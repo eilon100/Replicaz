@@ -1,0 +1,6 @@
+create private route for the change password only if the token is valid
+check to jose verify token its not working
+change all the TS any in the project
+create the images responsive
+add footer responsive
+

@@ -1,0 +1,170 @@
+import { Request, Response, NextFunction } from "express";
+import { validationResult } from "express-validator";
+import crypto from "crypto";
+import bcrypt from "bcrypt";
+import pendingUsers from "../modal/pendingUsers";
+import sgMail from "@sendgrid/mail";
+import User from "../modal/user";
+import jwt from "jsonwebtoken";
+import { signUpEmail } from "../utills/SG-mails";
+
+export const signup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    let errorArray: string[] = [];
+    errors.array().map((error) => {
+      errorArray.push(error.msg);
+    });
+    return res.status(400).json({ error: errorArray[0] });
+  }
+
+  const API_KEY: string = process.env.SG_API!;
+  sgMail.setApiKey(API_KEY);
+
+  const { username, email, password } = req.body;
+
+  // hash password
+  const hashedPassword = await bcrypt.hash(password, 12);
+
+  const newUser = new pendingUsers({
+    name: username,
+    email,
+    emailToken: crypto.randomBytes(64).toString("hex"),
+    hashedPassword,
+    emailVerified: false,
+  });
+  const message = signUpEmail(newUser.email, newUser.emailToken);
+
+  newUser
+    .save()
+    .then(() => {
+      try {
+        sgMail.send(message);
+        return res.status(200).json({ msg: "please check your email " });
+      } catch (error) {
+        return res.status(400).json({ error: "Error on verify email " });
+      }
+    })
+    .catch((err: any) => {
+      if (err.code == 11000) {
+        return res.status(400).json({
+          error: "Already registered please check your email for verification",
+        });
+      } else
+        return res
+          .status(400)
+          .json({ error: "Error on '/auth/signup': " + err });
+    });
+};
+
+export const activateAccount = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const token = req.body.token;
+
+  const pendingUser = await pendingUsers.findOne({
+    emailToken: token,
+  });
+  if (!pendingUser) {
+    return res
+      .status(400)
+      .json({ error: "Verification link times up please register again" });
+  }
+
+  const newUser = new User({
+    name: pendingUser.name,
+    email: pendingUser.email,
+    hashedPassword: pendingUser.hashedPassword,
+    image: pendingUser.image,
+    emailVerified: true,
+  });
+  await pendingUser.remove();
+  await newUser
+    .save()
+    .then(() => {
+      return res.status(200).json({ message: "Verification completed" });
+    })
+    .catch((err: any) => {
+      return res
+        .status(400)
+        .json({ error: "Error on '/activateAccount': " + err });
+    });
+};
+
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { email, password } = req.body;
+  try {
+    const loadedUser = await User.findOne({ email: email });
+
+    if (!loadedUser) {
+      return res.status(401).json({ error: "Email is not registered" });
+    }
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      loadedUser.hashedPassword
+    );
+
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ error: "Password is incorrect" });
+    }
+    const token = jwt.sign(
+      {
+        email: loadedUser,
+        userId: loadedUser._id.toString(),
+      },
+      process.env.JWT_SECRET!,
+      { expiresIn: "1h" }
+    );
+    const userData = {
+      id: loadedUser._id,
+      name: loadedUser.name,
+      email: loadedUser.email,
+      image: loadedUser.image,
+    };
+
+    res.cookie("token", token, { httpOnly: true, maxAge: 60 * 60 * 1000 });
+    res.cookie("userData", JSON.stringify(userData), {
+      maxAge: 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({
+      message: "Logged in successfully",
+    });
+  } catch (error) {
+    return res.status(401).json({ message: "Logged in failed" });
+  }
+};
+
+export const logout = (req: Request, res: Response, next: NextFunction) => {
+  const cookies = req.cookies;
+
+  try {
+    if (!cookies.token) {
+      return res.status(401).json({ message: "unauthorize" });
+    }
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: true,
+    });
+    res.clearCookie("userData", {
+      // httpOnly: true,
+      secure: true,
+    });
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (err) {
+    return res
+      .status(424)
+      .json({ message: "Something went wrong, please try again" });
+  }
+};

@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .icons {
+    @apply h-9 w-9  lg:w-9 cursor-pointer rounded-xl lg:p-1 lg:hover:bg-gray-100;
+  }
+  .auth_textfield {
+    @apply w-[80vw] max-w-xl;
+  }
+  .postButtons {
+    @apply flex items-center space-x-1 text-sm font-semibold text-[#65676B] px-10 py-1
+     hover:bg-gray-100 cursor-pointer rounded-md;
+  }
+}
