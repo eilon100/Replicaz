@@ -13,6 +13,8 @@ import toast from "react-hot-toast";
 
 function Header() {
   const router = useRouter();
+  const isAuthPage = router.pathname.includes("auth");
+
   const { state, dispatch } = useContext(AuthContext);
   const { loggedIn, name: userName, image: userImage } = state;
   const logOut = () => {
@@ -80,7 +82,9 @@ function Header() {
   };
 
   return (
-    <div className="sticky top-0 z-50 flex justify-center items-center pl-16 py-5 h-[82px] bg-white shadow-sm sm:px-3 sm:pl-24 pr-3 ">
+    <div
+      className={`sticky top-0 z-50 ${isAuthPage?'hidden':'flex'} justify-center items-center pl-16 py-5 h-[82px] bg-white shadow-sm sm:px-3 sm:pl-24 pr-3 `}
+    >
       <SiteLogo />
       <GroupSelect />
       <SearchBar />

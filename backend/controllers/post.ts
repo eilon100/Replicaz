@@ -25,7 +25,32 @@ export const getAllPosts: RequestHandler = (req, res, next) => {
       return res.status(500).json({ message: "Could not fetch the posts" });
     });
 };
+export const getPost: RequestHandler = async (req, res, next) => {
+  const postId = req.params.id;
+  try {
+    const post = await Post.findById(postId).populate({
+      path: "postedBy",
+      select: ["name", "image"],
+    });
+    if (!post) {
+      return res.status(404).json({ message: "Could not find the post" });
+    }
+    if (post.comments && post.comments.length > 0) {
+      await post.populate({
+        path: "comments",
+        select: "-post -seen -updatedAt",
+        populate: {
+          path: "postedBy",
+          select: ["name", "image"],
+        },
+      });
+    }
 
+    return res.status(200).send(post);
+  } catch (error) {
+    return res.status(500).json({ message: "Fetching post failed " });
+  }
+};
 export const createPost: RequestHandler = async (req: any, res, next) => {
   const mongoosePostId = new mongoose.Types.ObjectId();
   // get and validate body variables

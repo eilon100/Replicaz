@@ -10,7 +10,6 @@ import "swiper/css/thumbs";
 
 const ImageSwiper = (images) => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
-
   return (
     <>
       <Swiper
@@ -34,23 +33,27 @@ const ImageSwiper = (images) => {
           );
         })}
       </Swiper>
-      <Swiper
-        onSwiper={setThumbsSwiper}
-        spaceBetween={10}
-        slidesPerView={4}
-        freeMode={true}
-        watchSlidesProgress={true}
-        modules={[FreeMode, Navigation, Thumbs]}
-        className="mySwiper"
-      >
-        {images.arr.map((url, i) => {
-          return (
-            <SwiperSlide key={i}>
-              <img src={url} />
-            </SwiperSlide>
-          );
-        })}
-      </Swiper>
+      {images.arr.length > 1 ? (
+        <Swiper
+          onSwiper={setThumbsSwiper}
+          spaceBetween={10}
+          slidesPerView={4}
+          freeMode={true}
+          watchSlidesProgress={true}
+          modules={[FreeMode, Navigation, Thumbs]}
+          className="mySwiper"
+        >
+          {images.arr.map((url, i) => {
+            return (
+              <SwiperSlide key={i}>
+                <img src={url} />
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
+      ) : (
+        ""
+      )}
     </>
   );
 };

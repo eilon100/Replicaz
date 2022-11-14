@@ -9,7 +9,7 @@ export const createComment = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { body, postId } = req.body;
+  const { comment, postId } = req.body;
   const mongooseCommentId = new mongoose.Types.ObjectId();
 
   try {
@@ -24,8 +24,8 @@ export const createComment = async (
     const newComment = new Comment({
       _id: mongooseCommentId,
       post: postId,
-      posteBy: req.userData.userId,
-      body: body,
+      postedBy: commentedUser._id,
+      body: comment,
     });
 
     const commentCreatingSession = await mongoose.startSession();
