@@ -1,10 +1,28 @@
 import React from "react";
 import Router from "next/router";
 interface page {
-  page: string;
+  page: keyof pageObj;
 }
+type pageObj = {
+  signIn: { p: string; span: string; router: string };
+  register: {
+    p: string;
+    span: string;
+    router: string;
+  };
+  resetPassword: {
+    p: string;
+    span: string;
+    router: string;
+  };
+  newPassword: {
+    p: string;
+    span: string;
+    router: string;
+  };
+};
 
-const pageObj: any = {
+const pageObj: pageObj = {
   signIn: { p: "Not register yet?", span: "Sign up", router: "/auth/register" },
   register: {
     p: "Have an account?",

@@ -1,8 +1,7 @@
 import React from "react";
 import { useInfiniteQuery } from "react-query";
 import { apiService } from "../utills/apiService";
-import Post from "./feed-components/Post";
-
+import Post from "./Post";
 
 function Feed() {
   const fetchPosts = async ({ pageParam = 0 }) => {

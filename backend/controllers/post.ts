@@ -13,7 +13,7 @@ export const getAllPosts: RequestHandler = (req, res, next) => {
   const postsPerPage = 3;
 
   Post.find()
-    .populate({ path: "postedBy", select: ["name", "image"] })
+    .populate({ path: "postedBy", select: ["userName", "image"] })
     .sort({ _id: -1 })
     .skip(page * postsPerPage)
     .limit(postsPerPage)
@@ -26,11 +26,12 @@ export const getAllPosts: RequestHandler = (req, res, next) => {
     });
 };
 export const getPost: RequestHandler = async (req, res, next) => {
+
   const postId = req.params.id;
   try {
     const post = await Post.findById(postId).populate({
       path: "postedBy",
-      select: ["name", "image"],
+      select: ["userName", "image"],
     });
     if (!post) {
       return res.status(404).json({ message: "Could not find the post" });
@@ -41,7 +42,7 @@ export const getPost: RequestHandler = async (req, res, next) => {
         select: "-post -seen -updatedAt",
         populate: {
           path: "postedBy",
-          select: ["name", "image"],
+          select: ["userName", "image"],
         },
       });
     }
@@ -52,6 +53,7 @@ export const getPost: RequestHandler = async (req, res, next) => {
   }
 };
 export const createPost: RequestHandler = async (req: any, res, next) => {
+  
   const mongoosePostId = new mongoose.Types.ObjectId();
   // get and validate body variables
   const { postTitle, community, postBody, postImage } = req.body;
@@ -63,7 +65,7 @@ export const createPost: RequestHandler = async (req: any, res, next) => {
     }
 
     const imageArr = await imagesUpload(postImage, {
-      postedBy: postedBy.name,
+      postedBy: postedBy.userName,
       postTitle: mongoosePostId,
     });
 
@@ -87,7 +89,7 @@ export const createPost: RequestHandler = async (req: any, res, next) => {
   } catch (err) {
     const postedBy = await User.findById(req.userData.userId);
     await imagesFolderDeletion({
-      postedBy: postedBy.name,
+      postedBy: postedBy.userName,
       postTitle: mongoosePostId,
     });
     return res

@@ -15,6 +15,22 @@ export function UserSignUpValidation() {
         });
       })
       .normalizeEmail(),
+    body("firstName")
+      .trim()
+      .matches(/^[a-zA-Z]+$/)
+      .withMessage("First name can only contain Latin letters")
+      .isLength({ min: 3 })
+      .withMessage("First name must be 3 or more characters")
+      .isLength({ max: 15 })
+      .withMessage("First name must be 12 characters long"),
+    body("lastName")
+      .trim()
+      .matches(/^[a-zA-Z]+$/)
+      .withMessage("Last name can only contain Latin letters")
+      .isLength({ min: 3 })
+      .withMessage("Last name must be 3 or more characters")
+      .isLength({ max: 15 })
+      .withMessage("Last name must be 12 characters long"),
     body("password")
       .trim()
       .not()
@@ -25,7 +41,7 @@ export function UserSignUpValidation() {
       .withMessage("Password requires a lowercase letter")
       .matches(/[A-Z]/)
       .withMessage("Password requires an uppercase letter"),
-    body("username")
+    body("userName")
       .trim()
       .isLength({ min: 3 })
       .withMessage("User name must be 3 or more characters")
@@ -36,7 +52,7 @@ export function UserSignUpValidation() {
       .custom((value, { req }) => {
         return User.findOne({ name: value }).then((userDoc) => {
           if (userDoc) {
-            return Promise.reject("Username already taken");
+            return Promise.reject("User name already taken");
           }
         });
       }),

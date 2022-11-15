@@ -2,9 +2,17 @@ import Button from "@mui/material/Button";
 import React from "react";
 
 interface page {
-  page: string;
+  page: keyof buttonObj;
 }
-const buttonObj: any = {
+
+type buttonObj = {
+  signIn: string;
+  register: string;
+  resetPassword: string;
+  newPassword: string;
+};
+
+const buttonObj: buttonObj = {
   signIn: "LOGIN",
   register: "SIGN UP",
   resetPassword: "RESET",

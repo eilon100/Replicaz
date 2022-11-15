@@ -52,7 +52,7 @@ function UploadPhotos(props: any) {
       setImages(imagesArrClone);
     }
   };
-  const onImageAdd = (e: any) => {
+  const onImageAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
     let imagesArrClone: File[] = [...images];
     const newUploadedFiles = Array.from(e.target.files as ArrayLike<File>);
 

@@ -11,7 +11,9 @@ import { ValidationSchema } from "../../utills/validation";
 const register = () => {
   const formik: any = useFormik({
     initialValues: {
-      username: "",
+      userName: "",
+      firstName: "",
+      lastName: "",
       email: "",
       pass: "",
       confirm: "",
@@ -24,10 +26,12 @@ const register = () => {
 
   const registerUser = () => {
     let data = JSON.stringify({
-      username:
-        formik.values.username.charAt(0).toUpperCase() +
-        formik.values.username.slice(1).toLowerCase(),
-      email: formik.values.email,
+      userName:
+        formik.values.userName.charAt(0).toUpperCase() +
+        formik.values.userName.slice(1).toLowerCase(),
+      firstName: formik.values.firstName.toLowerCase(),
+      lastName: formik.values.lastName.toLowerCase(),
+      email: formik.values.email.toLowerCase(),
       password: formik.values.pass,
     });
 
@@ -47,23 +51,45 @@ const register = () => {
       <>
         <TextField
           className="auth_textfield"
-          id="username"
+          id="userName"
           label="User name"
           type="text"
-          name="username"
           variant="outlined"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          value={formik.values.username}
-          error={formik.touched.username && Boolean(formik.errors.username)}
-          helperText={formik.touched.username && formik.errors.username}
+          value={formik.values.userName}
+          error={formik.touched.userName && Boolean(formik.errors.userName)}
+          helperText={formik.touched.userName && formik.errors.userName}
+        />
+        <TextField
+          className="auth_textfield"
+          id="firstName"
+          label="First name"
+          type="text"
+          variant="outlined"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.firstName}
+          error={formik.touched.firstName && Boolean(formik.errors.firstName)}
+          helperText={formik.touched.firstName && formik.errors.firstName}
+        />
+        <TextField
+          className="auth_textfield"
+          id="lastName"
+          label="Last name"
+          type="text"
+          variant="outlined"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.lastName}
+          error={formik.touched.lastName && Boolean(formik.errors.lastName)}
+          helperText={formik.touched.lastName && formik.errors.lastName}
         />
         <TextField
           className="auth_textfield"
           id="email"
           label="Email"
           type="email"
-          name="email"
           variant="outlined"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -73,10 +99,9 @@ const register = () => {
         />
         <TextField
           className="auth_textfield"
-          id="password"
+          id="pass"
           label="Password"
           type="password"
-          name="pass"
           variant="outlined"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -87,10 +112,9 @@ const register = () => {
         <TextField
           className="auth_textfield"
           id="confirm"
-          label="confirm"
+          label="Confirm"
           variant="outlined"
           type="password"
-          name="confirm"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.confirm}
@@ -102,7 +126,7 @@ const register = () => {
   };
 
   return (
-    <div className="flex flex-col items-center ">
+    <div className="flex flex-col items-center mb-10 ">
       <div className="flex flex-col">
         <AuthHeader page="register" />
         <form

@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React, { useContext } from "react";
 import toast from "react-hot-toast";
 import { useQuery } from "react-query";
-import Post from "../../components/feed-components/Post";
+import Post from "../../components/Post";
 import { AuthContext } from "../../context/AuthContext";
 import { comment } from "../../interface/comment";
 import { apiService } from "../../utills/apiService";
@@ -17,7 +17,7 @@ export async function getServerSideProps() {
 function PostPage() {
   const router = useRouter();
   const { state, dispatch } = useContext(AuthContext);
-  const { loggedIn, name: userName, image: userImage } = state;
+  const { loggedIn, userName, userImage } = state;
   const { postId } = router.query;
 
   const fetchPost = () => {
@@ -91,7 +91,7 @@ function PostPage() {
                 <div>{comment.body}</div>
                 <div>{comment.createdAt}</div>
                 <div>{comment.likes}</div>
-                <div>{comment.postedBy.name}</div>
+                <div>{comment.postedBy.userName}</div>
                 <div>{comment.postedBy.image}</div>
               </div>
             ))}

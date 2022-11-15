@@ -6,9 +6,9 @@ interface AuthProps {
 
 export const initialState: any = {
   loggedIn: false,
-  name: null,
+  userName: null,
   email: null,
-  image: null,
+  userImage: null,
 };
 
 export const AuthContext = createContext(initialState);
@@ -18,9 +18,9 @@ export const authReducer = (state: any, action: any) => {
     case "LOGIN":
       return {
         loggedIn: true,
-        name: action.payload.name,
+        userName: action.payload.userName,
         email: action.payload.email,
-        image: action.payload.image,
+        userImage: action.payload.userImage,
       };
     case "LOGOUT":
       return initialState;

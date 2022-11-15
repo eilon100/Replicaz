@@ -2,7 +2,7 @@ import * as yup from "yup";
 
 export const ValidationSchema = (page: string) => {
   const yupObject = {
-    username: yup
+    userName: yup
       .string()
       .required("User name is required")
       .trim()
@@ -13,6 +13,22 @@ export const ValidationSchema = (page: string) => {
         "User name can only contain Latin letters and number "
       )
       .matches(/[a-zA-Z]/, "Username requires a Latin letters"),
+    firstName: yup
+      .string()
+      .trim()
+      .required("First name is required")
+      .min(3, "First name must be 3 or more characters")
+      .max(15, "First name must be 15 characters long")
+      .matches(/^[a-zA-Z]+$/, "First name can only contain Latin letters")
+      .matches(/[a-zA-Z]/, "First name requires a Latin letters"),
+    lastName: yup
+      .string()
+      .trim()
+      .required("Last name is required")
+      .min(3, "Last name must be 3 or more characters")
+      .max(15, "Last name must be 15 characters long")
+      .matches(/^[a-zA-Z]+$/, "Lsat name can only contain Latin letters")
+      .matches(/[a-zA-Z]/, "Last name requires a Latin letters"),
     email: yup
       .string()
       .trim()
@@ -34,27 +50,28 @@ export const ValidationSchema = (page: string) => {
       .oneOf([yup.ref("pass"), null], "Password does not match"),
   };
 
-  if ((page === "register")) {
-
+  if (page === "register") {
     return yup.object({
-      username: yupObject.username,
+      userName: yupObject.userName,
+      firstName: yupObject.firstName,
+      lastName: yupObject.lastName,
       email: yupObject.email,
       pass: yupObject.pass,
       confirm: yupObject.confirm,
     });
   }
-  if ((page ==="signin")) {
+  if (page === "signin") {
     return yup.object({
       email: yupObject.email,
       pass: yupObject.pass,
     });
   }
-  if ((page === "resetPassword")) {
+  if (page === "resetPassword") {
     return yup.object({
       email: yupObject.email,
     });
   }
-  if ((page === "newPassword")) {
+  if (page === "newPassword") {
     return yup.object({
       pass: yupObject.pass,
       confirm: yupObject.confirm,

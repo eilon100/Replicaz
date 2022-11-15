@@ -28,6 +28,7 @@ export default function middleware(req: NextRequest) {
     }
     if (token)
       try {
+        console.log(token);
         const verify = jwtVerify(token, secret);
         console.log(verify);
         return NextResponse.redirect("http://localhost:3000/");

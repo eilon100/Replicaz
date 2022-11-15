@@ -2,7 +2,7 @@ import { axiosInstance } from "./axiosInstance";
 
 export const apiService = {
   post: {
-    REGISTER_USER(data: any) {
+    REGISTER_USER(data: string) {
       return axiosInstance.post("/auth/signup", data);
     },
     LOGIN_USER(data: any) {

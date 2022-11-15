@@ -26,14 +26,16 @@ export const signup = async (
   const API_KEY: string = process.env.SG_API!;
   sgMail.setApiKey(API_KEY);
 
-  const { username, email, password } = req.body;
+  const { userName, firstName, lastName, email, password } = req.body;
 
   // hash password
   const hashedPassword = await bcrypt.hash(password, 12);
 
   const newUser = new pendingUsers({
-    name: username,
+    userName,
     email,
+    firstName,
+    lastName,
     emailToken: crypto.randomBytes(64).toString("hex"),
     hashedPassword,
     emailVerified: false,
@@ -79,7 +81,9 @@ export const activateAccount = async (
   }
 
   const newUser = new User({
-    name: pendingUser.name,
+    userName: pendingUser.userName,
+    firstName:pendingUser.firstName,
+    lastName:pendingUser.lastName,
     email: pendingUser.email,
     hashedPassword: pendingUser.hashedPassword,
     image: pendingUser.image,
@@ -128,9 +132,9 @@ export const login = async (
     );
     const userData = {
       id: loadedUser._id,
-      name: loadedUser.name,
+      userName: loadedUser.userName,
       email: loadedUser.email,
-      image: loadedUser.image,
+      userImage: loadedUser.image,
     };
 
     res.cookie("token", token, { httpOnly: true, maxAge: 60 * 60 * 1000 });

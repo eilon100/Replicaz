@@ -1,6 +1,6 @@
 type commentedUser = {
   _id: string;
-  name: string;
+  userName: string;
   image: string;
 };
 

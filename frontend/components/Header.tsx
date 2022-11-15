@@ -16,7 +16,7 @@ function Header() {
   const isAuthPage = router.pathname.includes("auth");
 
   const { state, dispatch } = useContext(AuthContext);
-  const { loggedIn, name: userName, image: userImage } = state;
+  const { loggedIn, userName,  userImage } = state;
   const logOut = () => {
     dispatch({ type: "LOGOUT" });
     apiService.get

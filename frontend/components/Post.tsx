@@ -8,7 +8,7 @@ import {
   BiShare,
 } from "react-icons/bi";
 import ReactTimeago from "react-timeago";
-import ImageSwiper from "./ImageSwiper";
+import ImageSwiper from "./post-components/ImageSwiper";
 
 function Post({ post }: any) {
   const router = useRouter();
@@ -27,7 +27,7 @@ function Post({ post }: any) {
           </div>
           <div className="font-bold text-md">{post.community}</div>
           <div className=" font-[400] text-xs text-[#65676B]">
-            - Posted by {post.postedBy?.name}&nbsp;
+            - Posted by {post.postedBy?.userName}&nbsp;
             <ReactTimeago date={post.createdAt} />
           </div>
         </div>
@@ -43,8 +43,8 @@ function Post({ post }: any) {
         <ImageSwiper arr={post?.images} />
       </div>
       <div className="flex justify-between items-center mt-4 text-[#65676B] text-xs md:text-sm">
-        <div>{post.comments.length} Comments</div>
         <div>{post.likes.length} Likes</div>
+        <div>{post.comments.length} Comments</div>
       </div>
       <footer className="flex items-center justify-around mt-3 pt-1 text-gray-400 border-t-[1px] ">
         <div className="postButtons">

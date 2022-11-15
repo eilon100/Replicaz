@@ -17,7 +17,7 @@ const uploadImageLength = 5;
 
 function PostBox() {
   const { state, dispatch } = useContext(AuthContext);
-  const { loggedIn, name: userName, image: userImage } = state;
+  const { loggedIn,  userName,  userImage } = state;
   const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
   const [community, setCommunity] = useState("");
   const [images, setImages] = useState<File[]>([]);

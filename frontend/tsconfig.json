@@ -28,7 +28,7 @@
     "server/graphql/typeDefs.js",
     "../_middleware.ts",
     "context/AuthContext.jsx",
-    "components/feed-components/ImageSwiper.js"
+    "components/ImageSwiper.js"
   ],
   "exclude": ["node_modules"]
 }

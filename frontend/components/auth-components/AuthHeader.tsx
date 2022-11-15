@@ -1,11 +1,33 @@
+import { ReactJSXElement } from "@emotion/react/types/jsx-namespace";
 import { KeyIcon, UserIcon } from "@heroicons/react/outline";
 import React from "react";
 
 interface page {
-  page: string;
+  page: keyof pageObj;
 }
-
-const pageObj: any = {
+type pageObj = {
+  signIn: {
+    icon: ReactJSXElement;
+    h1: string;
+    p: string;
+  };
+  register: {
+    icon: ReactJSXElement;
+    h1: string;
+    p: string;
+  };
+  resetPassword: {
+    icon: ReactJSXElement;
+    h1: string;
+    p: string;
+  };
+  newPassword: {
+    icon: ReactJSXElement;
+    h1: string;
+    p: string;
+  };
+};
+const pageObj: pageObj = {
   signIn: {
     icon: <UserIcon className="h-4 w-4 ml-1" />,
     h1: "Login account",

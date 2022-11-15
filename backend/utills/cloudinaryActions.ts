@@ -1,8 +1,9 @@
+import { Types } from "mongoose";
 import cloudinary from "./cloudinary";
 
 interface pathobj {
   postedBy: string;
-  postTitle: any;
+  postTitle: Types.ObjectId;
 }
 
 export const imagesUpload = async (images: any[], path: pathobj) => {
