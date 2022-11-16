@@ -1,8 +1,11 @@
 import { useFormik } from "formik";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
 import toast from "react-hot-toast";
+import { BiLike } from "react-icons/bi";
 import { useQuery } from "react-query";
+import ReactTimeago from "react-timeago";
 import Post from "../../components/Post";
 import { AuthContext } from "../../context/AuthContext";
 import { comment } from "../../interface/comment";
@@ -44,7 +47,6 @@ function PostPage() {
       .then(() => toast.success("Your comment has been added"))
       .catch((error) => toast.error(error.response.data.error));
   };
-  console.log(postData);
 
   if (isLoading) {
     return <div>Loading....</div>;
@@ -56,7 +58,7 @@ function PostPage() {
           <Post post={postData} />
         </div>
         <div
-          className="-mt-1 rounded-b-md bg-white p-6 text-xs font-semibold 
+          className="-mt-1 rounded-b-md bg-white px-6 py-5 text-xs font-semibold 
           "
         >
           <p className="text-xs font-semibold ">
@@ -83,19 +85,44 @@ function PostPage() {
                   : "Please sign in to comment"
               }
             />
-            <button type="submit" className="mt-4">
+            <button type="submit" className="mt-4" disabled={!loggedIn}>
               Comment
             </button>
-            {postData.comments.map((comment: comment) => (
-              <div>
-                <div>{comment.body}</div>
-                <div>{comment.createdAt}</div>
-                <div>{comment.likes}</div>
-                <div>{comment.postedBy.userName}</div>
-                <div>{comment.postedBy.image}</div>
-              </div>
-            ))}
           </form>
+          {postData.comments.map((comment: comment, i: number) => (
+            <div key={i}>
+              <div className=" px-6 py-1 mt-3">
+                <div className="flex items-center space-x-2 -ml-[38px] mb-1">
+                  <div className="relative h-8 w-8 ">
+                    <Image
+                      className=" rounded-full "
+                      objectFit="contain"
+                      src={
+                        comment.postedBy.image || "/../public/EmptyProfile.png"
+                      }
+                      layout="fill"
+                    />
+                  </div>
+                  <div className=" font-semibold text-[9px] xs:text-xs ">
+                    {comment.postedBy?.userName} &nbsp;
+                    <ReactTimeago
+                      date={comment.createdAt}
+                      className="font-normal text-[#65676B]"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className=" border-l-2 px-6 flex flex-col gap-2 pb-3">
+                <div className="flex justify-between">
+                  <p className=" text-[17px] font-normal">{comment.body}</p>
+                  <div className="flex items-center gap-1">
+                    {comment.likes.length}
+                    <BiLike />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     );

@@ -5,6 +5,9 @@ export const apiService = {
     REGISTER_USER(data: string) {
       return axiosInstance.post("/auth/signup", data);
     },
+    ACTIVATE_USER(data: any) {
+      return axiosInstance.post("/auth/activate", data);
+    },
     LOGIN_USER(data: any) {
       return axiosInstance.post("/auth/login", data);
     },
@@ -19,6 +22,9 @@ export const apiService = {
     },
     CREATE_COMMENT(data: any) {
       return axiosInstance.post("/post/newcomment", data);
+    },
+    LIKE_POST(data: any) {
+      return axiosInstance.post("/post/likepost", data);
     },
   },
   get: {

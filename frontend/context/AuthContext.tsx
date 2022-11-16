@@ -6,6 +6,7 @@ interface AuthProps {
 
 export const initialState: any = {
   loggedIn: false,
+  userId: null,
   userName: null,
   email: null,
   userImage: null,
@@ -18,6 +19,7 @@ export const authReducer = (state: any, action: any) => {
     case "LOGIN":
       return {
         loggedIn: true,
+        userId: action.payload.id,
         userName: action.payload.userName,
         email: action.payload.email,
         userImage: action.payload.userImage,
@@ -30,10 +32,12 @@ export const authReducer = (state: any, action: any) => {
 };
 
 export const AuthContextProvider = ({ children }: AuthProps) => {
+  
   const [state, dispatch] = useReducer(authReducer, initialState);
   useEffect(() => {
     const cookie: any = getCookie("userData");
     const user = cookie ? JSON.parse(cookie) : undefined;
+
     if (user) {
       dispatch({ type: "LOGIN", payload: user });
     }

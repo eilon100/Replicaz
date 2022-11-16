@@ -10,6 +10,7 @@
     "@emotion/styled": "^11.10.0",
     "@heroicons/react": "^1.0.6",
     "@mui/base": "^5.0.0-alpha.98",
+    "@mui/icons-material": "^5.10.14",
     "@mui/material": "^5.10.2",
     "apollo-server": "^3.10.3",
     "axios": "^0.27.2",

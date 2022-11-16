@@ -50,7 +50,7 @@ export function UserSignUpValidation() {
       .matches(/^[a-z0-9A-Z]+$/)
       .withMessage("User name can only contain Latin letters and number")
       .custom((value, { req }) => {
-        return User.findOne({ name: value }).then((userDoc) => {
+        return User.findOne({ userName: value }).then((userDoc) => {
           if (userDoc) {
             return Promise.reject("User name already taken");
           }

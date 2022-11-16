@@ -10,6 +10,7 @@ import AuthButton from "../../components/auth-components/AuthButton";
 import { apiService } from "../../utills/apiService";
 import { AuthContext } from "../../context/AuthContext";
 import { ValidationSchema } from "../../utills/validation";
+import axios from "axios";
 
 const SignIn = () => {
   useEffect(() => {

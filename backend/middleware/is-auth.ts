@@ -4,11 +4,12 @@ import { Request, Response, NextFunction } from "express";
 import { decodedToken } from "../utills/interfaces";
 
 export const isAuth = (req: any, res: Response, next: NextFunction) => {
+  
   dotenv.config();
   try {
     const cookie = req.cookies.token;
     if (!cookie) {
-      return res.status(400).json({ message: "token is invalid" });
+      return res.status(400).json({ error: "token is invalid" });
     }
     const decodedToken = jwt.verify(
       cookie,
@@ -20,6 +21,6 @@ export const isAuth = (req: any, res: Response, next: NextFunction) => {
   } catch (error: any) {
     return res
       .status(403)
-      .json({ message: error.message || "Authentication failed" });
+      .json({ error: error.message || "Authentication failed" });
   }
 };

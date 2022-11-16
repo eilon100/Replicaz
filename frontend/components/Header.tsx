@@ -14,9 +14,9 @@ import toast from "react-hot-toast";
 function Header() {
   const router = useRouter();
   const isAuthPage = router.pathname.includes("auth");
-
   const { state, dispatch } = useContext(AuthContext);
   const { loggedIn, userName,  userImage } = state;
+  
   const logOut = () => {
     dispatch({ type: "LOGOUT" });
     apiService.get

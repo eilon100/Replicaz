@@ -13,7 +13,6 @@ export default function middleware(req: NextRequest) {
   const urlToken = req.nextUrl.searchParams.get("token")!;
 
   if (url.includes("/auth/newPassword")) {
-    console.log(urlToken);
   }
   // try {
   //   verify(token, secret);
@@ -28,9 +27,8 @@ export default function middleware(req: NextRequest) {
     }
     if (token)
       try {
-        console.log(token);
         const verify = jwtVerify(token, secret);
-        console.log(verify);
+
         return NextResponse.redirect("http://localhost:3000/");
       } catch (e) {
         return NextResponse.next();

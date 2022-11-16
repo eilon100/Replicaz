@@ -7,6 +7,7 @@ module.exports = {
       "lh3.googleusercontent.com",
       "platform-lookaside.fbsbx.com",
       "res.cloudinary.com",
+      "ui-avatars.com",
     ],
   },
 };

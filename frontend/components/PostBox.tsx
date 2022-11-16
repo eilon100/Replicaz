@@ -52,8 +52,8 @@ function PostBox() {
   //components
   const postBox = () => {
     return (
-      <div className="flex items-center space-x-3 pl-1">
-        <div className="relative h-8 w-8">
+      <div className="flex items-center space-x-3 ">
+        <div className="relative h-9 w-9">
           <Image
             className=" rounded-full "
             objectFit="contain"

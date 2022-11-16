@@ -63,7 +63,7 @@
   width: 25%;
   height: 80%;
 }
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 448px) {
   .mySwiper {
     display: none;
   }

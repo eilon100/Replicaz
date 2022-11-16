@@ -26,13 +26,13 @@ export const getAllPosts: RequestHandler = (req, res, next) => {
     });
 };
 export const getPost: RequestHandler = async (req, res, next) => {
-
   const postId = req.params.id;
   try {
     const post = await Post.findById(postId).populate({
       path: "postedBy",
       select: ["userName", "image"],
     });
+
     if (!post) {
       return res.status(404).json({ message: "Could not find the post" });
     }
@@ -46,6 +46,7 @@ export const getPost: RequestHandler = async (req, res, next) => {
         },
       });
     }
+    post.comments = post.comments.reverse();
 
     return res.status(200).send(post);
   } catch (error) {
@@ -53,7 +54,6 @@ export const getPost: RequestHandler = async (req, res, next) => {
   }
 };
 export const createPost: RequestHandler = async (req: any, res, next) => {
-  
   const mongoosePostId = new mongoose.Types.ObjectId();
   // get and validate body variables
   const { postTitle, community, postBody, postImage } = req.body;
@@ -97,3 +97,38 @@ export const createPost: RequestHandler = async (req: any, res, next) => {
       .json({ error: "Error on '/post/createPost': " + err });
   }
 };
+export const likePost: RequestHandler = async (req: any, res, next) => {
+  const { postId } = req.body;
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: "Could not find the post" });
+    }
+
+    if (post.likes.includes(req.userData.userId)) {
+      post.likes.pull(req.userData.userId);
+      await post.save();
+      return res
+        .status(200)
+        .json({ message: "Post unliked successfully!", like: false });
+    } else {
+      post.likes.push(req.userData.userId);
+      await post.save();
+      return res
+        .status(200)
+        .json({ message: "Post liked successfully!", like: true });
+    }
+  } catch (err) {
+    return res.status(500).json({ error: "Error on '/post/likepost': " + err });
+  }
+};
+
+//todo
+
+export const savePost: RequestHandler = async (req, res, next) => {};
+
+export const editPost: RequestHandler = async (req, res, next) => {};
+
+export const deletePost: RequestHandler = async (req, res, next) => {};
+
+export const reportPost: RequestHandler = async (req, res, next) => {};

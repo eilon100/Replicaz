@@ -44,3 +44,20 @@ export const createComment = async (
       .json({ error: "Create comment failed pleas try again " + err });
   }
 };
+//todo
+
+export const commentToComment = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {};
+export const likeComment = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {};
+export const deleteComment = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {};

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 import { setCookie } from "cookies-next";
+import { apiService } from "../../../../utills/apiService";
 
 export default function activateUser(
   req: NextApiRequest,
@@ -12,13 +13,14 @@ export default function activateUser(
     setCookie("active", "failed", { req, res });
     return res.redirect(307, "/auth/signin");
   }
-  axios
-    .post("http://localhost:8000/auth/activate", data)
+
+  apiService.post
+    .ACTIVATE_USER(data)
     .then(() => {
       setCookie("active", "Succeeded", { req, res });
       return res.redirect(307, "/auth/signin");
     })
-    .catch(() => {
+    .catch((err) => {
       setCookie("active", "failed", { req, res });
       return res.redirect(307, "/auth/signin");
     });

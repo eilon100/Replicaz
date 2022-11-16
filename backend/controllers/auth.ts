@@ -7,6 +7,7 @@ import sgMail from "@sendgrid/mail";
 import User from "../modal/user";
 import jwt from "jsonwebtoken";
 import { signUpEmail } from "../utills/SG-mails";
+import axios from "axios";
 
 export const signup = async (
   req: Request,
@@ -82,13 +83,14 @@ export const activateAccount = async (
 
   const newUser = new User({
     userName: pendingUser.userName,
-    firstName:pendingUser.firstName,
-    lastName:pendingUser.lastName,
+    firstName: pendingUser.firstName,
+    lastName: pendingUser.lastName,
     email: pendingUser.email,
     hashedPassword: pendingUser.hashedPassword,
-    image: pendingUser.image,
+    image: `https://ui-avatars.com/api/?background=random&name=${pendingUser.firstName}+${pendingUser.lastName}`,
     emailVerified: true,
   });
+
   await pendingUser.remove();
   await newUser
     .save()
