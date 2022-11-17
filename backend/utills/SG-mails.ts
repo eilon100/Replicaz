@@ -13,8 +13,6 @@ export const signUpEmail = (email: string, token: string) => {
       <a href="http://localhost:3000/api/activate/user/${token}">Verify your account</a>`,
   };
 };
-
-
 export const resetPasswordEmail = (email: string, token: string) => {
   return {
     from: "Replicazsite@gmail.com",

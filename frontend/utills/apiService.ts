@@ -29,6 +29,9 @@ export const apiService = {
     SAVE_POST(data: any) {
       return axiosInstance.post("/post/savepost", data);
     },
+    DELETE_POST(data: any) {
+      return axiosInstance.post("/post/deletepost", data);
+    },
   },
   get: {
     GET_ALLPOSTS(params: number) {

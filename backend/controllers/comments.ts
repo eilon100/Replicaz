@@ -33,10 +33,7 @@ export const createComment = async (
     await newComment.save({ session: commentCreatingSession });
     commentedPost.comments.push(newComment);
     await commentedPost.save({ session: commentCreatingSession });
-    commentedUser.comments.push(newComment);
-    await commentedUser.save({ session: commentCreatingSession });
     await commentCreatingSession.commitTransaction();
-
     res.status(201).json({ message: "New comment created!" });
   } catch (err) {
     return res

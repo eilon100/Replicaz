@@ -37,7 +37,6 @@ const userSchema = new Schema(
     },
     posts: [{ type: Schema.Types.ObjectId, ref: "Post", default: [] }],
     savedPosts: [{ type: Schema.Types.ObjectId, ref: "Post", default: [] }],
-    comments: [{ type: Schema.Types.ObjectId, ref: "Comment", default: [] }],
   },
   { timestamps: true }
 );

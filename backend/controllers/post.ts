@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import mongoose from "mongoose";
+import Comment from "../modal/comment";
 import Post from "../modal/post";
 import User from "../modal/user";
 import {
@@ -57,16 +58,15 @@ export const createPost: RequestHandler = async (req: any, res, next) => {
   const mongoosePostId = new mongoose.Types.ObjectId();
   // get and validate body variables
   const { postTitle, community, postBody, postImage } = req.body;
-
+  const postedBy = await User.findById(req.userData.userId);
   try {
-    const postedBy = await User.findById(req.userData.userId);
     if (!postedBy) {
       return res.status(400).json({ error: "Could not find user" });
     }
 
     const imageArr = await imagesUpload(postImage, {
       postedBy: postedBy.userName,
-      postTitle: mongoosePostId,
+      postId: mongoosePostId,
     });
 
     const newPost = new Post({
@@ -87,10 +87,9 @@ export const createPost: RequestHandler = async (req: any, res, next) => {
 
     res.status(201).json({ message: "New post created!" });
   } catch (err) {
-    const postedBy = await User.findById(req.userData.userId);
     await imagesFolderDeletion({
       postedBy: postedBy.userName,
-      postTitle: mongoosePostId,
+      postId: mongoosePostId,
     });
     return res
       .status(400)
@@ -148,7 +147,7 @@ export const savePost: RequestHandler = async (req: any, res, next) => {
       await user.save({ session: savePostSession });
       await savePostSession.commitTransaction();
       return res.status(200).json({
-        message: "Post unsaved successfully!",
+        message: "Post unsaved!",
         saved: false,
       });
     } else {
@@ -158,7 +157,7 @@ export const savePost: RequestHandler = async (req: any, res, next) => {
       await user.save({ session: savePostSession });
       await savePostSession.commitTransaction();
       return res.status(200).json({
-        message: "Post saved successfully!",
+        message: "Post saved!",
         saved: true,
       });
     }
@@ -166,10 +165,65 @@ export const savePost: RequestHandler = async (req: any, res, next) => {
     return res.status(500).json({ error: "Error on '/post/savePost': " + err });
   }
 };
+
+export const deletePost: RequestHandler = async (req: any, res, next) => {
+  const { postId } = req.body;
+  const postDeletionSession = await mongoose.startSession();
+
+  try {
+    const user = await User.findById(req.userData.userId);
+    if (!user) {
+      return res.status(404).json({ error: "Could not find the user" });
+    }
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: "Could not find the post" });
+    }
+
+    if (post.postedBy.toString() !== req.userData.userId) {
+      return res
+        .status(500)
+        .json({ error: "You are not allowed to delete this post!" });
+    }
+
+    postDeletionSession.startTransaction();
+
+    //delete the post from the user array
+    user.posts.pull(postId);
+    await user.save({ session: postDeletionSession });
+
+    //delete the post comments
+    await Comment.deleteMany(
+      { post: postId },
+      { session: postDeletionSession }
+    );
+
+    // delete the save post from every user saves
+    const deleteSaves = post.saves.map(async (save: string) => {
+      const user = await User.findById(save.toString());
+      user.savedPosts.pull(postId);
+      return user.save({ session: postDeletionSession });
+    });
+    await Promise.all(deleteSaves);
+    await post.remove({ session: postDeletionSession });
+
+    //images Deletion
+    await imagesFolderDeletion({
+      postedBy: user.userName,
+      postId: postId,
+    });
+
+    await postDeletionSession.commitTransaction();
+    res.status(200).json({ message: "Your post deleted!" });
+  } catch (err) {
+    await postDeletionSession.abortTransaction();
+    return res
+      .status(500)
+      .json({ error: "Error on '/post/deletePost': " + err });
+  }
+};
+
 //todo
-
 export const editPost: RequestHandler = async (req, res, next) => {};
-
-export const deletePost: RequestHandler = async (req, res, next) => {};
 
 export const reportPost: RequestHandler = async (req, res, next) => {};

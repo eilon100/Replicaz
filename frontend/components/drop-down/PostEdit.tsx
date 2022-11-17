@@ -46,6 +46,17 @@ export default function PostEdit({ postId, userPost, saves }: PostEditProps) {
         toast.error(error.response.data.error);
       });
   };
+  const deletePostHandler = (id: string) => {
+    const postId = { postId: id };
+    apiService.post
+      .DELETE_POST(postId)
+      .then((res) => {
+        toast.success(res.data.message);
+      })
+      .catch((error) => {
+        toast.error(error.response.data.error);
+      });
+  };
 
   return (
     <React.Fragment>
@@ -107,7 +118,11 @@ export default function PostEdit({ postId, userPost, saves }: PostEditProps) {
         </MenuItem>
         {userPost ? (
           <div>
-            <MenuItem>
+            <MenuItem
+              onClick={() => {
+                deletePostHandler(postId);
+              }}
+            >
               <BsTrash className="mr-5" /> Delete
             </MenuItem>
             <MenuItem>

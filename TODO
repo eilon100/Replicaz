@@ -1,3 +1,5 @@
 wait for answer in stackoverflow then make the token verify to works and add private route to new password
 change all the TS any in the project
-add edit and save and report and delete to the post
+add edit and report to the post
+disable comment hile body is empty
+delete post redirect to home page

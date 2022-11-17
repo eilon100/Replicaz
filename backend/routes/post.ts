@@ -2,6 +2,7 @@ import express from "express";
 import { createComment } from "../controllers/comments";
 import {
   createPost,
+  deletePost,
   getAllPosts,
   getPost,
   likePost,
@@ -24,5 +25,7 @@ postRouter.post("/newcomment", createComment);
 postRouter.post("/likepost", likePost);
 
 postRouter.post("/savepost", savePost);
+
+postRouter.post("/deletepost", deletePost);
 
 export { postRouter };
