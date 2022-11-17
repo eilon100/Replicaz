@@ -23,6 +23,7 @@ const postSchema = new Schema(
     },
     images: [{ type: String, default: [] }],
     likes: [{ type: Schema.Types.ObjectId, ref: "User", default: [] }],
+    saves: [{ type: Schema.Types.ObjectId, ref: "User", default: [] }],
     comments: [{ type: Schema.Types.ObjectId, ref: "Comment", default: [] }],
   },
   { timestamps: true }

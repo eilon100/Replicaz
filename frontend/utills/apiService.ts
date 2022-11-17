@@ -26,6 +26,9 @@ export const apiService = {
     LIKE_POST(data: any) {
       return axiosInstance.post("/post/likepost", data);
     },
+    SAVE_POST(data: any) {
+      return axiosInstance.post("/post/savepost", data);
+    },
   },
   get: {
     GET_ALLPOSTS(params: number) {
@@ -33,6 +36,9 @@ export const apiService = {
     },
     GET_POST_BY_ID(id: string) {
       return axiosInstance.get(`/post/getpost/${id}`);
+    },
+    GET_USER_DATA() {
+      return axiosInstance.get("/account/getuserdata");
     },
     LOGOUT() {
       return axiosInstance.get("/auth/logout");

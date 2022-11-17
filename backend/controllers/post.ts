@@ -108,24 +108,65 @@ export const likePost: RequestHandler = async (req: any, res, next) => {
     if (post.likes.includes(req.userData.userId)) {
       post.likes.pull(req.userData.userId);
       await post.save();
-      return res
-        .status(200)
-        .json({ message: "Post unliked successfully!", like: false });
+      return res.status(200).json({
+        message: "Post unliked successfully!",
+        like: false,
+        likesLength: post.likes.length,
+      });
     } else {
       post.likes.push(req.userData.userId);
       await post.save();
-      return res
-        .status(200)
-        .json({ message: "Post liked successfully!", like: true });
+      return res.status(200).json({
+        message: "Post liked successfully!",
+        like: true,
+        likesLength: post.likes.length,
+      });
     }
   } catch (err) {
     return res.status(500).json({ error: "Error on '/post/likepost': " + err });
   }
 };
 
-//todo
+export const savePost: RequestHandler = async (req: any, res, next) => {
+  const { postId } = req.body;
+  try {
+    const user = await User.findById(req.userData.userId);
+    if (!user) {
+      return res.status(404).json({ error: "Could not find the user" });
+    }
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: "Could not find the post" });
+    }
+    const savePostSession = await mongoose.startSession();
+    savePostSession.startTransaction();
 
-export const savePost: RequestHandler = async (req, res, next) => {};
+    if (post.saves.includes(req.userData.userId)) {
+      post.saves.pull(req.userData.userId);
+      await post.save({ session: savePostSession });
+      user.savedPosts.pull(postId);
+      await user.save({ session: savePostSession });
+      await savePostSession.commitTransaction();
+      return res.status(200).json({
+        message: "Post unsaved successfully!",
+        saved: false,
+      });
+    } else {
+      post.saves.push(req.userData.userId);
+      await post.save({ session: savePostSession });
+      user.savedPosts.push(postId);
+      await user.save({ session: savePostSession });
+      await savePostSession.commitTransaction();
+      return res.status(200).json({
+        message: "Post saved successfully!",
+        saved: true,
+      });
+    }
+  } catch (err) {
+    return res.status(500).json({ error: "Error on '/post/savePost': " + err });
+  }
+};
+//todo
 
 export const editPost: RequestHandler = async (req, res, next) => {};
 

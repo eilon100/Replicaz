@@ -6,12 +6,9 @@ import { compare } from "bcrypt";
 import bcrypt from "bcrypt";
 import { decodedToken } from "../utills/interfaces";
 import { resetPasswordEmail } from "../utills/SG-mails";
+import { RequestHandler } from "express";
 
-export const resetPassword = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const resetPassword: RequestHandler = async (req, res, next) => {
   const API_KEY: string = process.env.SG_API!;
   sgMail.setApiKey(API_KEY);
 
@@ -40,11 +37,7 @@ export const resetPassword = async (
     return res.status(400).json({ error: "Error on verify email " });
   }
 };
-export const newPassword = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const newPassword: RequestHandler = async (req, res, next) => {
   try {
     const { password, token } = req.body;
     const decodedToken = jwt.verify(
@@ -85,5 +78,19 @@ export const newPassword = async (
     return res
       .status(410)
       .json({ error: "Reset password times out please try again" });
+  }
+};
+export const getUserData: RequestHandler = async (req: any, res, next) => {
+  const userId = req.userData.userId;
+  try {
+    const user = await User.findById(req.userData.userId);
+    if (!user) {
+      return res.status(404).json({ error: "Could not find the user" });
+    }
+    return res.status(200).json(user);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: "Error on '/account/getuserdata': " + error });
   }
 };

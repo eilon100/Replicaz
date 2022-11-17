@@ -5,8 +5,9 @@ import {
   getAllPosts,
   getPost,
   likePost,
+  savePost,
 } from "../controllers/post";
-import { isAuth } from "../middleware/is-auth";
+import { isAuth } from "../middleware/isAuth";
 
 const postRouter = express.Router();
 
@@ -21,5 +22,7 @@ postRouter.post("/newpost", createPost);
 postRouter.post("/newcomment", createComment);
 
 postRouter.post("/likepost", likePost);
+
+postRouter.post("/savepost", savePost);
 
 export { postRouter };

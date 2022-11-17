@@ -20,16 +20,16 @@ function Post({ post }: any) {
   const { state } = useContext(AuthContext);
   const { loggedIn, userId } = state;
   const [postLiked, setPostLiked] = useState(post.likes.includes(userId));
-  const [postLikedCount, setPostLikedCount] = useState(0);
-
+  const [likesLength, setLikesLength] = useState(post.likes.length);
+  const fetchUserData = () => {};
   const likePostHandler = (id: string) => {
     const postId = JSON.stringify({ postId: id });
     apiService.post
       .LIKE_POST(postId)
       .then((res) => {
         res.data.like
-          ? (setPostLiked(true), setPostLikedCount(postLikedCount + 1))
-          : (setPostLiked(false), setPostLikedCount(postLikedCount - 1));
+          ? (setPostLiked(true), setLikesLength(res.data.likesLength))
+          : (setPostLiked(false), setLikesLength(res.data.likesLength));
       })
       .catch((error) => {
         toast.error(error.response.data.error);
@@ -56,7 +56,15 @@ function Post({ post }: any) {
             <ReactTimeago date={post.createdAt} />
           </div>
         </div>
-        <PostEdit postId={post._id} userPost={post.postedBy._id === userId} />
+        {loggedIn ? (
+          <PostEdit
+            postId={post._id}
+            userPost={post.postedBy._id === userId}
+            saves={post.saves}
+          />
+        ) : (
+          ""
+        )}
       </header>
     );
   };
@@ -73,7 +81,7 @@ function Post({ post }: any) {
           <ImageSwiper arr={post?.images} />
         </div>
         <div className="flex justify-between items-center mt-4 text-[#65676B] text-xs md:text-sm">
-          <div>{post.likes.length + postLikedCount} Likes</div>
+          <div>{likesLength} Likes</div>
           <div>{post.comments.length} Comments</div>
         </div>
       </>

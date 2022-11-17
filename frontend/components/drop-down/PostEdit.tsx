@@ -1,28 +1,50 @@
 import * as React from "react";
-
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import IconButton from "@mui/material/IconButton";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
-import { FiEdit2, FiBookmark, FiFlag, FiTrash } from "react-icons/fi";
+import {
+  BsBookmark,
+  BsFillBookmarkFill,
+  BsPencil,
+  BsTrash,
+  BsFlag,
+} from "react-icons/bs";
 import { AuthContext } from "../../context/AuthContext";
 import { useContext } from "react";
+import { apiService } from "../../utills/apiService";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 type PostEditProps = {
   postId: string;
   userPost: boolean;
+  saves: string[];
 };
-export default function PostEdit({ postId, userPost }: PostEditProps) {
+export default function PostEdit({ postId, userPost, saves }: PostEditProps) {
   const { state } = useContext(AuthContext);
-  const { loggedIn, userId } = state;
-
+  const { userId } = state;
+  const [savedPost, setSavedPost] = useState(saves.includes(userId));
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  const savePostHandler = (id: string) => {
+    const postId = { postId: id };
+    apiService.post
+      .SAVE_POST(postId)
+      .then((res) => {
+        toast.success(res.data.message);
+        res.data.saved ? setSavedPost(true) : setSavedPost(false);
+      })
+      .catch((error) => {
+        toast.error(error.response.data.error);
+      });
   };
 
   return (
@@ -73,19 +95,23 @@ export default function PostEdit({ postId, userPost }: PostEditProps) {
       >
         <MenuItem
           onClick={() => {
-            console.log(postId);
+            savePostHandler(postId);
           }}
         >
-          <FiBookmark className="mr-5" />
+          {savedPost ? (
+            <BsFillBookmarkFill className="mr-5" />
+          ) : (
+            <BsBookmark className="mr-5" />
+          )}
           Save
         </MenuItem>
         {userPost ? (
           <div>
             <MenuItem>
-              <FiTrash className="mr-5" /> Delete
+              <BsTrash className="mr-5" /> Delete
             </MenuItem>
             <MenuItem>
-              <FiEdit2 className="mr-5" /> Edit
+              <BsPencil className="mr-5" /> Edit
             </MenuItem>
           </div>
         ) : (
@@ -93,7 +119,7 @@ export default function PostEdit({ postId, userPost }: PostEditProps) {
         )}
 
         <MenuItem>
-          <FiFlag className="mr-5" /> Report
+          <BsFlag className="mr-5" /> Report
         </MenuItem>
       </Menu>
     </React.Fragment>
