@@ -7,7 +7,7 @@ import { apiService } from "../../utills/apiService";
 import AuthHeader from "../../components/auth-components/AuthHeader";
 import AuthFooter from "../../components/auth-components/AuthFooter";
 import AuthButton from "../../components/auth-components/AuthButton";
-import { ValidationSchema } from "../../utills/validation";
+import { authValidationSchema } from "../../utills/validation/auth";
 
 function newPassword() {
   const router = useRouter();
@@ -17,7 +17,7 @@ function newPassword() {
       pass: "",
       confirm: "",
     },
-    validationSchema: ValidationSchema("newPassword"),
+    validationSchema: authValidationSchema("newPassword"),
     onSubmit: (values) => {
       handleFormSubmit();
     },

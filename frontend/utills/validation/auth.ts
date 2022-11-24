@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-export const ValidationSchema = (page: string) => {
+export const authValidationSchema = (page: string) => {
   const yupObject = {
     userName: yup
       .string()

@@ -29,6 +29,7 @@ function PostPage() {
   };
   const { data, isLoading, error } = useQuery(["fetchPost"], fetchPost);
   const postData = data?.data;
+
   const formik = useFormik({
     initialValues: {
       comment: "",
@@ -85,7 +86,11 @@ function PostPage() {
                   : "Please sign in to comment"
               }
             />
-            <button type="submit" className="mt-4" disabled={!loggedIn}>
+            <button
+              type="submit"
+              className="mt-4"
+              disabled={!loggedIn || formik.values.comment.length === 0}
+            >
               Comment
             </button>
           </form>

@@ -130,8 +130,9 @@ export const login = async (
         userId: loadedUser._id.toString(),
       },
       process.env.JWT_SECRET!,
-      { expiresIn: "1h" }
+      { expiresIn: "24h" }
     );
+    
     const userData = {
       id: loadedUser._id,
       userName: loadedUser.userName,

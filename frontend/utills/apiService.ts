@@ -47,4 +47,9 @@ export const apiService = {
       return axiosInstance.get("/auth/logout");
     },
   },
+  patch: {
+    EDIT_POST(data: any) {
+      return axiosInstance.patch("/post/editpost", data);
+    },
+  },
 };

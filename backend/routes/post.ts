@@ -3,6 +3,7 @@ import { createComment } from "../controllers/comments";
 import {
   createPost,
   deletePost,
+  editPost,
   getAllPosts,
   getPost,
   likePost,
@@ -27,5 +28,7 @@ postRouter.post("/likepost", likePost);
 postRouter.post("/savepost", savePost);
 
 postRouter.post("/deletepost", deletePost);
+
+postRouter.patch("/editpost", editPost);
 
 export { postRouter };

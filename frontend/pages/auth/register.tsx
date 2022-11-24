@@ -6,7 +6,7 @@ import { apiService } from "../../utills/apiService";
 import AuthHeader from "../../components/auth-components/AuthHeader";
 import AuthFooter from "../../components/auth-components/AuthFooter";
 import AuthButton from "../../components/auth-components/AuthButton";
-import { ValidationSchema } from "../../utills/validation";
+import { authValidationSchema } from "../../utills/validation/auth";
 
 const register = () => {
   const formik: any = useFormik({
@@ -18,7 +18,7 @@ const register = () => {
       pass: "",
       confirm: "",
     },
-    validationSchema: ValidationSchema("register"),
+    validationSchema: authValidationSchema("register"),
     onSubmit: (values) => {
       registerUser();
     },

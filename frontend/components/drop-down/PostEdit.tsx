@@ -15,13 +15,20 @@ import { useContext } from "react";
 import { apiService } from "../../utills/apiService";
 import toast from "react-hot-toast";
 import { useState } from "react";
+import Router from "next/router";
 
 type PostEditProps = {
   postId: string;
   userPost: boolean;
   saves: string[];
+  setEditPost: React.Dispatch<React.SetStateAction<boolean>>;
 };
-export default function PostEdit({ postId, userPost, saves }: PostEditProps) {
+export default function PostEdit({
+  postId,
+  userPost,
+  saves,
+  setEditPost,
+}: PostEditProps) {
   const { state } = useContext(AuthContext);
   const { userId } = state;
   const [savedPost, setSavedPost] = useState(saves.includes(userId));
@@ -47,15 +54,24 @@ export default function PostEdit({ postId, userPost, saves }: PostEditProps) {
       });
   };
   const deletePostHandler = (id: string) => {
+    const notification = toast.loading("Deleting post...");
     const postId = { postId: id };
     apiService.post
       .DELETE_POST(postId)
       .then((res) => {
-        toast.success(res.data.message);
+        toast.success(res.data.message, {
+          id: notification,
+        });
+        Router.push("/");
       })
       .catch((error) => {
-        toast.error(error.response.data.error);
+        toast.error(error.response.data.error, {
+          id: notification,
+        });
       });
+  };
+  const editPostHandler = () => {
+    setEditPost(true);
   };
 
   return (
@@ -125,7 +141,11 @@ export default function PostEdit({ postId, userPost, saves }: PostEditProps) {
             >
               <BsTrash className="mr-5" /> Delete
             </MenuItem>
-            <MenuItem>
+            <MenuItem
+              onClick={() => {
+                editPostHandler();
+              }}
+            >
               <BsPencil className="mr-5" /> Edit
             </MenuItem>
           </div>

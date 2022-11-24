@@ -9,7 +9,7 @@ import AuthFooter from "../../components/auth-components/AuthFooter";
 import AuthButton from "../../components/auth-components/AuthButton";
 import { apiService } from "../../utills/apiService";
 import { AuthContext } from "../../context/AuthContext";
-import { ValidationSchema } from "../../utills/validation";
+import { authValidationSchema } from "../../utills/validation/auth";
 import axios from "axios";
 
 const SignIn = () => {
@@ -32,7 +32,7 @@ const SignIn = () => {
       email: "",
       pass: "",
     },
-    validationSchema: ValidationSchema("signin"),
+    validationSchema: authValidationSchema("signin"),
 
     onSubmit: (values) => {
       loginUser();

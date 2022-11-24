@@ -1,5 +1,10 @@
 wait for answer in stackoverflow then make the token verify to works and add private route to new password
 change all the TS any in the project
-add edit and report to the post
-disable comment hile body is empty
-delete post redirect to home page
+create a refresh token 
+
+add report to the post and add share option
+preview photo on click only
+add rerender query after delete and after upload and after new comment
+add validation to comment and post and title error 
+change the post creation to formik then react hook form
+

@@ -2,18 +2,15 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
 import toast from "react-hot-toast";
-import {
-  BiComment,
-  BiDotsHorizontalRounded,
-  BiLike,
-  BiShare,
-} from "react-icons/bi";
+import { BiComment, BiLike, BiShare } from "react-icons/bi";
 import ReactTimeago from "react-timeago";
 import { apiService } from "../utills/apiService";
 import ImageSwiper from "./post-components/ImageSwiper";
 import { useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import PostEdit from "./drop-down/PostEdit";
+import { useFormik } from "formik";
+import { postValidationSchema } from "../utills/validation/post";
 
 function Post({ post }: any) {
   const router = useRouter();
@@ -21,7 +18,8 @@ function Post({ post }: any) {
   const { loggedIn, userId } = state;
   const [postLiked, setPostLiked] = useState(post.likes.includes(userId));
   const [likesLength, setLikesLength] = useState(post.likes.length);
-  const fetchUserData = () => {};
+  const [editPost, setEditPost] = useState(false);
+
   const likePostHandler = (id: string) => {
     const postId = JSON.stringify({ postId: id });
     apiService.post
@@ -30,6 +28,35 @@ function Post({ post }: any) {
         res.data.like
           ? (setPostLiked(true), setLikesLength(res.data.likesLength))
           : (setPostLiked(false), setLikesLength(res.data.likesLength));
+      })
+      .catch((error) => {
+        toast.error(error.response.data.error);
+      });
+  };
+  
+  const formik = useFormik({
+    initialValues: {
+      title: post?.title,
+      body: post?.body,
+    },
+    validationSchema: postValidationSchema,
+    onSubmit: (values) => {
+      handleSubmit();
+    },
+  });
+
+  const handleSubmit = () => {
+    const editedPostData = {
+      title: formik.values.title,
+      body: formik.values.body,
+      postId: post._id,
+    };
+    console.log(editedPostData);
+
+    apiService.patch
+      .EDIT_POST(editedPostData)
+      .then((res) => {
+        toast.success(res.data.message);
       })
       .catch((error) => {
         toast.error(error.response.data.error);
@@ -61,6 +88,7 @@ function Post({ post }: any) {
             postId={post._id}
             userPost={post.postedBy._id === userId}
             saves={post.saves}
+            setEditPost={setEditPost}
           />
         ) : (
           ""
@@ -68,15 +96,63 @@ function Post({ post }: any) {
       </header>
     );
   };
+
   const Body = () => {
     return (
       <>
-        <div className=" font-semibold text-[#050505] text-2xl ">
-          <h1>{post?.title}</h1>
-        </div>
-        <div className="text-[#050505 ] font-[400]">
-          <p>{post?.body}</p>
-        </div>
+        {!editPost ? (
+          <div>
+            <div className=" font-semibold text-[#050505] text-2xl ">
+              <h1>{post?.title}</h1>
+            </div>
+            <div className="text-[#050505 ] font-[400]">
+              <p>{post?.body}</p>
+            </div>
+          </div>
+        ) : (
+          <form
+            onSubmit={(e) => {
+              formik.handleSubmit(e);
+            }}
+          >
+            <div className=" font-semibold text-[#050505] s ">
+              <input
+                id="title"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.title}
+                disabled={!loggedIn}
+                className="w-full flex-1 rounded-md bg-gray-50 p-2 pl-5 mb-2 outline-none"
+                type="text"
+                placeholder={"Title"}
+              />
+            </div>
+            <div className="text-[#050505 ] font-[400]">
+              <textarea
+                disabled={!loggedIn}
+                rows={4}
+                id="body"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.body}
+                placeholder={"Body"}
+                className="w-full flex-1 p-2 pl-5 mb-2 bg-gray-50 outline-none rounded-md resize-none"
+              />
+            </div>
+            <div className="flex justify-end items-center gap-2 font-semibold">
+              <button
+                type="reset"
+                onClick={() => {
+                  setEditPost(false);
+                }}
+              >
+                Cancel
+              </button>
+              <button type="submit">Save</button>
+            </div>
+          </form>
+        )}
+
         <div className="mt-4">
           <ImageSwiper arr={post?.images} />
         </div>

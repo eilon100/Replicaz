@@ -1,6 +1,4 @@
 import { NextResponse, NextRequest } from "next/server";
-import { jwtVerify } from "jose";
-import axios from "axios";
 
 const secret: any = process.env.JWT_SECRET!;
 
@@ -26,12 +24,8 @@ export default function middleware(req: NextRequest) {
     if (token === undefined) {
       return NextResponse.next();
     }
-    if (token)
-    axios.post('http://localhost:8000/')
-      try {
-        return NextResponse.redirect("http://localhost:3000/");
-      } catch (e) {
-        return NextResponse.next();
-      }
+    if (token) {
+      return NextResponse.redirect("http://localhost:3000/");
+    }
   }
 }

@@ -6,14 +6,14 @@ import { apiService } from "../../utills/apiService";
 import AuthHeader from "../../components/auth-components/AuthHeader";
 import AuthFooter from "../../components/auth-components/AuthFooter";
 import AuthButton from "../../components/auth-components/AuthButton";
-import { ValidationSchema } from "../../utills/validation";
+import { authValidationSchema } from "../../utills/validation/auth";
 
 function ForgetPassword() {
   const formik = useFormik({
     initialValues: {
       email: "",
     },
-    validationSchema: ValidationSchema("resetPassword"),
+    validationSchema: authValidationSchema("resetPassword"),
     onSubmit: (values) => {
       handleFormSubmit();
     },
