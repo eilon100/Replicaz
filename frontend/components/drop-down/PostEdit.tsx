@@ -73,6 +73,17 @@ export default function PostEdit({
   const editPostHandler = () => {
     setEditPost(true);
   };
+  const reportPostHandler = (id: string) => {
+    const postId = { postId: id };
+    apiService.post
+      .REPORT_POST(postId)
+      .then((res) => {
+        toast.success(res.data.message);
+      })
+      .catch((error) => {
+        toast.error(error.response.data.error);
+      });
+  };
 
   return (
     <React.Fragment>
@@ -153,7 +164,11 @@ export default function PostEdit({
           ""
         )}
 
-        <MenuItem>
+        <MenuItem
+          onClick={() => {
+            reportPostHandler(postId);
+          }}
+        >
           <BsFlag className="mr-5" /> Report
         </MenuItem>
       </Menu>

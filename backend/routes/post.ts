@@ -7,6 +7,7 @@ import {
   getAllPosts,
   getPost,
   likePost,
+  reportPost,
   savePost,
 } from "../controllers/post";
 import { isAuth } from "../middleware/isAuth";
@@ -30,5 +31,7 @@ postRouter.post("/savepost", savePost);
 postRouter.post("/deletepost", deletePost);
 
 postRouter.patch("/editpost", editPost);
+
+postRouter.post("/reportpost", reportPost);
 
 export { postRouter };

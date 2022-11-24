@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import mongoose from "mongoose";
 import Comment from "../modal/comment";
 import Post from "../modal/post";
+import Report from "../modal/report";
 import User from "../modal/user";
 import {
   imagesFolderDeletion,
@@ -223,7 +224,6 @@ export const deletePost: RequestHandler = async (req: any, res, next) => {
   }
 };
 
-//todo
 export const editPost: RequestHandler = async (req: any, res, next) => {
   const { postId, title, body } = req.body;
   try {
@@ -254,4 +254,38 @@ export const editPost: RequestHandler = async (req: any, res, next) => {
   }
 };
 
-export const reportPost: RequestHandler = async (req, res, next) => {};
+export const reportPost: RequestHandler = async (req: any, res, next) => {
+  const { postId } = req.body;
+
+  try {
+    const user = await User.findById(req.userData.userId);
+    if (!user) {
+      return res.status(404).json({ error: "Could not find the user" });
+    }
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: "Could not find the post" });
+    }
+    const reportedPost = await Report.findById(postId);
+    if (!reportedPost) {
+      const newReport = new Report({
+        _id: postId,
+        reportedBy: req.userData.userId,
+      });
+      await newReport.save();
+      res.status(201).json({ message: "Thank you for your report" });
+    }
+
+    if (reportedPost.reportedBy.includes(req.userData.userId)) {
+      res.status(201).json({ message: "Thank you for your report" });
+    } else {
+      reportedPost.reportedBy.push(req.userData.userId);
+      await reportedPost.save();
+      res.status(201).json({ message: "Thank you for your report" });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: "Error on '/post/reportpost': " + error });
+  }
+};

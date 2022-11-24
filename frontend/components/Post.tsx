@@ -33,7 +33,18 @@ function Post({ post }: any) {
         toast.error(error.response.data.error);
       });
   };
-  
+  const sharePostHandler = async () => {
+    const url = `http://localhost:3000/post/${post._id}`;
+    await navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        toast.success("Copied to clipboard");
+      })
+      .catch(() => {
+        toast.error("failed to copy");
+      });
+  };
+
   const formik = useFormik({
     initialValues: {
       title: post?.title,
@@ -184,7 +195,7 @@ function Post({ post }: any) {
           <BiComment className="mt-[2px]" />
           <p>Comment</p>
         </div>
-        <div className="postButtons">
+        <div className="postButtons" onClick={() => sharePostHandler()}>
           <BiShare />
           <p>Share</p>
         </div>

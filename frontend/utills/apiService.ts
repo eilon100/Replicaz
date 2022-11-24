@@ -32,6 +32,9 @@ export const apiService = {
     DELETE_POST(data: any) {
       return axiosInstance.post("/post/deletepost", data);
     },
+    REPORT_POST(data: any) {
+      return axiosInstance.post("/post/reportpost", data);
+    },
   },
   get: {
     GET_ALLPOSTS(params: number) {

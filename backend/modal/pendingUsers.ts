@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema(
+const pendingUserSchema = new Schema(
   {
     userName: {
       type: String,
@@ -48,5 +48,5 @@ const userSchema = new Schema(
 );
 
 const pendingUsers =
-  mongoose.models.pendingUsers || mongoose.model("PendingUsers", userSchema);
+  mongoose.models.pendingUsers || mongoose.model("PendingUsers", pendingUserSchema);
 export default pendingUsers;
