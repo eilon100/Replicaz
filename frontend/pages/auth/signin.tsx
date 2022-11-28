@@ -1,16 +1,15 @@
 import TextField from "@mui/material/TextField";
 import { useContext, useEffect } from "react";
 import { useFormik } from "formik";
-import Router, { SingletonRouter } from "next/router";
+import Router from "next/router";
 import toast from "react-hot-toast";
-import { getCookie, deleteCookie, setCookie } from "cookies-next";
+import { getCookie, deleteCookie } from "cookies-next";
 import AuthHeader from "../../components/auth-components/AuthHeader";
 import AuthFooter from "../../components/auth-components/AuthFooter";
 import AuthButton from "../../components/auth-components/AuthButton";
 import { apiService } from "../../utills/apiService";
 import { AuthContext } from "../../context/AuthContext";
-import { authValidationSchema } from "../../utills/validation/auth";
-import axios from "axios";
+import { authValidationSchema } from "../../validation/auth";
 
 const SignIn = () => {
   useEffect(() => {

@@ -27,6 +27,7 @@ export const getAllPosts: RequestHandler = (req, res, next) => {
       return res.status(500).json({ message: "Could not fetch the posts" });
     });
 };
+
 export const getPost: RequestHandler = async (req, res, next) => {
   const postId = req.params.id;
   try {
@@ -55,6 +56,7 @@ export const getPost: RequestHandler = async (req, res, next) => {
     return res.status(500).json({ message: "Fetching post failed " });
   }
 };
+
 export const createPost: RequestHandler = async (req: any, res, next) => {
   const mongoosePostId = new mongoose.Types.ObjectId();
   // get and validate body variables
@@ -97,6 +99,7 @@ export const createPost: RequestHandler = async (req: any, res, next) => {
       .json({ error: "Error on '/post/createPost': " + err });
   }
 };
+
 export const likePost: RequestHandler = async (req: any, res, next) => {
   const { postId } = req.body;
   try {
@@ -266,7 +269,9 @@ export const reportPost: RequestHandler = async (req: any, res, next) => {
     if (!post) {
       return res.status(404).json({ error: "Could not find the post" });
     }
+
     const reportedPost = await Report.findById(postId);
+
     if (!reportedPost) {
       const newReport = new Report({
         _id: postId,
@@ -274,14 +279,14 @@ export const reportPost: RequestHandler = async (req: any, res, next) => {
       });
       await newReport.save();
       res.status(201).json({ message: "Thank you for your report" });
-    }
-
-    if (reportedPost.reportedBy.includes(req.userData.userId)) {
-      res.status(201).json({ message: "Thank you for your report" });
     } else {
-      reportedPost.reportedBy.push(req.userData.userId);
-      await reportedPost.save();
-      res.status(201).json({ message: "Thank you for your report" });
+      if (reportedPost.reportedBy.includes(req.userData.userId)) {
+        res.status(201).json({ message: "Thank you for your report" });
+      } else {
+        reportedPost.reportedBy.push(req.userData.userId);
+        await reportedPost.save();
+        res.status(201).json({ message: "Thank you for your report" });
+      }
     }
   } catch (error) {
     return res

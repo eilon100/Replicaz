@@ -4,8 +4,10 @@ import { PlusIcon, UploadIcon } from "@heroicons/react/solid";
 import toast from "react-hot-toast";
 
 function UploadPhotos(props: any) {
+
   const [images, setImages] = useState<any[]>([]);
   const [imageURL, setImageURL] = useState<string[]>([]);
+
   useEffect(() => {
     if (images.length > props.imageLength) {
       toast.error("Please upload 5 photos only");
@@ -44,6 +46,7 @@ function UploadPhotos(props: any) {
 
     setImages(files);
   };
+
   const onImageRemove = (imageSrc: string) => {
     let imagesArrClone: File[] = [...images];
     let index: number = imageURL.indexOf(imageSrc);
@@ -52,6 +55,7 @@ function UploadPhotos(props: any) {
       setImages(imagesArrClone);
     }
   };
+
   const onImageAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
     let imagesArrClone: File[] = [...images];
     const newUploadedFiles = Array.from(e.target.files as ArrayLike<File>);
@@ -63,6 +67,7 @@ function UploadPhotos(props: any) {
       toast.error("Please upload 5 photos only");
     }
   };
+
   const uploadImageZone = () => {
     return (
       imageURL.length === 0 && (
@@ -86,6 +91,7 @@ function UploadPhotos(props: any) {
       )
     );
   };
+
   const previewImage = () => {
     return imageURL.map((imageSrc, index) => (
       <div key={index} className="relative flex-shrink-0">
@@ -102,6 +108,7 @@ function UploadPhotos(props: any) {
       </div>
     ));
   };
+  
   const addPhotos = () => {
     return (
       imageURL.length > 0 &&

@@ -8,9 +8,11 @@ import { apiService } from "../utills/apiService";
 import ImageSwiper from "./post-components/ImageSwiper";
 import { useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-import PostEdit from "./drop-down/PostEdit";
+
 import { useFormik } from "formik";
-import { postValidationSchema } from "../utills/validation/post";
+import { postValidationSchema } from "../validation/post";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import PostEdit from "./post-components/PostEdit";
 
 function Post({ post }: any) {
   const router = useRouter();
@@ -31,17 +33,6 @@ function Post({ post }: any) {
       })
       .catch((error) => {
         toast.error(error.response.data.error);
-      });
-  };
-  const sharePostHandler = async () => {
-    const url = `http://localhost:3000/post/${post._id}`;
-    await navigator.clipboard
-      .writeText(url)
-      .then(() => {
-        toast.success("Copied to clipboard");
-      })
-      .catch(() => {
-        toast.error("failed to copy");
       });
   };
 
@@ -195,10 +186,15 @@ function Post({ post }: any) {
           <BiComment className="mt-[2px]" />
           <p>Comment</p>
         </div>
-        <div className="postButtons" onClick={() => sharePostHandler()}>
-          <BiShare />
-          <p>Share</p>
-        </div>
+        <CopyToClipboard
+          text={window.location as any}
+          onCopy={() => toast.success("Copied to clipboard")}
+        >
+          <div className="postButtons">
+            <BiShare />
+            <p>Share</p>
+          </div>
+        </CopyToClipboard>
       </footer>
     );
   };

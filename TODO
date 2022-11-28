@@ -1,9 +1,9 @@
 wait for answer in stackoverflow then make the token verify to works and add private route to new password
 change all the TS any in the project
-create a refresh token 
+create a refresh token
 
 preview photo on click only
 add rerender query after delete and after upload and after new comment
-add validation to comment and post and title error 
-change the post creation to formik then react hook form
+add validation to comment and post and title error
 
+change tdl direction for hebrew in the post and in the create post

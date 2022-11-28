@@ -3,37 +3,56 @@ import React, { useContext, useState } from "react";
 import Image from "next/image";
 import { apiService } from "../utills/apiService";
 import { useForm } from "react-hook-form";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
 import UploadPhotos from "./postbox-components/UploadPhotos";
 import toast from "react-hot-toast";
 import { AuthContext } from "../context/AuthContext";
+import { useFormik } from "formik";
+import Textarea from "@mui/joy/Textarea";
 
 type FormData = {
   postTitle: string;
   postBody: string;
   community: string;
 };
+
 const uploadImageLength = 5;
 
 function PostBox() {
   const { state, dispatch } = useContext(AuthContext);
-  const { loggedIn,  userName,  userImage } = state;
+  const { loggedIn, userName, userImage } = state;
   const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
   const [community, setCommunity] = useState("");
   const [images, setImages] = useState<File[]>([]);
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = useForm<FormData>();
+  const formik: any = useFormik({
+    initialValues: {
+      title: "",
+      body: "",
+      community: "",
+    },
 
-  const onSubmit = handleSubmit((formData) => {
+    onSubmit: (values) => {
+      onSubmit();
+    },
+  });
+
+  const isPostActive = formik.values.title.length > 0;
+
+  const onSubmit = () => {
     const notification = toast.loading("uploading post...");
     const data = {
-      ...formData,
+      postTitle: formik.values.title,
+      postBody: formik.values.body,
+      community,
       postImage: images,
     };
+    console.log(data);
 
     apiService.post
       .CREATE_POST(data)
@@ -47,7 +66,7 @@ function PostBox() {
           id: notification,
         })
       );
-  });
+  };
 
   //components
   const postBox = () => {
@@ -61,19 +80,23 @@ function PostBox() {
             layout="fill"
           />
         </div>
-        <input
-          {...register("postTitle", { required: true })}
-          autoComplete="off"
-          disabled={!loggedIn}
-          className="flex-1 rounded-md bg-gray-50 p-2 pl-5 outline-none min-w-[80px]"
-          type="text"
+        <Textarea
           placeholder={loggedIn ? "Create a post" : "Sign in to post"}
+          required
+          name="title"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.title}
+          error={formik.touched.title && Boolean(formik.errors.title)}
+          variant="soft"
+          disabled={!loggedIn}
+          className=" flex-1 rounded-md bg-gray-50 p-2 pl-5 outline-none min-w-[80px] resize-none"
         />
         <PhotographIcon
-          onClick={() => !!watch("postTitle") && setImageBoxOpen(!imageBoxOpen)}
-          className={`h-7 text-gray-300 ${
-            !!watch("postTitle") && "cursor-pointer"
-          } ${imageBoxOpen && "text-blue-300 "}`}
+          onClick={() => isPostActive && setImageBoxOpen(!imageBoxOpen)}
+          className={`h-7 text-gray-300 ${isPostActive && "cursor-pointer"} ${
+            imageBoxOpen && "text-blue-300 "
+          }`}
         />
       </div>
     );
@@ -81,11 +104,24 @@ function PostBox() {
   const textArea = () => {
     return (
       <div className="flex items-center">
-        <textarea
-          rows={4}
-          className=" flex-1 m-2 p-2 bg-gray-50 outline-none rounded-md resize-none"
-          {...register("postBody")}
+        <Textarea
+          minRows={4}
+          maxRows={4}
+          name="body"
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.body}
+          error={formik.touched.body && Boolean(formik.errors.body)}
           placeholder="Text (optional)"
+          required
+          variant="soft"
+          disabled={!loggedIn}
+          className=" flex-1 m-2 p-2 bg-gray-50 outline-none rounded-md resize-none"
+          endDecorator={
+            <Typography sx={{ ml: "auto" }} className="text-xs">
+              {300 - formik.values.body.length} character(s)
+            </Typography>
+          }
         />
       </div>
     );
@@ -99,7 +135,6 @@ function PostBox() {
           id="demo-simple-select"
           value={community}
           label="Community"
-          inputProps={register("community", { required: true })}
           onChange={(event) => {
             setCommunity(event.target.value);
           }}
@@ -114,23 +149,21 @@ function PostBox() {
   const createPostButton = () => {
     return (
       <div className="flex justify-center mt-2  xs:justify-end">
-        {!!watch("postTitle") && (
-          <button
-            className=" w-36 rounded-full bg-gray-300 p-2 text-white "
-            type="submit"
-          >
-            Create Post
-          </button>
-        )}
+        <button
+          className=" w-36 rounded-full bg-gray-300 p-2 text-white "
+          type="submit"
+        >
+          Create Post
+        </button>
       </div>
     );
   };
 
-  const isPostActive = !!watch("postTitle");
-
   return (
     <form
-      onSubmit={onSubmit}
+      onSubmit={(e) => {
+        formik.handleSubmit(e);
+      }}
       className="sticky top-[106px] z-10 bg-white px-3 py-2 rounded-lg border border-gray-300"
     >
       {postBox()}

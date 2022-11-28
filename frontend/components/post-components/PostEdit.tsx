@@ -23,26 +23,30 @@ type PostEditProps = {
   saves: string[];
   setEditPost: React.Dispatch<React.SetStateAction<boolean>>;
 };
+
 export default function PostEdit({
   postId,
   userPost,
   saves,
   setEditPost,
 }: PostEditProps) {
+
   const { state } = useContext(AuthContext);
   const { userId } = state;
   const [savedPost, setSavedPost] = useState(saves.includes(userId));
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
 
+  const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   const savePostHandler = (id: string) => {
     const postId = { postId: id };
+
     apiService.post
       .SAVE_POST(postId)
       .then((res) => {
@@ -53,9 +57,11 @@ export default function PostEdit({
         toast.error(error.response.data.error);
       });
   };
+
   const deletePostHandler = (id: string) => {
     const notification = toast.loading("Deleting post...");
     const postId = { postId: id };
+
     apiService.post
       .DELETE_POST(postId)
       .then((res) => {
@@ -70,11 +76,14 @@ export default function PostEdit({
         });
       });
   };
+
   const editPostHandler = () => {
     setEditPost(true);
   };
+
   const reportPostHandler = (id: string) => {
     const postId = { postId: id };
+
     apiService.post
       .REPORT_POST(postId)
       .then((res) => {
@@ -163,7 +172,6 @@ export default function PostEdit({
         ) : (
           ""
         )}
-
         <MenuItem
           onClick={() => {
             reportPostHandler(postId);

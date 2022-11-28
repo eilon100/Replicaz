@@ -4,7 +4,7 @@ import sgMail from "@sendgrid/mail";
 import jwt from "jsonwebtoken";
 import { compare } from "bcrypt";
 import bcrypt from "bcrypt";
-import { decodedToken } from "../utills/interfaces";
+import { decodedToken } from "../interface/decodedToken";
 import { resetPasswordEmail } from "../utills/SG-mails";
 import { RequestHandler } from "express";
 

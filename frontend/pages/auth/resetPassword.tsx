@@ -6,9 +6,10 @@ import { apiService } from "../../utills/apiService";
 import AuthHeader from "../../components/auth-components/AuthHeader";
 import AuthFooter from "../../components/auth-components/AuthFooter";
 import AuthButton from "../../components/auth-components/AuthButton";
-import { authValidationSchema } from "../../utills/validation/auth";
+import { authValidationSchema } from "../../validation/auth";
 
 function ForgetPassword() {
+  
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -18,6 +19,7 @@ function ForgetPassword() {
       handleFormSubmit();
     },
   });
+
   const handleFormSubmit = () => {
     const data = { email: formik.values.email };
 

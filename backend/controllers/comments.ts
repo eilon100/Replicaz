@@ -43,11 +43,6 @@ export const createComment = async (
 };
 //todo
 
-export const commentToComment = async (
-  req: any,
-  res: Response,
-  next: NextFunction
-) => {};
 export const likeComment = async (
   req: any,
   res: Response,

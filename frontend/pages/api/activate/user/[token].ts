@@ -1,4 +1,3 @@
-import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 import { setCookie } from "cookies-next";
 import { apiService } from "../../../../utills/apiService";
