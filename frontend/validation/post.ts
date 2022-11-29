@@ -7,7 +7,7 @@ export const postValidationSchema = (page: string) => {
       .required("Title is required")
       .min(3, "Title must be 3 or more characters")
       .max(15, "Title must be 15 characters long"),
-    body: yup.string(),
+    body: yup.string().max(300, "Title must be 300 characters long"),
   };
 
   return yup.object({

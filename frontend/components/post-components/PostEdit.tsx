@@ -15,7 +15,8 @@ import { useContext } from "react";
 import { apiService } from "../../utills/apiService";
 import toast from "react-hot-toast";
 import { useState } from "react";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
+import { useQueryClient } from "react-query";
 
 type PostEditProps = {
   postId: string;
@@ -30,13 +31,14 @@ export default function PostEdit({
   saves,
   setEditPost,
 }: PostEditProps) {
-
   const { state } = useContext(AuthContext);
   const { userId } = state;
+
   const [savedPost, setSavedPost] = useState(saves.includes(userId));
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
+  const queryClient = useQueryClient();
   const open = Boolean(anchorEl);
+  const router = useRouter();
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -68,6 +70,7 @@ export default function PostEdit({
         toast.success(res.data.message, {
           id: notification,
         });
+        queryClient.fetchQuery("posts");
         Router.push("/");
       })
       .catch((error) => {
@@ -77,7 +80,8 @@ export default function PostEdit({
       });
   };
 
-  const editPostHandler = () => {
+  const editPostHandler = async () => {
+    await router.push(`/post/${postId}`);
     setEditPost(true);
   };
 

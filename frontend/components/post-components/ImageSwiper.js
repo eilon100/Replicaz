@@ -6,7 +6,6 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import Modal from "@mui/material/Modal";
-import { Fade } from "@mui/material";
 
 const ImageSwiper = (images) => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
@@ -15,20 +14,18 @@ const ImageSwiper = (images) => {
   const handleClose = () => setImageUrl(null);
   return (
     <>
-      {open && (
+      {/* {open && (
         <Modal
           open={!!imageUrl}
           onClose={handleClose}
           className="flex justify-center items-center"
         >
-          <Fade in={imageUrl}>
-            <img
-              src={imageUrl}
-              className={` px-3 w-[100vw] max-h-[90vh] lg:w-auto lg:h-[90vh] lg:max-w-[80vw] object-contain outline-none  `}
-            />
-          </Fade>
+          <img
+            src={imageUrl}
+            className={` px-3 w-[100vw] max-h-[90vh] lg:w-auto lg:h-[90vh] lg:max-w-[80vw] object-contain outline-none  `}
+          />
         </Modal>
-      )}
+      )} */}
 
       <Swiper
         style={{
@@ -46,7 +43,9 @@ const ImageSwiper = (images) => {
         {images.arr.map((url, i) => {
           return (
             <SwiperSlide key={i}>
-              <img src={url} onClick={() => handleOpen(url)} />
+              <a href={url} target="new">
+                <img src={url} />
+              </a>
             </SwiperSlide>
           );
         })}

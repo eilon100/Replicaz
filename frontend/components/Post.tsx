@@ -8,11 +8,12 @@ import { apiService } from "../utills/apiService";
 import ImageSwiper from "./post-components/ImageSwiper";
 import { useState } from "react";
 import { AuthContext } from "../context/AuthContext";
-
 import { useFormik } from "formik";
 import { postValidationSchema } from "../validation/post";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import PostEdit from "./post-components/PostEdit";
+import { Textarea } from "@mui/joy";
+import { Typography } from "@mui/material";
 
 function Post({ post }: any) {
   const router = useRouter();
@@ -21,6 +22,8 @@ function Post({ post }: any) {
   const [postLiked, setPostLiked] = useState(post.likes.includes(userId));
   const [likesLength, setLikesLength] = useState(post.likes.length);
   const [editPost, setEditPost] = useState(false);
+  const [title, setTitle] = useState(post?.title);
+  const [body, setBody] = useState(post?.body);
 
   const likePostHandler = (id: string) => {
     const postId = JSON.stringify({ postId: id });
@@ -53,12 +56,14 @@ function Post({ post }: any) {
       body: formik.values.body,
       postId: post._id,
     };
-    console.log(editedPostData);
 
     apiService.patch
       .EDIT_POST(editedPostData)
       .then((res) => {
         toast.success(res.data.message);
+        setEditPost(false);
+        setTitle(editedPostData.title);
+        setBody(editedPostData.body);
       })
       .catch((error) => {
         toast.error(error.response.data.error);
@@ -98,17 +103,16 @@ function Post({ post }: any) {
       </header>
     );
   };
-
   const Body = () => {
     return (
       <>
         {!editPost ? (
           <div>
-            <div className=" font-semibold text-[#050505] text-2xl ">
-              <h1>{post?.title}</h1>
+            <div className=" font-semibold text-[#050505] text-2xl " dir="auto">
+              <h1>{title}</h1>
             </div>
-            <div className="text-[#050505 ] font-[400]">
-              <p>{post?.body}</p>
+            <div className="text-[#050505 ] font-[400]" dir="auto">
+              <p>{body}</p>
             </div>
           </div>
         ) : (
@@ -120,6 +124,7 @@ function Post({ post }: any) {
             <div className=" font-semibold text-[#050505] s ">
               <input
                 id="title"
+                dir="auto"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.title}
@@ -130,15 +135,29 @@ function Post({ post }: any) {
               />
             </div>
             <div className="text-[#050505 ] font-[400]">
-              <textarea
-                disabled={!loggedIn}
-                rows={4}
-                id="body"
+              <Textarea
+                minRows={4}
+                maxRows={4}
+                componentsProps={{
+                  textarea: {
+                    maxLength: 300,
+                    dir: "auto",
+                  },
+                }}
+                name="body"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.body}
-                placeholder={"Body"}
-                className="w-full flex-1 p-2 pl-5 mb-2 bg-gray-50 outline-none rounded-md resize-none"
+                error={formik.touched.body && Boolean(formik.errors.body)}
+                placeholder="Text (optional)"
+                variant="soft"
+                disabled={!loggedIn}
+                className=" flex-1 m-2 p-2 bg-gray-50 !outline-none !border-none rounded-md resize-none "
+                endDecorator={
+                  <Typography className="text-xs ml-auto text-gray-500">
+                    {300 - formik.values.body.length} character(s)
+                  </Typography>
+                }
               />
             </div>
             <div className="flex justify-end items-center gap-2 font-semibold">

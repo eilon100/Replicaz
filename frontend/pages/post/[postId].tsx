@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React, { useContext } from "react";
 import toast from "react-hot-toast";
 import { BiLike } from "react-icons/bi";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import ReactTimeago from "react-timeago";
 import Post from "../../components/Post";
 import { AuthContext } from "../../context/AuthContext";
@@ -22,12 +22,13 @@ function PostPage() {
   const { state, dispatch } = useContext(AuthContext);
   const { loggedIn, userName, userImage } = state;
   const { postId } = router.query;
+  const queryClient = useQueryClient();
 
   const fetchPost = () => {
     const res = apiService.get.GET_POST_BY_ID(postId as string);
     return res;
   };
-  
+
   const { data, isLoading, error } = useQuery(["fetchPost"], fetchPost);
   const postData = data?.data;
 
@@ -47,7 +48,10 @@ function PostPage() {
     };
     apiService.post
       .CREATE_COMMENT(commentData)
-      .then(() => toast.success("Your comment has been added"))
+      .then(() => {
+        toast.success("Your comment has been added");
+        queryClient.fetchQuery("fetchPost");
+      })
       .catch((error) => toast.error(error.response.data.error));
   };
 

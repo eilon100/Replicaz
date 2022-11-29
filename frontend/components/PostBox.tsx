@@ -2,7 +2,7 @@ import { PhotographIcon } from "@heroicons/react/outline";
 import React, { useContext, useState } from "react";
 import Image from "next/image";
 import { apiService } from "../utills/apiService";
-import { useForm } from "react-hook-form";
+
 import {
   FormControl,
   InputLabel,
@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import { AuthContext } from "../context/AuthContext";
 import { useFormik } from "formik";
 import Textarea from "@mui/joy/Textarea";
+import { useQueryClient } from "react-query";
 
 type FormData = {
   postTitle: string;
@@ -30,6 +31,8 @@ function PostBox() {
   const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
   const [community, setCommunity] = useState("");
   const [images, setImages] = useState<File[]>([]);
+  const queryClient = useQueryClient();
+
   const formik: any = useFormik({
     initialValues: {
       title: "",
@@ -52,15 +55,15 @@ function PostBox() {
       community,
       postImage: images,
     };
-    console.log(data);
 
     apiService.post
       .CREATE_POST(data)
-      .then(() =>
+      .then(async () => {
         toast.success("post has been created", {
           id: notification,
-        })
-      )
+        });
+        queryClient.fetchQuery("posts");
+      })
       .catch((error) =>
         toast.error(error.response.data.error, {
           id: notification,
@@ -83,6 +86,12 @@ function PostBox() {
         <Textarea
           placeholder={loggedIn ? "Create a post" : "Sign in to post"}
           required
+          componentsProps={{
+            textarea: {
+              maxLength: 300,
+              dir: "auto",
+            },
+          }}
           name="title"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
@@ -107,18 +116,23 @@ function PostBox() {
         <Textarea
           minRows={4}
           maxRows={4}
+          componentsProps={{
+            textarea: {
+              maxLength: 300,
+              dir: "auto",
+            },
+          }}
           name="body"
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
           value={formik.values.body}
           error={formik.touched.body && Boolean(formik.errors.body)}
           placeholder="Text (optional)"
-          required
           variant="soft"
           disabled={!loggedIn}
-          className=" flex-1 m-2 p-2 bg-gray-50 outline-none rounded-md resize-none"
+          className=" flex-1 m-2 p-2 bg-gray-50 !outline-none !border-none rounded-md resize-none "
           endDecorator={
-            <Typography sx={{ ml: "auto" }} className="text-xs">
+            <Typography className="text-xs ml-auto text-gray-500">
               {300 - formik.values.body.length} character(s)
             </Typography>
           }
@@ -133,6 +147,7 @@ function PostBox() {
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
+          required
           value={community}
           label="Community"
           onChange={(event) => {

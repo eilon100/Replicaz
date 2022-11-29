@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { useInfiniteQuery } from "react-query";
 import { apiService } from "../utills/apiService";
