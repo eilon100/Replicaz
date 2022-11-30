@@ -9,6 +9,7 @@ function Feed() {
     const res = await apiService.get.GET_ALLPOSTS(pageParam);
     return res;
   };
+
   const {
     data,
     error,
@@ -22,7 +23,7 @@ function Feed() {
       if (!pages[pages.length - 1].data[0]) {
         return undefined;
       } else {
-        return pages.length + 1;
+        return pages.length;
       }
     },
   });
@@ -53,7 +54,7 @@ function Feed() {
       {data?.pages.map((group, i) => (
         <React.Fragment key={i}>
           {group.data.map((post: any, i: number) => (
-            <Post post={post} key={i} />
+            <Post post={post} key={post._id} />
           ))}
         </React.Fragment>
       ))}

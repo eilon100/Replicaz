@@ -23,7 +23,7 @@ function UploadPhotos(props: any) {
     );
 
     const imagesResultArr = images.reduce(
-      (newImageResult: any[], image: File) => {
+      (newImageResult: (string | ArrayBuffer | null)[], image: File) => {
         const reader = new FileReader();
         reader.readAsDataURL(image);
         reader.onloadend = () => {

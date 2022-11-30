@@ -47,8 +47,12 @@ const SignIn = () => {
     apiService.post
       .LOGIN_USER(data)
       .then((res) => {
-        const cookie: any = getCookie("userData");
-        const userData = JSON.parse(cookie);
+        const cookie = getCookie("userData");
+        if (!cookie) {
+          toast.error("Error fetching userData");
+          return;
+        }
+        const userData = JSON.parse(cookie as string);
         dispatch({ type: "LOGIN", payload: userData });
         toast.success("Login successfully");
         Router.push("/");

@@ -4,7 +4,7 @@ import sgMail from "@sendgrid/mail";
 import jwt from "jsonwebtoken";
 import { compare } from "bcrypt";
 import bcrypt from "bcrypt";
-import { decodedToken } from "../interface/decodedToken";
+import { decodedToken } from "../types/decodedToken";
 import { resetPasswordEmail } from "../utills/SG-mails";
 import { RequestHandler } from "express";
 
@@ -80,8 +80,7 @@ export const newPassword: RequestHandler = async (req, res, next) => {
       .json({ error: "Reset password times out please try again" });
   }
 };
-export const getUserData: RequestHandler = async (req: any, res, next) => {
-  const userId = req.userData.userId;
+export const getUserData: RequestHandler = async (req: Request, res, next) => {
   try {
     const user = await User.findById(req.userData.userId);
     if (!user) {

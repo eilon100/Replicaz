@@ -1,5 +1,6 @@
 import { createContext, useEffect, useReducer } from "react";
 import { getCookie } from "cookies-next";
+import toast from "react-hot-toast";
 
 interface AuthProps {
   children: React.ReactNode;
@@ -35,8 +36,12 @@ export const authReducer = (state: any, action: any) => {
 export const AuthContextProvider = ({ children }: AuthProps) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
   useEffect(() => {
-    const cookie: any = getCookie("userData");
-    const user = cookie ? JSON.parse(cookie) : undefined;
+    const cookie = getCookie("userData");
+    if (!cookie) {
+      toast.error("Error fetching userData");
+      return;
+    }
+    const user = cookie ? JSON.parse(cookie as string) : null;
 
     if (user) {
       dispatch({ type: "LOGIN", payload: user });

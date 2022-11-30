@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useContext } from "react";
+import React, { useContext, FC } from "react";
 import toast from "react-hot-toast";
 import { BiComment, BiLike, BiShare } from "react-icons/bi";
 import ReactTimeago from "react-timeago";
@@ -14,16 +14,22 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import PostEdit from "./post-components/PostEdit";
 import { Textarea } from "@mui/joy";
 import { Typography } from "@mui/material";
+import { useQueryClient } from "react-query";
+import Link from "next/link";
 
-function Post({ post }: any) {
+interface PostProps {
+  post: any;
+  page?: string;
+}
+
+const Post: FC<PostProps> = ({ post, page }) => {
   const router = useRouter();
   const { state } = useContext(AuthContext);
   const { loggedIn, userId } = state;
   const [postLiked, setPostLiked] = useState(post.likes.includes(userId));
   const [likesLength, setLikesLength] = useState(post.likes.length);
   const [editPost, setEditPost] = useState(false);
-  const [title, setTitle] = useState(post?.title);
-  const [body, setBody] = useState(post?.body);
+  const queryClient = useQueryClient();
 
   const likePostHandler = (id: string) => {
     const postId = JSON.stringify({ postId: id });
@@ -62,8 +68,7 @@ function Post({ post }: any) {
       .then((res) => {
         toast.success(res.data.message);
         setEditPost(false);
-        setTitle(editedPostData.title);
-        setBody(editedPostData.body);
+        queryClient.refetchQueries(page === "post" ? "fetchPost" : "posts");
       })
       .catch((error) => {
         toast.error(error.response.data.error);
@@ -109,10 +114,10 @@ function Post({ post }: any) {
         {!editPost ? (
           <div>
             <div className=" font-semibold text-[#050505] text-2xl " dir="auto">
-              <h1>{title}</h1>
+              <h1>{post?.title}</h1>
             </div>
             <div className="text-[#050505 ] font-[400]" dir="auto">
-              <p>{body}</p>
+              <p>{post?.body}</p>
             </div>
           </div>
         ) : (
@@ -198,15 +203,16 @@ function Post({ post }: any) {
           <BiLike />
           <p>Like</p>
         </div>
-        <div
-          className="postButtons"
-          onClick={() => router.push(`/post/${post._id}`)}
-        >
-          <BiComment className="mt-[2px]" />
-          <p>Comment</p>
-        </div>
+
+        <Link href={`/post/${post._id}`}>
+          <div className="postButtons">
+            <BiComment className="mt-[2px]" />
+            <p>Comment</p>
+          </div>
+        </Link>
+
         <CopyToClipboard
-          text={window.location as any}
+          text={`${window.location}/post/${post._id}`}
           onCopy={() => toast.success("Copied to clipboard")}
         >
           <div className="postButtons">
@@ -225,6 +231,6 @@ function Post({ post }: any) {
       {Footer()}
     </div>
   );
-}
+};
 
 export default Post;

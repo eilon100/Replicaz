@@ -1,14 +1,10 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import mongoose from "mongoose";
 import Comment from "../modal/comment";
 import Post from "../modal/post";
 import User from "../modal/user";
 
-export const createComment = async (
-  req: any,
-  res: Response,
-  next: NextFunction
-) => {
+export const createComment: RequestHandler = async (req, res, next) => {
   const { comment, postId } = req.body;
   const mongooseCommentId = new mongoose.Types.ObjectId();
 
@@ -42,14 +38,5 @@ export const createComment = async (
   }
 };
 //todo
-
-export const likeComment = async (
-  req: any,
-  res: Response,
-  next: NextFunction
-) => {};
-export const deleteComment = async (
-  req: any,
-  res: Response,
-  next: NextFunction
-) => {};
+export const likeComment: RequestHandler = async (req, res, next) => {};
+export const deleteComment: RequestHandler = async (req, res, next) => {};

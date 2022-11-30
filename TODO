@@ -3,6 +3,4 @@ change all the TS any in the project
 create a refresh token
 
 add validation to comment and post and title error
-
-pressing to fast on submit post errors
-edit post only on post page then re render
+fix edit in single post

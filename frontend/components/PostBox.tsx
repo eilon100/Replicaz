@@ -30,10 +30,11 @@ function PostBox() {
   const { loggedIn, userName, userImage } = state;
   const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
   const [community, setCommunity] = useState("");
+  const [disableButton, setDisableButton] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const queryClient = useQueryClient();
 
-  const formik: any = useFormik({
+  const formik = useFormik({
     initialValues: {
       title: "",
       body: "",
@@ -49,6 +50,7 @@ function PostBox() {
 
   const onSubmit = () => {
     const notification = toast.loading("uploading post...");
+    setDisableButton(true);
     const data = {
       postTitle: formik.values.title,
       postBody: formik.values.body,
@@ -62,13 +64,17 @@ function PostBox() {
         toast.success("post has been created", {
           id: notification,
         });
-        queryClient.fetchQuery("posts");
+        queryClient.invalidateQueries("posts");
+        formik.resetForm();
+        setImageBoxOpen(false);
+        setDisableButton(false);
       })
-      .catch((error) =>
+      .catch((error) => {
         toast.error(error.response.data.error, {
           id: notification,
-        })
-      );
+        });
+        setDisableButton(false);
+      });
   };
 
   //components
@@ -165,6 +171,7 @@ function PostBox() {
     return (
       <div className="flex justify-center mt-2  xs:justify-end">
         <button
+          disabled={disableButton}
           className=" w-36 rounded-full bg-gray-300 p-2 text-white "
           type="submit"
         >

@@ -8,7 +8,7 @@ import { useQuery, useQueryClient } from "react-query";
 import ReactTimeago from "react-timeago";
 import Post from "../../components/Post";
 import { AuthContext } from "../../context/AuthContext";
-import { comment } from "../../interface/comment";
+import { comment } from "../../types/comment";
 import { apiService } from "../../utills/apiService";
 
 export async function getServerSideProps() {
@@ -129,7 +129,7 @@ function PostPage() {
   if (data) {
     return (
       <div className="my-6 px-3 max-w-4xl mx-auto">
-        <Post post={postData} />
+        <Post post={postData} page="post" />
         <div
           className="-mt-1 rounded-b-md bg-white px-6 py-5 text-xs font-semibold 
           "

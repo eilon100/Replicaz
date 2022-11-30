@@ -2,7 +2,7 @@ import { axiosInstance } from "./axiosInstance";
 
 export const apiService = {
   post: {
-    REGISTER_USER(data: string) {
+    REGISTER_USER(data: any) {
       return axiosInstance.post("/auth/signup", data);
     },
     ACTIVATE_USER(data: any) {

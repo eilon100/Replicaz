@@ -11,8 +11,7 @@ import {
 
 export const getAllPosts: RequestHandler = (req, res, next) => {
   const page: any = req.query.p || 0;
-
-  const postsPerPage = 3;
+  const postsPerPage = 5;
 
   Post.find()
     .populate({ path: "postedBy", select: ["userName", "image"] })
@@ -57,7 +56,7 @@ export const getPost: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const createPost: RequestHandler = async (req: any, res, next) => {
+export const createPost: RequestHandler = async (req, res, next) => {
   const mongoosePostId = new mongoose.Types.ObjectId();
   // get and validate body variables
   const { postTitle, community, postBody, postImage } = req.body;
@@ -100,7 +99,7 @@ export const createPost: RequestHandler = async (req: any, res, next) => {
   }
 };
 
-export const likePost: RequestHandler = async (req: any, res, next) => {
+export const likePost: RequestHandler = async (req, res, next) => {
   const { postId } = req.body;
   try {
     const post = await Post.findById(postId);
@@ -130,7 +129,7 @@ export const likePost: RequestHandler = async (req: any, res, next) => {
   }
 };
 
-export const savePost: RequestHandler = async (req: any, res, next) => {
+export const savePost: RequestHandler = async (req, res, next) => {
   const { postId } = req.body;
   try {
     const user = await User.findById(req.userData.userId);
@@ -170,7 +169,7 @@ export const savePost: RequestHandler = async (req: any, res, next) => {
   }
 };
 
-export const deletePost: RequestHandler = async (req: any, res, next) => {
+export const deletePost: RequestHandler = async (req, res, next) => {
   const { postId } = req.body;
   const postDeletionSession = await mongoose.startSession();
 
@@ -205,8 +204,10 @@ export const deletePost: RequestHandler = async (req: any, res, next) => {
     // delete the save post from every user saves
     const deleteSaves = post.saves.map(async (save: string) => {
       const user = await User.findById(save.toString());
-      user.savedPosts.pull(postId);
-      return user.save({ session: postDeletionSession });
+      return user.update(
+        { savedPosts: user.savedPosts.pull(postId) },
+        { session: postDeletionSession }
+      );
     });
     await Promise.all(deleteSaves);
     await post.remove({ session: postDeletionSession });
@@ -227,7 +228,7 @@ export const deletePost: RequestHandler = async (req: any, res, next) => {
   }
 };
 
-export const editPost: RequestHandler = async (req: any, res, next) => {
+export const editPost: RequestHandler = async (req, res, next) => {
   const { postId, title, body } = req.body;
   try {
     const user = await User.findById(req.userData.userId);
@@ -257,7 +258,7 @@ export const editPost: RequestHandler = async (req: any, res, next) => {
   }
 };
 
-export const reportPost: RequestHandler = async (req: any, res, next) => {
+export const reportPost: RequestHandler = async (req, res, next) => {
   const { postId } = req.body;
 
   try {

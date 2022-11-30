@@ -1,9 +1,9 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import dotenv from "dotenv";
-import { Request, Response, NextFunction } from "express";
-import { decodedToken } from "../interface/decodedToken";
+import { RequestHandler } from "express";
+import { decodedToken } from "../types/decodedToken";
 
-export const isAuth = (req: any, res: Response, next: NextFunction) => {
+export const isAuth: RequestHandler = (req, res, next) => {
   dotenv.config();
   try {
     const cookie = req.cookies.token;

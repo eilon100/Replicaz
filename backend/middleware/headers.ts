@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
+import { RequestHandler } from "express";
 import cors from "cors";
 
-export const setHeaders = (req: Request, res: Response, next: NextFunction) => {
+export const setHeaders: RequestHandler = (req, res, next) => {
   cors({
     origin: "*",
     methods: ["OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"],
