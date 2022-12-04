@@ -1,46 +1,55 @@
+import * as postType from "../types/apiService/postRequest";
+import * as patchType from "../types/apiService/patchRequest";
+import * as getType from "../types/apiService/getRequest";
 import { axiosInstance } from "./axiosInstance";
 
 export const apiService = {
   post: {
-    REGISTER_USER(data: any) {
+    REGISTER_USER(data: postType.REGISTER_USER) {
       return axiosInstance.post("/auth/signup", data);
     },
-    ACTIVATE_USER(data: any) {
+    ACTIVATE_USER(data: postType.ACTIVATE_USER) {
       return axiosInstance.post("/auth/activate", data);
     },
-    LOGIN_USER(data: any) {
+    LOGIN_USER(data: postType.LOGIN_USER) {
       return axiosInstance.post("/auth/login", data);
     },
-    CREATE_NEW_PASSWORD(data: any) {
+    CREATE_NEW_PASSWORD(data: postType.CREATE_NEW_PASSWORD) {
       return axiosInstance.post("/account/newpassword", data);
     },
-    RESET_PASSWORD(data: any) {
+    RESET_PASSWORD(data: postType.RESET_PASSWORD) {
       return axiosInstance.post("/account/resetpassword", data);
     },
-    CREATE_POST(data: any) {
+    CREATE_POST(data: postType.CREATE_POST) {
       return axiosInstance.post("/post/newpost", data);
     },
-    CREATE_COMMENT(data: any) {
+    CREATE_COMMENT(data: postType.CREATE_COMMENT) {
       return axiosInstance.post("/post/newcomment", data);
     },
-    LIKE_POST(data: any) {
+    LIKE_POST(data: postType.LIKE_POST) {
       return axiosInstance.post("/post/likepost", data);
     },
-    SAVE_POST(data: any) {
+    SAVE_POST(data: postType.SAVE_POST) {
       return axiosInstance.post("/post/savepost", data);
     },
-    DELETE_POST(data: any) {
+    DELETE_POST(data: postType.DELETE_POST) {
       return axiosInstance.post("/post/deletepost", data);
     },
-    REPORT_POST(data: any) {
+    REPORT_POST(data: postType.REPORT_POST) {
       return axiosInstance.post("/post/reportpost", data);
+    },
+    LIKE_COMMENT(data: postType.LIKE_COMMENT) {
+      return axiosInstance.post("/comment/likecomment", data);
+    },
+    DELETE_COMMENT(data: postType.DELETE_COMMENT) {
+      return axiosInstance.post("/comment/deletecomment", data);
     },
   },
   get: {
-    GET_ALLPOSTS(params: number) {
+    GET_ALLPOSTS(params: any) {
       return axiosInstance.get(`/post/allposts?p=${params}`);
     },
-    GET_POST_BY_ID(id: string) {
+    GET_POST_BY_ID(id: any) {
       return axiosInstance.get(`/post/getpost/${id}`);
     },
     GET_USER_DATA() {
@@ -51,8 +60,11 @@ export const apiService = {
     },
   },
   patch: {
-    EDIT_POST(data: any) {
+    EDIT_POST(data: patchType.EDIT_POST) {
       return axiosInstance.patch("/post/editpost", data);
+    },
+    EDIT_COMMENT(data: patchType.EDIT_COMMENT) {
+      return axiosInstance.patch("/comment/editcomment", data);
     },
   },
 };

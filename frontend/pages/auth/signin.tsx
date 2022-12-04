@@ -26,7 +26,7 @@ const SignIn = () => {
 
   const { state, dispatch } = useContext(AuthContext);
 
-  const formik: any = useFormik({
+  const formik = useFormik({
     initialValues: {
       email: "",
       pass: "",
@@ -39,10 +39,10 @@ const SignIn = () => {
   });
 
   const loginUser = async () => {
-    let data = JSON.stringify({
+    let data = {
       email: formik.values.email,
       password: formik.values.pass,
-    });
+    };
 
     apiService.post
       .LOGIN_USER(data)

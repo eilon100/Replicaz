@@ -1,6 +1,7 @@
-import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 import { useInfiniteQuery } from "react-query";
+import { post } from "../types/post";
 import { apiService } from "../utills/apiService";
 import Post from "./Post";
 
@@ -9,6 +10,8 @@ function Feed() {
     const res = await apiService.get.GET_ALLPOSTS(pageParam);
     return res;
   };
+  const router = useRouter();
+  const [previousPage, setPreviousPage] = useState("");
 
   const {
     data,
@@ -53,7 +56,7 @@ function Feed() {
     <>
       {data?.pages.map((group, i) => (
         <React.Fragment key={i}>
-          {group.data.map((post: any, i: number) => (
+          {group.data.map((post: post, i: number) => (
             <Post post={post} key={post._id} />
           ))}
         </React.Fragment>

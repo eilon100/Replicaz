@@ -37,6 +37,108 @@ export const createComment: RequestHandler = async (req, res, next) => {
       .json({ error: "Create comment failed pleas try again " + err });
   }
 };
-//todo
-export const likeComment: RequestHandler = async (req, res, next) => {};
-export const deleteComment: RequestHandler = async (req, res, next) => {};
+
+export const likeComment: RequestHandler = async (req, res, next) => {
+  const { commentId } = req.body;
+  try {
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      return res.status(404).json({ error: "Could not find the comment" });
+    }
+
+    if (comment.likes.includes(req.userData.userId)) {
+      comment.likes.pull(req.userData.userId);
+      await comment.save();
+      return res.status(200).json({
+        message: "Comment unliked successfully!",
+        like: false,
+        likesLength: comment.likes.length,
+      });
+    } else {
+      comment.likes.push(req.userData.userId);
+      await comment.save();
+      return res.status(200).json({
+        message: "Comment liked successfully!",
+        like: true,
+        likesLength: comment.likes.length,
+      });
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: "Error on '/post/likeComment': " + err });
+  }
+};
+
+export const editComment: RequestHandler = async (req, res, next) => {
+  const { commentId, body } = req.body;
+  try {
+    const user = await User.findById(req.userData.userId);
+    if (!user) {
+      return res.status(404).json({ error: "Could not find the user" });
+    }
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      return res.status(404).json({ error: "Could not find the comment" });
+    }
+
+    if (comment.postedBy.toString() !== req.userData.userId) {
+      return res
+        .status(500)
+        .json({ error: "You are not allowed to edit this comment!" });
+    }
+
+    comment.body = body;
+    await comment.save();
+    return res.status(200).json({
+      message: "Comment edited successfully!",
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: "Error on '/post/editcomment': " + error });
+  }
+};
+
+export const deleteComment: RequestHandler = async (req, res, next) => {
+  const { commentId, postId } = req.body;
+  const commentDeletionSession = await mongoose.startSession();
+
+  try {
+    const user = await User.findById(req.userData.userId);
+    if (!user) {
+      return res.status(404).json({ error: "Could not find the user" });
+    }
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      return res.status(404).json({ error: "Could not find the comment" });
+    }
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: "Could not find the post" });
+    }
+
+    if (comment.postedBy.toString() !== req.userData.userId) {
+      return res
+        .status(500)
+        .json({ error: "You are not allowed to delete this comment!" });
+    }
+
+    commentDeletionSession.startTransaction();
+
+    await Comment.findByIdAndDelete(
+      { _id: commentId },
+      { session: commentDeletionSession }
+    );
+    post.comments.pull(commentId);
+    await post.save({ session: commentDeletionSession });
+    await commentDeletionSession.commitTransaction();
+
+    res.status(200).json({ message: "Your comment deleted!" });
+  } catch (error) {
+    await commentDeletionSession.abortTransaction();
+    return res
+      .status(500)
+      .json({ error: "Error on '/post/deleteComment': " + error });
+  }
+};

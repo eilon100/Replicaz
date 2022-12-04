@@ -37,10 +37,7 @@ export const AuthContextProvider = ({ children }: AuthProps) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
   useEffect(() => {
     const cookie = getCookie("userData");
-    if (!cookie) {
-      toast.error("Error fetching userData");
-      return;
-    }
+
     const user = cookie ? JSON.parse(cookie as string) : null;
 
     if (user) {

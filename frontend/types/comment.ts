@@ -1,13 +1,11 @@
-type commentedUser = {
-  _id: string;
-  userName: string;
-  image: string;
-};
+import { post } from "./post";
+import { user } from "./user";
 
 export type comment = {
   _id: string;
-  createdAt: string;
+  post: post;
   body: string;
-  postedBy: commentedUser;
-  likes: string[];
+  postedBy: user;
+  likes: user[];
+  createdAt: string;
 };

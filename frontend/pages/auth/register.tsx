@@ -9,8 +9,7 @@ import AuthButton from "../../components/auth-components/AuthButton";
 import { authValidationSchema } from "../../validation/auth";
 
 const register = () => {
-  
-  const formik: any = useFormik({
+  const formik = useFormik({
     initialValues: {
       userName: "",
       firstName: "",
@@ -26,7 +25,7 @@ const register = () => {
   });
 
   const registerUser = () => {
-    let data = JSON.stringify({
+    let data = {
       userName:
         formik.values.userName.charAt(0).toUpperCase() +
         formik.values.userName.slice(1).toLowerCase(),
@@ -34,7 +33,7 @@ const register = () => {
       lastName: formik.values.lastName.toLowerCase(),
       email: formik.values.email.toLowerCase(),
       password: formik.values.pass,
-    });
+    };
 
     apiService.post
       .REGISTER_USER(data)

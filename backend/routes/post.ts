@@ -1,5 +1,5 @@
 import express from "express";
-import { createComment } from "../controllers/comments";
+import { createComment, likeComment } from "../controllers/comments";
 import {
   createPost,
   deletePost,
@@ -23,6 +23,8 @@ postRouter.use(isAuth);
 postRouter.post("/newpost", createPost);
 
 postRouter.post("/newcomment", createComment);
+
+postRouter.post("/likecomment", likeComment);
 
 postRouter.post("/likepost", likePost);
 

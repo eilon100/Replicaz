@@ -17,11 +17,12 @@ import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
 import Router, { useRouter } from "next/router";
 import { useQueryClient } from "react-query";
+import { user } from "../../types/user";
 
 type PostEditProps = {
   postId: string;
   userPost: boolean;
-  saves: string[];
+  saves: user[];
   setEditPost: React.Dispatch<React.SetStateAction<boolean>>;
 };
 

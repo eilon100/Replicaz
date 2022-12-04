@@ -22,7 +22,6 @@ export const getAllPosts: RequestHandler = (req, res, next) => {
       return res.status(200).send(fetchedPosts);
     })
     .catch((err) => {
-      console.log(err);
       return res.status(500).json({ message: "Could not fetch the posts" });
     });
 };

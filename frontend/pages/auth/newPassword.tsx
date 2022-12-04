@@ -25,10 +25,10 @@ function newPassword() {
   const handleFormSubmit = () => {
     const password = formik.values.pass;
     const token = router.query.token;
-    let data = JSON.stringify({
+    let data = {
       password: password,
       token: token,
-    });
+    };
 
     apiService.post
       .CREATE_NEW_PASSWORD(data)

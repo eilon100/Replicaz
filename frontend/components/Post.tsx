@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { useRouter } from "next/router";
 import React, { useContext, FC } from "react";
 import toast from "react-hot-toast";
 import { BiComment, BiLike, BiShare } from "react-icons/bi";
@@ -16,34 +15,20 @@ import { Textarea } from "@mui/joy";
 import { Typography } from "@mui/material";
 import { useQueryClient } from "react-query";
 import Link from "next/link";
+import { post } from "../types/post";
 
 interface PostProps {
-  post: any;
+  post: post;
   page?: string;
 }
 
 const Post: FC<PostProps> = ({ post, page }) => {
-  const router = useRouter();
   const { state } = useContext(AuthContext);
   const { loggedIn, userId } = state;
   const [postLiked, setPostLiked] = useState(post.likes.includes(userId));
   const [likesLength, setLikesLength] = useState(post.likes.length);
   const [editPost, setEditPost] = useState(false);
   const queryClient = useQueryClient();
-
-  const likePostHandler = (id: string) => {
-    const postId = JSON.stringify({ postId: id });
-    apiService.post
-      .LIKE_POST(postId)
-      .then((res) => {
-        res.data.like
-          ? (setPostLiked(true), setLikesLength(res.data.likesLength))
-          : (setPostLiked(false), setLikesLength(res.data.likesLength));
-      })
-      .catch((error) => {
-        toast.error(error.response.data.error);
-      });
-  };
 
   const formik = useFormik({
     initialValues: {
@@ -52,11 +37,25 @@ const Post: FC<PostProps> = ({ post, page }) => {
     },
     validationSchema: postValidationSchema,
     onSubmit: (values) => {
-      handleSubmit();
+      editPostHandler();
     },
   });
 
-  const handleSubmit = () => {
+  const likePostHandler = (id: string) => {
+    const postId = { postId: id };
+    apiService.post
+      .LIKE_POST(postId)
+      .then((res) => {
+        res.data.like
+          ? (setPostLiked(true), setLikesLength(res.data.likesLength))
+          : (setPostLiked(false), setLikesLength(res.data.likesLength));
+        queryClient.invalidateQueries("posts");
+      })
+      .catch((error) => {
+        toast.error(error.response.data.error);
+      });
+  };
+  const editPostHandler = () => {
     const editedPostData = {
       title: formik.values.title,
       body: formik.values.body,
