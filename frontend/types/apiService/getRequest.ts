@@ -1,2 +1,2 @@
-export type GET_ALLPOSTS = {};
-export type GET_POST_BY_ID = {};
+export type GET_ALLPOSTS = number;
+export type GET_POST_BY_ID = string | string[] | undefined;

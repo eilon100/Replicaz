@@ -26,27 +26,34 @@ const SignIn = () => {
 
   const { state, dispatch } = useContext(AuthContext);
 
-  const formik = useFormik({
+  const {
+    handleChange,
+    handleBlur,
+    values: { email: valuesEmail, password: valuesPassword },
+    touched: { email: touchedEmail, password: touchedPassword },
+    errors: { email: errorsEmail, password: errorsPassword },
+    handleSubmit,
+  } = useFormik({
     initialValues: {
       email: "",
-      pass: "",
+      password: "",
     },
     validationSchema: authValidationSchema("signin"),
 
-    onSubmit: (values) => {
+    onSubmit: () => {
       loginUser();
     },
   });
 
   const loginUser = async () => {
     let data = {
-      email: formik.values.email,
-      password: formik.values.pass,
+      email: valuesEmail,
+      password: valuesPassword,
     };
 
     apiService.post
       .LOGIN_USER(data)
-      .then((res) => {
+      .then(() => {
         const cookie = getCookie("userData");
         if (!cookie) {
           toast.error("Error fetching userData");
@@ -57,9 +64,15 @@ const SignIn = () => {
         toast.success("Login successfully");
         Router.push("/");
       })
-      .catch((error) => {
-        toast.error(error.response.data.error);
-      });
+      .catch(
+        ({
+          response: {
+            data: { error },
+          },
+        }) => {
+          toast.error(error);
+        }
+      );
   };
 
   //components
@@ -74,24 +87,24 @@ const SignIn = () => {
           type="email"
           name="email"
           variant="outlined"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.email}
-          error={formik.touched.email && Boolean(formik.errors.email)}
-          helperText={formik.touched.email && formik.errors.email}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={valuesEmail}
+          error={touchedEmail && Boolean(errorsEmail)}
+          helperText={touchedEmail && errorsEmail}
         />
         <TextField
           className="auth_textfield"
           id="password"
           label="Password"
           type="password"
-          name="pass"
+          name="password"
           variant="outlined"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.pass}
-          error={formik.touched.pass && Boolean(formik.errors.pass)}
-          helperText={formik.touched.pass && formik.errors.pass}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={valuesPassword}
+          error={touchedPassword && Boolean(errorsPassword)}
+          helperText={touchedPassword && errorsPassword}
         />
       </>
     );
@@ -117,7 +130,7 @@ const SignIn = () => {
         <form
           className="flex flex-col justify-center items-center space-y-8 "
           onSubmit={(e) => {
-            formik.handleSubmit(e);
+            handleSubmit(e);
           }}
           method="post"
           action="/api/auth/signin/email"

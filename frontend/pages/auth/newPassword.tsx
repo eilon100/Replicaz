@@ -12,21 +12,28 @@ import { authValidationSchema } from "../../validation/auth";
 function newPassword() {
   const router = useRouter();
 
-  const formik = useFormik({
+  const {
+    handleChange,
+    handleBlur,
+    values: { password: valuesPassword, confirm: valuesConfirm },
+    touched: { password: touchedPassword, confirm: touchedConfirm },
+    errors: { password: errorsPassword, confirm: errorsConfirm },
+    handleSubmit,
+  } = useFormik({
     initialValues: {
-      pass: "",
+      password: "",
       confirm: "",
     },
     validationSchema: authValidationSchema("newPassword"),
-    onSubmit: (values) => {
+    onSubmit: () => {
       handleFormSubmit();
     },
   });
+
   const handleFormSubmit = () => {
-    const password = formik.values.pass;
     const token = router.query.token;
     let data = {
-      password: password,
+      password: valuesPassword,
       token: token,
     };
 
@@ -51,13 +58,13 @@ function newPassword() {
           id="password"
           label=" New password"
           type="password"
-          name="pass"
+          name="password"
           variant="outlined"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.pass}
-          error={formik.touched.pass && Boolean(formik.errors.pass)}
-          helperText={formik.touched.pass && formik.errors.pass}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={valuesPassword}
+          error={touchedPassword && Boolean(errorsPassword)}
+          helperText={touchedPassword && errorsPassword}
         />
         <TextField
           className="auth_textfield "
@@ -66,11 +73,11 @@ function newPassword() {
           variant="outlined"
           type="password"
           name="confirm"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.confirm}
-          error={formik.touched.confirm && Boolean(formik.errors.confirm)}
-          helperText={formik.touched.confirm && formik.errors.confirm}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={valuesConfirm}
+          error={touchedConfirm && Boolean(errorsConfirm)}
+          helperText={touchedConfirm && errorsConfirm}
         />
       </>
     );
@@ -83,7 +90,7 @@ function newPassword() {
         <form
           className="flex flex-col justify-center items-center space-y-8"
           onSubmit={(e) => {
-            formik.handleSubmit(e);
+            handleSubmit(e);
           }}
         >
           <h1 className="font-bold text-5xl">Replicaz</h1>

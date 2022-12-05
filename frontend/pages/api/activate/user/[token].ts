@@ -19,7 +19,7 @@ export default function activateUser(
       setCookie("active", "Succeeded", { req, res });
       return res.redirect(307, "/auth/signin");
     })
-    .catch((err) => {
+    .catch(() => {
       setCookie("active", "failed", { req, res });
       return res.redirect(307, "/auth/signin");
     });

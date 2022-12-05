@@ -9,33 +9,45 @@ import { apiService } from "../../utills/apiService";
 function NewComment() {
   const router = useRouter();
   const { state } = useContext(AuthContext);
-  const { loggedIn, userName, userImage } = state;
+  const { loggedIn } = state;
   const { postId } = router.query;
-
   const queryClient = useQueryClient();
 
-  const formik = useFormik({
+  const {
+    handleChange,
+    handleBlur,
+    values: { comment: valuesComment },
+    resetForm,
+    handleSubmit,
+  } = useFormik({
     initialValues: {
       comment: "",
     },
-    onSubmit: (values) => {
-      handleSubmit();
+    onSubmit: () => {
+      NewCommentHandler();
     },
   });
 
-  const handleSubmit = () => {
+  const NewCommentHandler = () => {
     const commentData = {
-      comment: formik.values.comment,
-      postId: postId,
+      comment: valuesComment,
+      postId,
     };
+
     apiService.post
       .CREATE_COMMENT(commentData)
       .then(() => {
         toast.success("Your comment has been added");
         queryClient.fetchQuery("fetchPost");
-        formik.resetForm();
+        resetForm();
       })
-      .catch((error) => toast.error(error.response.data.error));
+      .catch(
+        ({
+          response: {
+            data: { error },
+          },
+        }) => toast.error(error)
+      );
   };
 
   const newCommentForm = () => {
@@ -43,16 +55,16 @@ function NewComment() {
       <form
         className="flex max-w-4-xl flex-col mt-2"
         onSubmit={(e) => {
-          formik.handleSubmit(e);
+          handleSubmit(e);
         }}
       >
         <textarea
           disabled={!loggedIn}
           rows={4}
           id="comment"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.comment}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={valuesComment}
           className="h-24 rounded-md border border-gray-200 p-2 pl-4 
       outline-none disabled:bg-gray-50 resize-none"
           placeholder={
@@ -62,7 +74,7 @@ function NewComment() {
         <button
           type="submit"
           className="mt-4"
-          disabled={!loggedIn || formik.values.comment.length === 0}
+          disabled={!loggedIn || valuesComment.length === 0}
         >
           Comment
         </button>

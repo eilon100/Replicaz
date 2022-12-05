@@ -1,20 +1,15 @@
-import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React from "react";
 import { useInfiniteQuery } from "react-query";
 import { post } from "../types/post";
 import { apiService } from "../utills/apiService";
 import Post from "./Post";
 
 function Feed() {
-  const fetchPosts = async ({ pageParam = 0 }) => {
-    const res = await apiService.get.GET_ALLPOSTS(pageParam);
-    return res;
-  };
-  const router = useRouter();
-  const [previousPage, setPreviousPage] = useState("");
+  const fetchPosts = async ({ pageParam = 0 }) =>
+    await apiService.get.GET_ALLPOSTS(pageParam);
 
   const {
-    data,
+    data: { pages } = {},
     error,
     fetchNextPage,
     hasNextPage,
@@ -22,12 +17,12 @@ function Feed() {
     isFetchingNextPage,
     status,
   } = useInfiniteQuery(["posts"], fetchPosts, {
-    getNextPageParam: (_lastPage, pages) => {
-      if (!pages[pages.length - 1].data[0]) {
+    getNextPageParam: (_lastPage, currentPage) => {
+      const isLastPage = !currentPage[currentPage.length - 1].data[0];
+      if (isLastPage) {
         return undefined;
-      } else {
-        return pages.length;
       }
+      return currentPage.length;
     },
   });
 
@@ -54,9 +49,9 @@ function Feed() {
     <p></p>
   ) : (
     <>
-      {data?.pages.map((group, i) => (
+      {pages?.map((page, i) => (
         <React.Fragment key={i}>
-          {group.data.map((post: post, i: number) => (
+          {page.data.map((post: post) => (
             <Post post={post} key={post._id} />
           ))}
         </React.Fragment>

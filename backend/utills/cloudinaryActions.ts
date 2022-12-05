@@ -28,14 +28,11 @@ export const imagesUpload = async (images: any[], path: pathObj) => {
 };
 
 export const imagesFolderDeletion = async (path: pathObj) => {
-
   try {
     await cloudinary.api
       .delete_resources_by_prefix(`posts/${path.postedBy}/${path.postId}`)
       .then(() => {
-        cloudinary.api.delete_folder(
-          `posts/${path.postedBy}/${path.postId}`
-        );
+        cloudinary.api.delete_folder(`posts/${path.postedBy}/${path.postId}`);
       });
   } catch (err) {
     console.log(err);

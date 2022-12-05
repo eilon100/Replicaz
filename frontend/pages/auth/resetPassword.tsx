@@ -9,28 +9,40 @@ import AuthButton from "../../components/auth-components/AuthButton";
 import { authValidationSchema } from "../../validation/auth";
 
 function ForgetPassword() {
-  
-  const formik = useFormik({
+  const {
+    handleChange,
+    handleBlur,
+    values: { email: valuesEmail },
+    touched: { email: touchedEmail },
+    errors: { email: errorsEmail },
+    handleSubmit,
+  } = useFormik({
     initialValues: {
       email: "",
     },
     validationSchema: authValidationSchema("resetPassword"),
-    onSubmit: (values) => {
+    onSubmit: () => {
       handleFormSubmit();
     },
   });
 
   const handleFormSubmit = () => {
-    const data = { email: formik.values.email };
+    const data = { email: valuesEmail };
 
     apiService.post
       .RESET_PASSWORD(data)
       .then(() => {
         toast.success("Reset password has been sent to your email");
       })
-      .catch((error) => {
-        toast.error(error.response?.data?.error);
-      });
+      .catch(
+        ({
+          response: {
+            data: { error },
+          },
+        }) => {
+          toast.error(error);
+        }
+      );
   };
 
   //components
@@ -44,11 +56,11 @@ function ForgetPassword() {
         type="email"
         name="email"
         variant="outlined"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.email}
-        error={formik.touched.email && Boolean(formik.errors.email)}
-        helperText={formik.touched.email && formik.errors.email}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        value={valuesEmail}
+        error={touchedEmail && Boolean(errorsEmail)}
+        helperText={touchedEmail && errorsEmail}
       />
     );
   };
@@ -60,7 +72,7 @@ function ForgetPassword() {
         <form
           className="flex flex-col justify-center items-center space-y-8"
           onSubmit={(e) => {
-            formik.handleSubmit(e);
+            handleSubmit(e);
           }}
         >
           <h1 className="font-bold text-5xl">Replicaz</h1>

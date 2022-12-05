@@ -20,11 +20,9 @@ export const apiService = {
     RESET_PASSWORD(data: postType.RESET_PASSWORD) {
       return axiosInstance.post("/account/resetpassword", data);
     },
+
     CREATE_POST(data: postType.CREATE_POST) {
       return axiosInstance.post("/post/newpost", data);
-    },
-    CREATE_COMMENT(data: postType.CREATE_COMMENT) {
-      return axiosInstance.post("/post/newcomment", data);
     },
     LIKE_POST(data: postType.LIKE_POST) {
       return axiosInstance.post("/post/likepost", data);
@@ -38,19 +36,26 @@ export const apiService = {
     REPORT_POST(data: postType.REPORT_POST) {
       return axiosInstance.post("/post/reportpost", data);
     },
+
+    CREATE_COMMENT(data: postType.CREATE_COMMENT) {
+      return axiosInstance.post("/post/newcomment", data);
+    },
     LIKE_COMMENT(data: postType.LIKE_COMMENT) {
       return axiosInstance.post("/comment/likecomment", data);
     },
     DELETE_COMMENT(data: postType.DELETE_COMMENT) {
       return axiosInstance.post("/comment/deletecomment", data);
     },
+    REPORT_COMMENT(data: postType.REPORT_COMMENT) {
+      return axiosInstance.post("/comment/reportcomment", data);
+    },
   },
   get: {
-    GET_ALLPOSTS(params: any) {
+    GET_ALLPOSTS(params: getType.GET_ALLPOSTS) {
       return axiosInstance.get(`/post/allposts?p=${params}`);
     },
-    GET_POST_BY_ID(id: any) {
-      return axiosInstance.get(`/post/getpost/${id}`);
+    GET_POST_BY_ID(postId: getType.GET_POST_BY_ID) {
+      return axiosInstance.get(`/post/getpost/${postId}`);
     },
     GET_USER_DATA() {
       return axiosInstance.get("/account/getuserdata");

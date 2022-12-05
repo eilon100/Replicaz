@@ -10,7 +10,7 @@ import { AuthContext } from "../context/AuthContext";
 import { useFormik } from "formik";
 import { postValidationSchema } from "../validation/post";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import PostEdit from "./post-components/PostEdit";
+import PostOptions from "./post-components/PostOptions";
 import { Textarea } from "@mui/joy";
 import { Typography } from "@mui/material";
 import { useQueryClient } from "react-query";
@@ -30,48 +30,69 @@ const Post: FC<PostProps> = ({ post, page }) => {
   const [editPost, setEditPost] = useState(false);
   const queryClient = useQueryClient();
 
-  const formik = useFormik({
+  const {
+    handleChange,
+    handleBlur,
+    values: { body: valuesBody, title: valuesTitle },
+    touched: { body: touchedBody, title: touchedTitle },
+    errors: { body: errorsBody, title: errorsTitle },
+    resetForm,
+    handleSubmit,
+  } = useFormik({
     initialValues: {
       title: post?.title,
       body: post?.body,
     },
     validationSchema: postValidationSchema,
-    onSubmit: (values) => {
+    onSubmit: (s) => {
       editPostHandler();
     },
   });
 
-  const likePostHandler = (id: string) => {
-    const postId = { postId: id };
+  const likePostHandler = (postId: string) => {
+    const data = { postId };
+
     apiService.post
-      .LIKE_POST(postId)
-      .then((res) => {
-        res.data.like
-          ? (setPostLiked(true), setLikesLength(res.data.likesLength))
-          : (setPostLiked(false), setLikesLength(res.data.likesLength));
+      .LIKE_POST(data)
+      .then(({ data: { like, likesLength } }) => {
+        like
+          ? (setPostLiked(true), setLikesLength(likesLength))
+          : (setPostLiked(false), setLikesLength(likesLength));
         queryClient.invalidateQueries("posts");
       })
-      .catch((error) => {
-        toast.error(error.response.data.error);
-      });
+      .catch(
+        ({
+          response: {
+            data: { error },
+          },
+        }) => {
+          toast.error(error);
+        }
+      );
   };
   const editPostHandler = () => {
     const editedPostData = {
-      title: formik.values.title,
-      body: formik.values.body,
+      title: valuesTitle,
+      body: valuesBody,
       postId: post._id,
     };
 
     apiService.patch
       .EDIT_POST(editedPostData)
-      .then((res) => {
-        toast.success(res.data.message);
+      .then(({ data: { message } }) => {
+        toast.success(message);
         setEditPost(false);
         queryClient.refetchQueries(page === "post" ? "fetchPost" : "posts");
       })
-      .catch((error) => {
-        toast.error(error.response.data.error);
-      });
+      .catch(
+        ({
+          response: {
+            data: { error },
+          },
+        }) => {
+          toast.error(error);
+        }
+      );
   };
 
   const Header = () => {
@@ -95,7 +116,7 @@ const Post: FC<PostProps> = ({ post, page }) => {
           </div>
         </div>
         {loggedIn ? (
-          <PostEdit
+          <PostOptions
             postId={post._id}
             userPost={post.postedBy._id === userId}
             saves={post.saves}
@@ -122,16 +143,16 @@ const Post: FC<PostProps> = ({ post, page }) => {
         ) : (
           <form
             onSubmit={(e) => {
-              formik.handleSubmit(e);
+              handleSubmit(e);
             }}
           >
             <div className=" font-semibold text-[#050505] s ">
               <input
                 id="title"
                 dir="auto"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.title}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={valuesTitle}
                 disabled={!loggedIn}
                 className="w-full flex-1 rounded-md bg-gray-50 p-2 pl-5 mb-2 outline-none"
                 type="text"
@@ -149,17 +170,17 @@ const Post: FC<PostProps> = ({ post, page }) => {
                   },
                 }}
                 name="body"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.body}
-                error={formik.touched.body && Boolean(formik.errors.body)}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={valuesBody}
+                error={touchedBody && Boolean(errorsBody)}
                 placeholder="Text (optional)"
                 variant="soft"
                 disabled={!loggedIn}
                 className=" flex-1 m-2 p-2 bg-gray-50 !outline-none !border-none rounded-md resize-none "
                 endDecorator={
                   <Typography className="text-xs ml-auto text-gray-500">
-                    {300 - formik.values.body.length} character(s)
+                    {300 - valuesBody.length} character(s)
                   </Typography>
                 }
               />

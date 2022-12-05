@@ -34,7 +34,7 @@ export const authValidationSchema = (page: string) => {
       .trim()
       .email("Enter a valid email")
       .required("Email is required"),
-    pass: yup
+    password: yup
       .string()
       .required("No password provided.")
       .min(8, "Password must be min 8 characters")
@@ -47,7 +47,7 @@ export const authValidationSchema = (page: string) => {
       .string()
       .required("Confirm your password")
       .matches(/^\S*$/, "Spaces are not allowed")
-      .oneOf([yup.ref("pass"), null], "Password does not match"),
+      .oneOf([yup.ref("password"), null], "Password does not match"),
   };
 
   if (page === "register") {
@@ -56,14 +56,14 @@ export const authValidationSchema = (page: string) => {
       firstName: yupObject.firstName,
       lastName: yupObject.lastName,
       email: yupObject.email,
-      pass: yupObject.pass,
+      password: yupObject.password,
       confirm: yupObject.confirm,
     });
   }
   if (page === "signin") {
     return yup.object({
       email: yupObject.email,
-      pass: yupObject.pass,
+      password: yupObject.password,
     });
   }
   if (page === "resetPassword") {
@@ -73,7 +73,7 @@ export const authValidationSchema = (page: string) => {
   }
   if (page === "newPassword") {
     return yup.object({
-      pass: yupObject.pass,
+      password: yupObject.password,
       confirm: yupObject.confirm,
     });
   }

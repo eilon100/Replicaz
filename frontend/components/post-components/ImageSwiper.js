@@ -1,32 +1,16 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FreeMode, Navigation, Thumbs } from "swiper";
 import "swiper/css";
 import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
-import Modal from "@mui/material/Modal";
 
 const ImageSwiper = (images) => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
-  const [imageUrl, setImageUrl] = React.useState("");
-  const handleOpen = (url) => setImageUrl(url);
-  const handleClose = () => setImageUrl(null);
+  
   return (
     <>
-      {/* {open && (
-        <Modal
-          open={!!imageUrl}
-          onClose={handleClose}
-          className="flex justify-center items-center"
-        >
-          <img
-            src={imageUrl}
-            className={` px-3 w-[100vw] max-h-[90vh] lg:w-auto lg:h-[90vh] lg:max-w-[80vw] object-contain outline-none  `}
-          />
-        </Modal>
-      )} */}
-
       <Swiper
         style={{
           "--swiper-navigation-color": "#888888",

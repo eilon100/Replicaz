@@ -17,12 +17,6 @@ import { useFormik } from "formik";
 import Textarea from "@mui/joy/Textarea";
 import { useQueryClient } from "react-query";
 
-type FormData = {
-  postTitle: string;
-  postBody: string;
-  community: string;
-};
-
 const uploadImageLength = 5;
 
 function PostBox() {
@@ -34,47 +28,61 @@ function PostBox() {
   const [images, setImages] = useState<File[]>([]);
   const queryClient = useQueryClient();
 
-  const formik = useFormik({
+  const {
+    handleChange,
+    handleBlur,
+    values: { body: valuesBody, title: valuesTitle },
+    touched: { body: touchedBody, title: touchedTitle },
+    errors: { body: errorsBody, title: errorsTitle },
+    resetForm,
+    handleSubmit,
+  } = useFormik({
     initialValues: {
       title: "",
       body: "",
       community: "",
     },
 
-    onSubmit: (values) => {
+    onSubmit: () => {
       onSubmit();
     },
   });
 
-  const isPostActive = formik.values.title.length > 0;
+  const isPostActive = valuesTitle.length > 0;
 
   const onSubmit = () => {
     const notification = toast.loading("uploading post...");
     setDisableButton(true);
     const data = {
-      postTitle: formik.values.title,
-      postBody: formik.values.body,
+      postTitle: valuesTitle,
+      postBody: valuesBody,
       community,
       postImage: images,
     };
 
     apiService.post
       .CREATE_POST(data)
-      .then(async () => {
+      .then(() => {
         toast.success("post has been created", {
           id: notification,
         });
         queryClient.invalidateQueries("posts");
-        formik.resetForm();
+        resetForm();
         setImageBoxOpen(false);
         setDisableButton(false);
       })
-      .catch((error) => {
-        toast.error(error.response.data.error, {
-          id: notification,
-        });
-        setDisableButton(false);
-      });
+      .catch(
+        ({
+          response: {
+            data: { error },
+          },
+        }) => {
+          toast.error(error, {
+            id: notification,
+          });
+          setDisableButton(false);
+        }
+      );
   };
 
   //components
@@ -99,10 +107,10 @@ function PostBox() {
             },
           }}
           name="title"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.title}
-          error={formik.touched.title && Boolean(formik.errors.title)}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={valuesTitle}
+          error={touchedTitle && Boolean(errorsTitle)}
           variant="soft"
           disabled={!loggedIn}
           className=" flex-1 rounded-md bg-gray-50 p-2 pl-5 outline-none min-w-[80px] resize-none"
@@ -129,17 +137,17 @@ function PostBox() {
             },
           }}
           name="body"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.body}
-          error={formik.touched.body && Boolean(formik.errors.body)}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={valuesBody}
+          error={touchedBody && Boolean(errorsBody)}
           placeholder="Text (optional)"
           variant="soft"
           disabled={!loggedIn}
           className=" flex-1 m-2 p-2 bg-gray-50 !outline-none !border-none rounded-md resize-none "
           endDecorator={
             <Typography className="text-xs ml-auto text-gray-500">
-              {300 - formik.values.body.length} character(s)
+              {300 - valuesBody.length} character(s)
             </Typography>
           }
         />
@@ -184,7 +192,7 @@ function PostBox() {
   return (
     <form
       onSubmit={(e) => {
-        formik.handleSubmit(e);
+        handleSubmit(e);
       }}
       className="sticky top-[106px] z-10 bg-white px-3 py-2 rounded-lg border border-gray-300"
     >

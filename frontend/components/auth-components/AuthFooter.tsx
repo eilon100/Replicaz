@@ -4,22 +4,7 @@ interface page {
   page: keyof pageObj;
 }
 type pageObj = {
-  signIn: { p: string; span: string; router: string };
-  register: {
-    p: string;
-    span: string;
-    router: string;
-  };
-  resetPassword: {
-    p: string;
-    span: string;
-    router: string;
-  };
-  newPassword: {
-    p: string;
-    span: string;
-    router: string;
-  };
+  [key: string]: { p: string; span: string; router: string };
 };
 
 const pageObj: pageObj = {
@@ -41,17 +26,17 @@ const pageObj: pageObj = {
   },
 };
 
-function AuthFooter(props: page) {
+function AuthFooter({ page }: page) {
   return (
     <p className="text-[#757171]  ">
-      {pageObj[props.page].p}&nbsp;
+      {pageObj[page].p}&nbsp;
       <span
         className="text-black hover:underline cursor-pointer"
         onClick={() => {
-          Router.push(pageObj[props.page].router);
+          Router.push(pageObj[page].router);
         }}
       >
-        {pageObj[props.page].span}
+        {pageObj[page].span}
       </span>
     </p>
   );

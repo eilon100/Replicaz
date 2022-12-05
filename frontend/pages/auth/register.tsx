@@ -9,17 +9,45 @@ import AuthButton from "../../components/auth-components/AuthButton";
 import { authValidationSchema } from "../../validation/auth";
 
 const register = () => {
-  const formik = useFormik({
+  const {
+    handleChange,
+    handleBlur,
+    values: {
+      userName: valuesUserName,
+      firstName: valuesFirstName,
+      lastName: valuesLastName,
+      email: valuesEmail,
+      password: valuesPassword,
+      confirm: valuesConfirm,
+    },
+    touched: {
+      userName: touchedUserName,
+      firstName: touchedFirstName,
+      lastName: touchedLastName,
+      email: touchedEmail,
+      password: touchedPassword,
+      confirm: touchedConfirm,
+    },
+    errors: {
+      userName: errorsUserName,
+      firstName: errorsFirstName,
+      lastName: errorsLastName,
+      email: errorsEmail,
+      password: errorsPassword,
+      confirm: errorsConfirm,
+    },
+    handleSubmit,
+  } = useFormik({
     initialValues: {
       userName: "",
       firstName: "",
       lastName: "",
       email: "",
-      pass: "",
+      password: "",
       confirm: "",
     },
     validationSchema: authValidationSchema("register"),
-    onSubmit: (values) => {
+    onSubmit: () => {
       registerUser();
     },
   });
@@ -27,12 +55,12 @@ const register = () => {
   const registerUser = () => {
     let data = {
       userName:
-        formik.values.userName.charAt(0).toUpperCase() +
-        formik.values.userName.slice(1).toLowerCase(),
-      firstName: formik.values.firstName.toLowerCase(),
-      lastName: formik.values.lastName.toLowerCase(),
-      email: formik.values.email.toLowerCase(),
-      password: formik.values.pass,
+        valuesUserName.charAt(0).toUpperCase() +
+        valuesUserName.slice(1).toLowerCase(),
+      firstName: valuesFirstName.toLowerCase(),
+      lastName: valuesLastName.toLowerCase(),
+      email: valuesEmail.toLowerCase(),
+      password: valuesPassword,
     };
 
     apiService.post
@@ -41,9 +69,15 @@ const register = () => {
         toast.success("Verification has been sent to your email");
         Router.push("/auth/signin");
       })
-      .catch((error) => {
-        toast.error(error.response.data.error);
-      });
+      .catch(
+        ({
+          response: {
+            data: { error },
+          },
+        }) => {
+          toast.error(error);
+        }
+      );
   };
   //components
   const textField = () => {
@@ -55,11 +89,11 @@ const register = () => {
           label="User name"
           type="text"
           variant="outlined"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.userName}
-          error={formik.touched.userName && Boolean(formik.errors.userName)}
-          helperText={formik.touched.userName && formik.errors.userName}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={valuesUserName}
+          error={touchedUserName && Boolean(errorsUserName)}
+          helperText={touchedUserName && errorsUserName}
         />
         <TextField
           className="auth_textfield"
@@ -67,11 +101,11 @@ const register = () => {
           label="First name"
           type="text"
           variant="outlined"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.firstName}
-          error={formik.touched.firstName && Boolean(formik.errors.firstName)}
-          helperText={formik.touched.firstName && formik.errors.firstName}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={valuesFirstName}
+          error={touchedFirstName && Boolean(errorsFirstName)}
+          helperText={touchedFirstName && errorsFirstName}
         />
         <TextField
           className="auth_textfield"
@@ -79,11 +113,11 @@ const register = () => {
           label="Last name"
           type="text"
           variant="outlined"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.lastName}
-          error={formik.touched.lastName && Boolean(formik.errors.lastName)}
-          helperText={formik.touched.lastName && formik.errors.lastName}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={valuesLastName}
+          error={touchedLastName && Boolean(errorsLastName)}
+          helperText={touchedLastName && errorsLastName}
         />
         <TextField
           className="auth_textfield"
@@ -91,23 +125,23 @@ const register = () => {
           label="Email"
           type="email"
           variant="outlined"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.email}
-          error={formik.touched.email && Boolean(formik.errors.email)}
-          helperText={formik.touched.email && formik.errors.email}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={valuesEmail}
+          error={touchedEmail && Boolean(errorsEmail)}
+          helperText={touchedEmail && errorsEmail}
         />
         <TextField
           className="auth_textfield"
-          id="pass"
+          id="password"
           label="Password"
           type="password"
           variant="outlined"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.pass}
-          error={formik.touched.pass && Boolean(formik.errors.pass)}
-          helperText={formik.touched.pass && formik.errors.pass}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={valuesPassword}
+          error={touchedPassword && Boolean(errorsPassword)}
+          helperText={touchedPassword && errorsPassword}
         />
         <TextField
           className="auth_textfield"
@@ -115,11 +149,11 @@ const register = () => {
           label="Confirm"
           variant="outlined"
           type="password"
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.confirm}
-          error={formik.touched.confirm && Boolean(formik.errors.confirm)}
-          helperText={formik.touched.confirm && formik.errors.confirm}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={valuesConfirm}
+          error={touchedConfirm && Boolean(errorsConfirm)}
+          helperText={touchedConfirm && errorsConfirm}
         />
       </>
     );
@@ -132,7 +166,7 @@ const register = () => {
         <form
           className="flex flex-col justify-center items-center space-y-8 "
           onSubmit={(e) => {
-            formik.handleSubmit(e);
+            handleSubmit(e);
           }}
           method="post"
           action="/api/auth/signin/email"

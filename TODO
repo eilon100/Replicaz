@@ -4,4 +4,5 @@ create a refresh token
 
 add validation to comment and post and title error
 
-add model for report and for delete
+add delete modal
+add report comment

@@ -1,6 +1,5 @@
 import { useFormik } from "formik";
 import Image from "next/image";
-import { useRouter } from "next/router";
 import React, { useContext, FC, useState } from "react";
 import toast from "react-hot-toast";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
@@ -9,6 +8,7 @@ import ReactTimeago from "react-timeago";
 import { AuthContext } from "../../context/AuthContext";
 import { comment } from "../../types/comment";
 import { apiService } from "../../utills/apiService";
+import ReportModal from "../modals/ReportModal";
 
 interface AllCommentsProps {
   comment: comment;
@@ -21,50 +21,73 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
   const [commentLiked, setCommentLiked] = useState(
     comment.likes.includes(userId)
   );
+  const [modalOpen, setModalOpen] = React.useState(false);
   const [commentLength, setCommentLength] = useState(comment.likes.length);
   const [editComment, setEditComment] = useState(false);
   const queryClient = useQueryClient();
-
-  const formik = useFormik({
+  const {
+    handleChange,
+    handleBlur,
+    values: { body: valuesBody },
+    resetForm,
+    handleSubmit,
+  } = useFormik({
     initialValues: {
       body: comment?.body,
     },
 
-    onSubmit: (values) => {
+    onSubmit: () => {
       commentEditHandler();
     },
   });
 
   const commentEditHandler = () => {
     const editedCommentData = {
-      body: formik.values.body,
+      body: valuesBody,
       commentId: comment._id,
     };
     apiService.patch
       .EDIT_COMMENT(editedCommentData)
-      .then((res) => {
-        toast.success(res.data.message);
+      .then(({ data: { message } }) => {
+        toast.success(message);
         setEditComment(false);
         queryClient.fetchQuery("fetchPost");
-        formik.resetForm();
+        resetForm();
       })
-      .catch((error) => {
-        toast.error(error.response.data.error);
-      });
+      .catch(
+        ({
+          response: {
+            data: { error },
+          },
+        }) => {
+          toast.error(error);
+        }
+      );
   };
 
   const commentLikeHandler = () => {
     const commentId = { commentId: comment._id };
+
     apiService.post
       .LIKE_COMMENT(commentId)
-      .then((res) => {
-        res.data.like
-          ? (setCommentLiked(true), setCommentLength(res.data.likesLength))
-          : (setCommentLiked(false), setCommentLength(res.data.likesLength));
+      .then(({ data: { like, likesLength } }) => {
+        if (like) {
+          setCommentLiked(true);
+          setCommentLength(likesLength);
+        } else {
+          setCommentLiked(false);
+          setCommentLength(likesLength);
+        }
       })
-      .catch((error) => {
-        toast.error(error.response.data.error);
-      });
+      .catch(
+        ({
+          response: {
+            data: { error },
+          },
+        }) => {
+          toast.error(error);
+        }
+      );
   };
 
   const commentDeleteHandler = () => {
@@ -73,18 +96,26 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
 
     apiService.post
       .DELETE_COMMENT(data)
-      .then((res) => {
-        toast.success(res.data.message, {
+      .then(({ data: { message } }) => {
+        toast.success(message, {
           id: notification,
         });
         queryClient.fetchQuery("fetchPost");
       })
-      .catch((error) => {
-        toast.error(error.response.data.error, {
-          id: notification,
-        });
-      });
+      .catch(
+        ({
+          response: {
+            data: { error },
+          },
+        }) => {
+          toast.error(error, {
+            id: notification,
+          });
+        }
+      );
   };
+
+  const commentReportHandler = () => {};
 
   const header = () => {
     return (
@@ -135,7 +166,7 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
         ) : (
           <form
             onSubmit={(e) => {
-              formik.handleSubmit(e);
+              handleSubmit(e);
             }}
             className="w-full"
           >
@@ -143,9 +174,9 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
               <input
                 id="body"
                 dir="auto"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.body}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={valuesBody}
                 disabled={!loggedIn}
                 className=" flex-1 w-full rounded-md bg-gray-50 p-2 pl-5 mb-2 outline-none"
                 type="text"
@@ -188,7 +219,12 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
             </span>
           </>
         ) : (
-          ""
+          <span
+            className="hover:underline cursor-pointer"
+            onClick={() => commentReportHandler()}
+          >
+            Report
+          </span>
         )}
       </div>
     );
@@ -196,6 +232,12 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
 
   return (
     <div key={comment._id}>
+      <ReportModal
+        type="comment"
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        id={comment._id}
+      />
       {header()}
       <div className=" border-l-2 px-6 flex flex-col gap-2 ">
         {body()}

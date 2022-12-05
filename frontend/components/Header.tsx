@@ -12,7 +12,6 @@ import { apiService } from "../utills/apiService";
 import toast from "react-hot-toast";
 
 function Header() {
-
   const router = useRouter();
   const isAuthPage = router.pathname.includes("auth");
   const { state, dispatch } = useContext(AuthContext);
@@ -27,7 +26,7 @@ function Header() {
         toast.success("Logout successfully");
       })
       .catch((error) => {
-        console.log(error);
+        toast.error(error);
       });
   };
 

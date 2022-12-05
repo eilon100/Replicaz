@@ -6,22 +6,7 @@ interface page {
   page: keyof pageObj;
 }
 type pageObj = {
-  signIn: {
-    icon: ReactJSXElement;
-    h1: string;
-    p: string;
-  };
-  register: {
-    icon: ReactJSXElement;
-    h1: string;
-    p: string;
-  };
-  resetPassword: {
-    icon: ReactJSXElement;
-    h1: string;
-    p: string;
-  };
-  newPassword: {
+  [key: string]: {
     icon: ReactJSXElement;
     h1: string;
     p: string;
@@ -50,14 +35,14 @@ const pageObj: pageObj = {
   },
 };
 
-function AuthHeader(props: page) {
+function AuthHeader({ page }: page) {
   return (
     <header className="flex flex-col items-start mt-12 mb-10">
       <div className="flex font-bold items-center ">
-        <h1 className=" text-lg ">{pageObj[props.page].h1}</h1>
-        {pageObj[props.page].icon}
+        <h1 className=" text-lg ">{pageObj[page].h1}</h1>
+        {pageObj[page].icon}
       </div>
-      <p className=" text-xs my-1 ">{pageObj[props.page].p}</p>
+      <p className=" text-xs my-1 ">{pageObj[page].p}</p>
     </header>
   );
 }

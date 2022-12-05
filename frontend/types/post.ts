@@ -1,7 +1,7 @@
 import { comment } from "./comment";
 import { user } from "./user";
 
-export type post = {
+export interface post {
   _id: string;
   title: string;
   body: string;
@@ -14,4 +14,4 @@ export type post = {
   createdAt: Date;
   updatedAt: Date;
   __v: number;
-};
+}

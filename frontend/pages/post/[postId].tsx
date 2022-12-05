@@ -26,21 +26,24 @@ function PostPage() {
   const { loggedIn, userName, userImage } = state;
   const { postId } = router.query;
 
-  const fetchPost = () => {
-    const res = apiService.get.GET_POST_BY_ID(postId);
-    return res;
-  };
+  const fetchPost = () => apiService.get.GET_POST_BY_ID(postId);
 
-  const { data, isLoading, error } = useQuery(["fetchPost"], fetchPost, {
+  const {
+    data: { data: postData } = {},
+    isLoading,
+    error,
+  } = useQuery(["fetchPost"], fetchPost, {
     cacheTime: 0,
   });
-  const postData = data?.data;
 
   if (isLoading) {
     return <div>Loading....</div>;
   }
+  if (error) {
+    return <div>Error</div>;
+  }
 
-  if (data) {
+  if (postData) {
     return (
       <div className="my-6 px-3 max-w-4xl mx-auto">
         <Post post={postData} page="post" />

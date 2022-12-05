@@ -203,7 +203,7 @@ export const deletePost: RequestHandler = async (req, res, next) => {
     // delete the save post from every user saves
     const deleteSaves = post.saves.map(async (save: string) => {
       const user = await User.findById(save.toString());
-      return user.update(
+      return user.updateOne(
         { savedPosts: user.savedPosts.pull(postId) },
         { session: postDeletionSession }
       );
@@ -229,6 +229,7 @@ export const deletePost: RequestHandler = async (req, res, next) => {
 
 export const editPost: RequestHandler = async (req, res, next) => {
   const { postId, title, body } = req.body;
+  
   try {
     const user = await User.findById(req.userData.userId);
     if (!user) {
@@ -258,7 +259,7 @@ export const editPost: RequestHandler = async (req, res, next) => {
 };
 
 export const reportPost: RequestHandler = async (req, res, next) => {
-  const { postId } = req.body;
+  const { postId, body } = req.body;
 
   try {
     const user = await User.findById(req.userData.userId);
@@ -275,18 +276,21 @@ export const reportPost: RequestHandler = async (req, res, next) => {
     if (!reportedPost) {
       const newReport = new Report({
         _id: postId,
-        reportedBy: req.userData.userId,
+        type: "Post",
+        reports: [{ reportedBy: req.userData.userId, body: [body] }],
       });
       await newReport.save();
       res.status(201).json({ message: "Thank you for your report" });
     } else {
-      if (reportedPost.reportedBy.includes(req.userData.userId)) {
-        res.status(201).json({ message: "Thank you for your report" });
-      } else {
-        reportedPost.reportedBy.push(req.userData.userId);
-        await reportedPost.save();
-        res.status(201).json({ message: "Thank you for your report" });
-      }
+      
+      const reported = reportedPost.reports.find(
+        (report: { reportedBy: string; body: string[] }) =>
+          report.reportedBy.toString() === req.userData.userId
+      );
+
+      reported.body.push(body);
+      await reportedPost.save();
+      res.status(201).json({ message: "Thank you for your report" });
     }
   } catch (error) {
     return res

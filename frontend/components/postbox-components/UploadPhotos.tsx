@@ -3,8 +3,11 @@ import React, { useEffect, useState } from "react";
 import { PlusIcon, UploadIcon } from "@heroicons/react/solid";
 import toast from "react-hot-toast";
 
-function UploadPhotos(props: any) {
-
+type UploadPhotosProps = {
+  setImages: (image: File[]) => void;
+  imageLength: number;
+};
+function UploadPhotos(props: UploadPhotosProps) {
   const [images, setImages] = useState<any[]>([]);
   const [imageURL, setImageURL] = useState<string[]>([]);
 
@@ -108,7 +111,7 @@ function UploadPhotos(props: any) {
       </div>
     ));
   };
-  
+
   const addPhotos = () => {
     return (
       imageURL.length > 0 &&

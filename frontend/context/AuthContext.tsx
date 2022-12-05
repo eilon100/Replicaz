@@ -21,7 +21,7 @@ export const authReducer = (state: any, action: any) => {
     case "LOGIN":
       return {
         loggedIn: true,
-        userId: action.payload.id,
+        userId: action.payload.userId,
         userName: action.payload.userName,
         email: action.payload.email,
         userImage: action.payload.userImage,
@@ -37,7 +37,7 @@ export const AuthContextProvider = ({ children }: AuthProps) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
   useEffect(() => {
     const cookie = getCookie("userData");
-
+    if (!cookie) return;
     const user = cookie ? JSON.parse(cookie as string) : null;
 
     if (user) {
