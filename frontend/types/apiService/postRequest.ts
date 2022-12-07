@@ -31,6 +31,5 @@ export type CREATE_COMMENT = {
 export type LIKE_COMMENT = { commentId: string };
 export type DELETE_COMMENT = {
   commentId: string;
-  postId: string | string[] | undefined;
 };
 export type REPORT_COMMENT = { commentId: string; body: string };

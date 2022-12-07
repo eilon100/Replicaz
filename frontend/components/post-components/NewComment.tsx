@@ -44,9 +44,9 @@ function NewComment() {
       .catch(
         ({
           response: {
-            data: { error },
+            data ,
           },
-        }) => toast.error(error)
+        }) => toast.error(data.error)
       );
   };
 

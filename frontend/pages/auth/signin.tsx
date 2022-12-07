@@ -64,15 +64,9 @@ const SignIn = () => {
         toast.success("Login successfully");
         Router.push("/");
       })
-      .catch(
-        ({
-          response: {
-            data: { error },
-          },
-        }) => {
-          toast.error(error);
-        }
-      );
+      .catch(({ response: { data } }) => {
+        toast.error(data.error);
+      });
   };
 
   //components

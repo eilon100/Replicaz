@@ -71,18 +71,12 @@ function PostBox() {
         setImageBoxOpen(false);
         setDisableButton(false);
       })
-      .catch(
-        ({
-          response: {
-            data: { error },
-          },
-        }) => {
-          toast.error(error, {
-            id: notification,
-          });
-          setDisableButton(false);
-        }
-      );
+      .catch(({ response: { data } }) => {
+        toast.error(data.error, {
+          id: notification,
+        });
+        setDisableButton(false);
+      });
   };
 
   //components

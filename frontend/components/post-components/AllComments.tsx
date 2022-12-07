@@ -8,7 +8,8 @@ import ReactTimeago from "react-timeago";
 import { AuthContext } from "../../context/AuthContext";
 import { comment } from "../../types/comment";
 import { apiService } from "../../utills/apiService";
-import ReportModal from "../modals/ReportModal";
+import InputModal from "../modals/InputModal";
+import ReportModal from "../modals/InputModal";
 
 interface AllCommentsProps {
   comment: comment;
@@ -54,15 +55,9 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
         queryClient.fetchQuery("fetchPost");
         resetForm();
       })
-      .catch(
-        ({
-          response: {
-            data: { error },
-          },
-        }) => {
-          toast.error(error);
-        }
-      );
+      .catch(({ response: { data } }) => {
+        toast.error(data.error);
+      });
   };
 
   const commentLikeHandler = () => {
@@ -79,20 +74,14 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
           setCommentLength(likesLength);
         }
       })
-      .catch(
-        ({
-          response: {
-            data: { error },
-          },
-        }) => {
-          toast.error(error);
-        }
-      );
+      .catch(({ response: { data } }) => {
+        toast.error(data.error);
+      });
   };
 
   const commentDeleteHandler = () => {
     const notification = toast.loading("Deleting comment...");
-    const data = { commentId: comment._id, postId };
+    const data = { commentId: comment._id };
 
     apiService.post
       .DELETE_COMMENT(data)
@@ -102,20 +91,16 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
         });
         queryClient.fetchQuery("fetchPost");
       })
-      .catch(
-        ({
-          response: {
-            data: { error },
-          },
-        }) => {
-          toast.error(error, {
-            id: notification,
-          });
-        }
-      );
+      .catch(({ response: { data } }) => {
+        toast.error(data.error, {
+          id: notification,
+        });
+      });
   };
 
-  const commentReportHandler = () => {};
+  const commentReportHandler = () => {
+    setModalOpen(true);
+  };
 
   const header = () => {
     return (
@@ -202,37 +187,39 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
 
   const footer = () => {
     return (
-      <div className="flex items-center gap-2">
-        {userId === comment.postedBy._id && !editComment ? (
-          <>
+      !editComment && (
+        <div className="flex items-center gap-2">
+          {userId === comment.postedBy._id ? (
+            <>
+              <span
+                className="hover:underline cursor-pointer"
+                onClick={() => setEditComment(true)}
+              >
+                Edit
+              </span>
+              <span
+                className="hover:underline cursor-pointer"
+                onClick={() => commentDeleteHandler()}
+              >
+                Delete
+              </span>
+            </>
+          ) : (
             <span
               className="hover:underline cursor-pointer"
-              onClick={() => setEditComment(true)}
+              onClick={() => commentReportHandler()}
             >
-              Edit
+              Report
             </span>
-            <span
-              className="hover:underline cursor-pointer"
-              onClick={() => commentDeleteHandler()}
-            >
-              Delete
-            </span>
-          </>
-        ) : (
-          <span
-            className="hover:underline cursor-pointer"
-            onClick={() => commentReportHandler()}
-          >
-            Report
-          </span>
-        )}
-      </div>
+          )}
+        </div>
+      )
     );
   };
 
   return (
     <div key={comment._id}>
-      <ReportModal
+      <InputModal
         type="comment"
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
@@ -241,7 +228,7 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
       {header()}
       <div className=" border-l-2 px-6 flex flex-col gap-2 ">
         {body()}
-        {footer()}
+        {loggedIn ? footer() : ""}
       </div>
     </div>
   );

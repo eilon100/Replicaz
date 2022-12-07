@@ -34,15 +34,9 @@ function ForgetPassword() {
       .then(() => {
         toast.success("Reset password has been sent to your email");
       })
-      .catch(
-        ({
-          response: {
-            data: { error },
-          },
-        }) => {
-          toast.error(error);
-        }
-      );
+      .catch(({ response: { data } }) => {
+        toast.error(data.error);
+      });
   };
 
   //components

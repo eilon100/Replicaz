@@ -60,15 +60,9 @@ const Post: FC<PostProps> = ({ post, page }) => {
           : (setPostLiked(false), setLikesLength(likesLength));
         queryClient.invalidateQueries("posts");
       })
-      .catch(
-        ({
-          response: {
-            data: { error },
-          },
-        }) => {
-          toast.error(error);
-        }
-      );
+      .catch(({ response: { data } }) => {
+        toast.error(data.error);
+      });
   };
   const editPostHandler = () => {
     const editedPostData = {
@@ -84,15 +78,9 @@ const Post: FC<PostProps> = ({ post, page }) => {
         setEditPost(false);
         queryClient.refetchQueries(page === "post" ? "fetchPost" : "posts");
       })
-      .catch(
-        ({
-          response: {
-            data: { error },
-          },
-        }) => {
-          toast.error(error);
-        }
-      );
+      .catch(({ response: { data } }) => {
+        toast.error(data.error);
+      });
   };
 
   const Header = () => {

@@ -18,7 +18,7 @@ import { useState, useEffect } from "react";
 import Router, { useRouter } from "next/router";
 import { useQueryClient } from "react-query";
 import { user } from "../../types/user";
-import ReportModal from "../modals/ReportModal";
+import InputModal from "../modals/InputModal";
 
 type PostOptionsProps = {
   postId: string;
@@ -60,7 +60,8 @@ export default function PostOptions({
   const { userId } = state;
   const [savedPost, setSavedPost] = useState(saves.includes(userId));
   const [closeOptions, setCloseOptions] = useState<null | HTMLElement>(null);
-  const [reportModalOpen, setReportModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [action, setAction] = useState("");
   const queryClient = useQueryClient();
   const open = Boolean(closeOptions);
 
@@ -68,7 +69,7 @@ export default function PostOptions({
     setCloseOptions(event.currentTarget);
   };
 
-  const savePostHandler = (postId: string) => {
+  const savePostHandler = () => {
     const data = { postId };
 
     apiService.post
@@ -77,18 +78,12 @@ export default function PostOptions({
         toast.success(message);
         saved ? setSavedPost(true) : setSavedPost(false);
       })
-      .catch(
-        ({
-          response: {
-            data: { error },
-          },
-        }) => {
-          toast.error(error);
-        }
-      );
+      .catch(({ response: { data } }) => {
+        toast.error(data.error);
+      });
   };
 
-  const deletePostHandler = (postId: string) => {
+  const deletePostHandler = () => {
     const notification = toast.loading("Deleting post...");
     const data = { postId };
 
@@ -101,28 +96,25 @@ export default function PostOptions({
         queryClient.fetchQuery("posts");
         Router.push("/");
       })
-      .catch(
-        ({
-          response: {
-            data: { error },
-          },
-        }) => {
-          toast.error(error, {
-            id: notification,
-          });
-        }
-      );
+      .catch(({ response: { data } }) => {
+        toast.error(data.error, {
+          id: notification,
+        });
+      });
   };
 
-  const editPostHandler = async () => {
+  const editPostHandler = () => {
     setEditPost(true);
+  };
+  const reportPostHandler = () => {
+    setModalOpen(true);
   };
 
   return (
     <React.Fragment>
-      <ReportModal
-        modalOpen={reportModalOpen}
-        setModalOpen={setReportModalOpen}
+      <InputModal
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
         id={postId}
         type="post"
       />
@@ -150,7 +142,7 @@ export default function PostOptions({
       >
         <MenuItem
           onClick={() => {
-            savePostHandler(postId);
+            savePostHandler();
           }}
         >
           {savedPost ? (
@@ -164,7 +156,7 @@ export default function PostOptions({
           <div>
             <MenuItem
               onClick={() => {
-                deletePostHandler(postId);
+                deletePostHandler();
               }}
             >
               <BsTrash className="mr-5" /> Delete
@@ -180,7 +172,7 @@ export default function PostOptions({
         ) : (
           <MenuItem
             onClick={() => {
-              setReportModalOpen(true);
+              reportPostHandler();
             }}
           >
             <BsFlag className="mr-5" /> Report

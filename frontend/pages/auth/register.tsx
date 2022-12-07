@@ -69,15 +69,9 @@ const register = () => {
         toast.success("Verification has been sent to your email");
         Router.push("/auth/signin");
       })
-      .catch(
-        ({
-          response: {
-            data: { error },
-          },
-        }) => {
-          toast.error(error);
-        }
-      );
+      .catch(({ response: { data } }) => {
+        toast.error(data.error);
+      });
   };
   //components
   const textField = () => {
