@@ -3,5 +3,8 @@ change all the TS any in the project
 create a refresh token
 
 add delete modal
-
+add return to the same post you logged in to 
+add the the create post disapear on slide 
+add auto loading to the feed
 delete 2 post to fast error
+add skeleton loading

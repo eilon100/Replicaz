@@ -15,7 +15,8 @@ import { Typography } from "@mui/material";
 import { useQueryClient } from "react-query";
 import Link from "next/link";
 import { post } from "../types/post";
-
+import { postValidationSchema } from "../validation/post";
+import { TextField } from "@mui/material";
 interface PostProps {
   post: post;
   page?: string;
@@ -42,7 +43,7 @@ const Post: FC<PostProps> = ({ post, page }) => {
       title: post?.title,
       body: post?.body,
     },
-
+    validationSchema: postValidationSchema("postBox"),
     onSubmit: (s) => {
       editPostHandler();
     },
@@ -94,12 +95,14 @@ const Post: FC<PostProps> = ({ post, page }) => {
               layout="fill"
             />
           </div>
-          <div className="font-bold text-[13px] xs:text-lg">
-            {post.community}
-          </div>
-          <div className=" font-[400] text-[9px] xs:text-xs text-[#65676B]">
-            - Posted by {post.postedBy?.userName}&nbsp;
-            <ReactTimeago date={post.createdAt} />
+          <div className="flex items-center">
+            <div className=" font-bold text-sm xs:text-xl">
+              {post.community}
+            </div>
+            <div className=" font-[400] mt-[1px] text-[0.5rem] xs:text-xs text-[#65676B] ">
+              &nbsp; - Posted by {post.postedBy?.userName}&nbsp;
+              <ReactTimeago date={post.createdAt} />
+            </div>
           </div>
         </div>
         {loggedIn ? (
@@ -133,20 +136,30 @@ const Post: FC<PostProps> = ({ post, page }) => {
               handleSubmit(e);
             }}
           >
-            <div className=" font-semibold text-[#050505] s ">
-              <input
-                id="title"
-                dir="auto"
+            <div className=" font-semibold text-[#050505] ">
+              <TextField
+                className=" flex-1 w-full min-w-[80px] rounded-md  mb-2 outline-none "
+                type="text"
+                name="title"
+                disabled={!loggedIn}
+                variant="outlined"
+                sx={{
+                  "& fieldset": { border: "none" },
+                }}
+                inputProps={{
+                  dir: "auto",
+                  className: "h-2 bg-gray-50 rounded-md",
+                  maxLength: 50,
+                }}
+                placeholder={"Title"}
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={valuesTitle}
-                disabled={!loggedIn}
-                className="w-full flex-1 rounded-md bg-gray-50 p-2 pl-5 mb-2 outline-none"
-                type="text"
-                placeholder={"Title"}
+                error={!!errorsTitle}
+                helperText={errorsTitle}
               />
             </div>
-            <div className="text-[#050505 ] font-[400]">
+            <div className="text-[#050505 ]">
               <Textarea
                 minRows={4}
                 maxRows={4}
@@ -160,19 +173,18 @@ const Post: FC<PostProps> = ({ post, page }) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={valuesBody}
-                error={touchedBody && Boolean(errorsBody)}
                 placeholder="Text (optional)"
                 variant="soft"
                 disabled={!loggedIn}
-                className=" flex-1 m-2 p-2 bg-gray-50 !outline-none !border-none rounded-md resize-none "
+                className="flex-1 px-3 bg-gray-50 !outline-none !border-none rounded-md resize-none text-xs xs:text-base"
                 endDecorator={
-                  <Typography className="text-xs ml-auto text-gray-500">
+                  <Typography className="text-[0.5rem] xs:text-xs ml-auto text-gray-500">
                     {300 - valuesBody.length} character(s)
                   </Typography>
                 }
               />
             </div>
-            <div className="flex justify-end items-center gap-2 font-semibold">
+            <div className="flex justify-end items-center gap-2 font-semibold text-xs xs:text-base">
               <button
                 type="reset"
                 onClick={() => {

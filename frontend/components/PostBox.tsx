@@ -2,12 +2,7 @@ import { PhotographIcon } from "@heroicons/react/outline";
 import React, { useContext, useState } from "react";
 import Image from "next/image";
 import { apiService } from "../utills/apiService";
-
 import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -145,7 +140,7 @@ function PostBox() {
           disabled={!loggedIn}
           className=" flex-1 m-2 p-2 bg-gray-50 !outline-none !border-none rounded-md resize-none "
           endDecorator={
-            <Typography className="text-xs ml-auto text-gray-500">
+            <Typography className="text-[0.5rem] xs:text-xs ml-auto text-gray-500">
               {300 - valuesBody.length} character(s)
             </Typography>
           }

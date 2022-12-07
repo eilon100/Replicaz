@@ -1,3 +1,4 @@
+import { Textarea, Typography } from "@mui/joy";
 import { useFormik } from "formik";
 import Image from "next/image";
 import React, { useContext, FC, useState } from "react";
@@ -8,6 +9,7 @@ import ReactTimeago from "react-timeago";
 import { AuthContext } from "../../context/AuthContext";
 import { comment } from "../../types/comment";
 import { apiService } from "../../utills/apiService";
+import { postValidationSchema } from "../../validation/post";
 import ModalComponent from "../modals/Modal";
 
 interface AllCommentsProps {
@@ -35,7 +37,7 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
     initialValues: {
       body: comment?.body,
     },
-
+    validationSchema: postValidationSchema("comment"),
     onSubmit: () => {
       commentEditHandler();
     },
@@ -113,11 +115,11 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
               layout="fill"
             />
           </div>
-          <div className=" font-semibold text-[9px] xs:text-xs ">
-            {comment.postedBy?.userName} &nbsp;
+          <div className="flex items-center font-semibold text-xs xs:text-lg ">
+            {comment.postedBy?.userName}&nbsp;·&nbsp;
             <ReactTimeago
               date={comment.createdAt}
-              className="font-normal text-[#65676B]"
+              className="font-normal xs:text-sm text-[#65676B]"
             />
           </div>
         </div>
@@ -130,7 +132,9 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
       <div className="flex w-full items-center justify-center mb-2">
         {!editComment ? (
           <>
-            <p className=" text-[20px] font-normal w-full ">{comment.body}</p>
+            <p className="text-sm xs:text-[20px] font-normal w-full ">
+              {comment.body}
+            </p>
             <div
               className="flex items-center gap-1"
               onClick={() => (loggedIn ? commentLikeHandler() : "")}
@@ -155,23 +159,37 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
             className="w-full"
           >
             <div className=" font-semibold  text-[#050505] s ">
-              <input
-                id="body"
-                dir="auto"
+              <Textarea
+                maxRows={4}
+                minRows={4}
+                disabled={!loggedIn}
+                componentsProps={{
+                  textarea: {
+                    maxLength: 300,
+                    dir: "auto",
+                  },
+                }}
+                name="body"
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={valuesBody}
-                disabled={!loggedIn}
-                className=" flex-1 w-full rounded-md bg-gray-50 p-2 pl-5 mb-2 outline-none"
-                type="text"
-                placeholder={"Body"}
+                placeholder='Edit comment..'
+                variant="soft"
+                className=" h-20 xs:h-28 rounded-md border border-gray-200 p-2 pl-4 
+               outline-none disabled:bg-gray-50 resize-none text-xs xs:text-base"
+                endDecorator={
+                  <Typography className=" text-[0.5rem] ml-auto  text-gray-500  xs:text-xs">
+                    {300 - valuesBody.length} character(s)
+                  </Typography>
+                }
               />
             </div>
-            <div className="flex justify-end items-center gap-2 font-semibold">
+            <div className="flex justify-end items-center gap-2 font-semibold mt-1">
               <button
                 type="reset"
                 onClick={() => {
                   setEditComment(false);
+                  resetForm();
                 }}
               >
                 Cancel
@@ -187,7 +205,7 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
   const footer = () => {
     return (
       !editComment && (
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 text-[0.6rem] xs:text-xs text-[#65676B]">
           {userId === comment.postedBy._id ? (
             <>
               <span
@@ -225,7 +243,7 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
         type={{ action: "report", type: "comment" }}
       />
       {header()}
-      <div className=" border-l-2 px-6 flex flex-col gap-2 ">
+      <div className=" border-l-2 px-6 flex flex-col xs:gap-2 ">
         {body()}
         {loggedIn ? footer() : ""}
       </div>

@@ -15,7 +15,7 @@ function NewComment() {
   const { loggedIn } = state;
   const { postId } = router.query;
   const queryClient = useQueryClient();
-
+  const { userName } = state;
   const {
     handleChange,
     handleBlur,
@@ -74,10 +74,10 @@ function NewComment() {
             loggedIn ? "What are your thoughts?" : "Please sign in to comment"
           }
           variant="soft"
-          className="h-28 rounded-md border border-gray-200 p-2 pl-4 
-          outline-none disabled:bg-gray-50 resize-none"
+          className="h-20 xs:h-28 rounded-md border border-gray-200 p-2 pl-4 
+          outline-none disabled:bg-gray-50 resize-none text-xs xs:text-base"
           endDecorator={
-            <Typography className="text-xs ml-auto text-gray-500">
+            <Typography className=" text-[0.5rem] ml-auto text-gray-500  xs:text-xs">
               {300 - valuesComment.length} character(s)
             </Typography>
           }
@@ -93,7 +93,14 @@ function NewComment() {
     );
   };
 
-  return <div>{newCommentForm()}</div>;
+  return (
+    <div>
+      <p className="text-[0.6rem] xs:text-xs font-semibold ">
+        Comment as <span className="font-normal">{userName}</span>
+      </p>
+      {newCommentForm()}
+    </div>
+  );
 }
 
 export default NewComment;

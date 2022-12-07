@@ -51,9 +51,6 @@ function PostPage() {
           className="-mt-1 rounded-b-md bg-white px-6 py-5 text-xs font-semibold 
           "
         >
-          <p className="text-xs font-semibold ">
-            Comment as <span className="font-normal">{userName}</span>
-          </p>
           <NewComment />
           {postData.comments.map((comment: comment) => {
             return (
