@@ -14,3 +14,7 @@
      hover:bg-gray-100 cursor-pointer rounded-md;
   }
 }
+
+.css-1v2n3o3-JoyTextarea-root.Joy-focused:before {
+  box-shadow: none;
+}

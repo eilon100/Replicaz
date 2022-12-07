@@ -8,8 +8,7 @@ import ReactTimeago from "react-timeago";
 import { AuthContext } from "../../context/AuthContext";
 import { comment } from "../../types/comment";
 import { apiService } from "../../utills/apiService";
-import InputModal from "../modals/InputModal";
-import ReportModal from "../modals/InputModal";
+import ModalComponent from "../modals/Modal";
 
 interface AllCommentsProps {
   comment: comment;
@@ -219,11 +218,11 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
 
   return (
     <div key={comment._id}>
-      <InputModal
-        type="comment"
+      <ModalComponent
         modalOpen={modalOpen}
         setModalOpen={setModalOpen}
         id={comment._id}
+        type={{ action: "report", type: "comment" }}
       />
       {header()}
       <div className=" border-l-2 px-6 flex flex-col gap-2 ">

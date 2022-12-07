@@ -2,6 +2,7 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 import mongoose from "mongoose";
 import Comment from "../modal/comment";
 import Post from "../modal/post";
+import Report from "../modal/report";
 import User from "../modal/user";
 
 export const createComment: RequestHandler = async (req, res, next) => {
@@ -101,7 +102,7 @@ export const editComment: RequestHandler = async (req, res, next) => {
 };
 
 export const deleteComment: RequestHandler = async (req, res, next) => {
-  const { commentId, postId } = req.body;
+  const { commentId } = req.body;
   const commentDeletionSession = await mongoose.startSession();
 
   try {
@@ -113,7 +114,7 @@ export const deleteComment: RequestHandler = async (req, res, next) => {
     if (!comment) {
       return res.status(404).json({ error: "Could not find the comment" });
     }
-    const post = await Post.findById(postId);
+    const post = await Post.findById(comment.post);
     if (!post) {
       return res.status(404).json({ error: "Could not find the post" });
     }
@@ -140,5 +141,43 @@ export const deleteComment: RequestHandler = async (req, res, next) => {
     return res
       .status(500)
       .json({ error: "Error on '/post/deleteComment': " + error });
+  }
+};
+export const reportComment: RequestHandler = async (req, res, next) => {
+  const { commentId, body } = req.body;
+  try {
+    const user = await User.findById(req.userData.userId);
+    if (!user) {
+      return res.status(404).json({ error: "Could not find the user" });
+    }
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
+      return res.status(404).json({ error: "Could not find the comment" });
+    }
+
+    const reportedComment = await Report.findById(commentId);
+
+    if (!reportedComment) {
+      const newReport = new Report({
+        _id: commentId,
+        type: "Comment",
+        reports: [{ reportedBy: req.userData.userId, body: [body] }],
+      });
+      await newReport.save();
+      res.status(201).json({ message: "Thank you for your report" });
+    } else {
+      const reported = reportedComment.reports.find(
+        (report: { reportedBy: string; body: string[] }) =>
+          report.reportedBy.toString() === req.userData.userId
+      );
+
+      reported.body.push(body);
+      await reportedComment.save();
+      res.status(201).json({ message: "Thank you for your report" });
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ error: "Error on '/post/reportpost': " + error });
   }
 };

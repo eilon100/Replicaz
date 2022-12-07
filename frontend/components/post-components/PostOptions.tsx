@@ -19,6 +19,7 @@ import Router, { useRouter } from "next/router";
 import { useQueryClient } from "react-query";
 import { user } from "../../types/user";
 import InputModal from "../modals/InputModal";
+import ModalComponent from "../modals/Modal";
 
 type PostOptionsProps = {
   postId: string;
@@ -61,7 +62,6 @@ export default function PostOptions({
   const [savedPost, setSavedPost] = useState(saves.includes(userId));
   const [closeOptions, setCloseOptions] = useState<null | HTMLElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
-  const [action, setAction] = useState("");
   const queryClient = useQueryClient();
   const open = Boolean(closeOptions);
 
@@ -110,23 +110,8 @@ export default function PostOptions({
     setModalOpen(true);
   };
 
-  return (
-    <React.Fragment>
-      <InputModal
-        modalOpen={modalOpen}
-        setModalOpen={setModalOpen}
-        id={postId}
-        type="post"
-      />
-      <IconButton
-        onClick={handleClick}
-        size="small"
-        aria-controls={open ? "PostOptions" : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
-      >
-        <BiDotsHorizontalRounded className="text-black" />
-      </IconButton>
+  const menu = () => {
+    return (
       <Menu
         anchorEl={closeOptions}
         id="PostOptions"
@@ -179,6 +164,27 @@ export default function PostOptions({
           </MenuItem>
         )}
       </Menu>
+    );
+  };
+  
+  return (
+    <React.Fragment>
+      <ModalComponent
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        id={postId}
+        type={{ action: "report", type: "post" }}
+      />
+      <IconButton
+        onClick={handleClick}
+        size="small"
+        aria-controls={open ? "PostOptions" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+      >
+        <BiDotsHorizontalRounded className="text-black" />
+      </IconButton>
+      {menu()}
     </React.Fragment>
   );
 }

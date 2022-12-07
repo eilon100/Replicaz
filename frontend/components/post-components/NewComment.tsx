@@ -1,3 +1,5 @@
+import { Textarea } from "@mui/joy";
+import { Typography } from "@mui/material";
 import { useFormik } from "formik";
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
@@ -17,6 +19,8 @@ function NewComment() {
     handleChange,
     handleBlur,
     values: { comment: valuesComment },
+    touched: { comment: touchedComment },
+    errors: { comment: errorsComment },
     resetForm,
     handleSubmit,
   } = useFormik({
@@ -41,13 +45,7 @@ function NewComment() {
         queryClient.fetchQuery("fetchPost");
         resetForm();
       })
-      .catch(
-        ({
-          response: {
-            data ,
-          },
-        }) => toast.error(data.error)
-      );
+      .catch(({ response: { data } }) => toast.error(data.error));
   };
 
   const newCommentForm = () => {
@@ -58,17 +56,31 @@ function NewComment() {
           handleSubmit(e);
         }}
       >
-        <textarea
+        <Textarea
+          maxRows={4}
+          minRows={4}
           disabled={!loggedIn}
-          rows={4}
-          id="comment"
+          componentsProps={{
+            textarea: {
+              maxLength: 300,
+              dir: "auto",
+            },
+          }}
+          name="comment"
           onChange={handleChange}
           onBlur={handleBlur}
           value={valuesComment}
-          className="h-24 rounded-md border border-gray-200 p-2 pl-4 
-      outline-none disabled:bg-gray-50 resize-none"
+          error={touchedComment && Boolean(errorsComment)}
           placeholder={
             loggedIn ? "What are your thoughts?" : "Please sign in to comment"
+          }
+          variant="soft"
+          className="h-28 rounded-md border border-gray-200 p-2 pl-4 
+          outline-none disabled:bg-gray-50 resize-none"
+          endDecorator={
+            <Typography className="text-xs ml-auto text-gray-500">
+              {300 - valuesComment.length} character(s)
+            </Typography>
           }
         />
         <button

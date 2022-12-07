@@ -229,7 +229,7 @@ export const deletePost: RequestHandler = async (req, res, next) => {
 
 export const editPost: RequestHandler = async (req, res, next) => {
   const { postId, title, body } = req.body;
-  
+
   try {
     const user = await User.findById(req.userData.userId);
     if (!user) {
@@ -259,7 +259,7 @@ export const editPost: RequestHandler = async (req, res, next) => {
 };
 
 export const reportPost: RequestHandler = async (req, res, next) => {
-  const { postId, body } = req.body;
+  const { postId, body: reportedBody } = req.body;
 
   try {
     const user = await User.findById(req.userData.userId);
@@ -277,8 +277,9 @@ export const reportPost: RequestHandler = async (req, res, next) => {
       const newReport = new Report({
         _id: postId,
         type: "Post",
-        reports: [{ reportedBy: req.userData.userId, body: [body] }],
+        reports: [{ reportedBy: req.userData.userId, body: [reportedBody] }],
       });
+
       await newReport.save();
       res.status(201).json({ message: "Thank you for your report" });
     } else {
@@ -288,7 +289,7 @@ export const reportPost: RequestHandler = async (req, res, next) => {
           report.reportedBy.toString() === req.userData.userId
       );
 
-      reported.body.push(body);
+      reported.body.push(reportedBody);
       await reportedPost.save();
       res.status(201).json({ message: "Thank you for your report" });
     }

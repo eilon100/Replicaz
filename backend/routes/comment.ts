@@ -3,6 +3,7 @@ import {
   deleteComment,
   editComment,
   likeComment,
+  reportComment,
 } from "../controllers/comments";
 import { isAuth } from "../middleware/isAuth";
 
@@ -15,5 +16,7 @@ commentRouter.post("/likecomment", likeComment);
 commentRouter.patch("/editcomment", editComment);
 
 commentRouter.post("/deletecomment", deleteComment);
+
+commentRouter.post("/reportcomment", reportComment);
 
 export { commentRouter };
