@@ -8,7 +8,6 @@ import ImageSwiper from "./post-components/ImageSwiper";
 import { useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useFormik } from "formik";
-import { postValidationSchema } from "../validation/post";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import PostOptions from "./post-components/PostOptions";
 import { Textarea } from "@mui/joy";
@@ -43,7 +42,7 @@ const Post: FC<PostProps> = ({ post, page }) => {
       title: post?.title,
       body: post?.body,
     },
-    validationSchema: postValidationSchema,
+
     onSubmit: (s) => {
       editPostHandler();
     },

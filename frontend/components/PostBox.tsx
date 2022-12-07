@@ -8,6 +8,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  TextField,
   Typography,
 } from "@mui/material";
 import UploadPhotos from "./postbox-components/UploadPhotos";
@@ -16,6 +17,8 @@ import { AuthContext } from "../context/AuthContext";
 import { useFormik } from "formik";
 import Textarea from "@mui/joy/Textarea";
 import { useQueryClient } from "react-query";
+import CommunitySelect from "./postbox-components/CommunitySelect";
+import { postValidationSchema } from "../validation/post";
 
 const uploadImageLength = 5;
 
@@ -42,7 +45,7 @@ function PostBox() {
       body: "",
       community: "",
     },
-
+    validationSchema: postValidationSchema("postBox"),
     onSubmit: () => {
       onSubmit();
     },
@@ -82,8 +85,8 @@ function PostBox() {
   //components
   const postBox = () => {
     return (
-      <div className="flex items-center space-x-3 ">
-        <div className="relative h-9 w-9">
+      <div className="flex items-start space-x-3 h-14 px-2 mt-2">
+        <div className="relative h-10 w-10  ">
           <Image
             className=" rounded-full "
             objectFit="contain"
@@ -91,29 +94,31 @@ function PostBox() {
             layout="fill"
           />
         </div>
-        <Textarea
-          placeholder={loggedIn ? "Create a post" : "Sign in to post"}
-          required
-          componentsProps={{
-            textarea: {
-              maxLength: 300,
-              dir: "auto",
-            },
-          }}
+        <TextField
+          className=" flex-1 h-1 px-1 min-w-[80px] "
+          type="text"
           name="title"
+          disabled={!loggedIn}
+          variant="outlined"
+          sx={{
+            "& fieldset": { border: "none" },
+          }}
+          inputProps={{
+            className: "h-2 bg-gray-50 rounded-md",
+            maxLength: 50,
+          }}
+          placeholder={loggedIn ? "Create a post" : "Sign in to post"}
           onChange={handleChange}
           onBlur={handleBlur}
           value={valuesTitle}
-          error={touchedTitle && Boolean(errorsTitle)}
-          variant="soft"
-          disabled={!loggedIn}
-          className=" flex-1 rounded-md bg-gray-50 p-2 pl-5 outline-none min-w-[80px] resize-none"
+          error={!!errorsTitle}
+          helperText={errorsTitle}
         />
         <PhotographIcon
           onClick={() => isPostActive && setImageBoxOpen(!imageBoxOpen)}
           className={`h-7 text-gray-300 ${isPostActive && "cursor-pointer"} ${
             imageBoxOpen && "text-blue-300 "
-          }`}
+          } mt-[6px] `}
         />
       </div>
     );
@@ -148,27 +153,7 @@ function PostBox() {
       </div>
     );
   };
-  const communitySelect = () => {
-    return (
-      <FormControl variant="standard" sx={{ mx: 1.5, maxWidth: 120 }}>
-        <InputLabel id="demo-simple-select-label">community</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          required
-          value={community}
-          label="Community"
-          onChange={(event) => {
-            setCommunity(event.target.value);
-          }}
-        >
-          <MenuItem value={"Shoes"}>Shoes</MenuItem>
-          <MenuItem value={"Bags"}>Bags</MenuItem>
-          <MenuItem value={"Clothes"}>Clothes</MenuItem>
-        </Select>
-      </FormControl>
-    );
-  };
+
   const createPostButton = () => {
     return (
       <div className="flex justify-center mt-2  xs:justify-end">
@@ -193,7 +178,7 @@ function PostBox() {
       {postBox()}
       {isPostActive && (
         <div className="flex flex-col py-2 ">
-          {communitySelect()}
+          <CommunitySelect community={community} setCommunity={setCommunity} />
           {textArea()}
           {imageBoxOpen && (
             <UploadPhotos

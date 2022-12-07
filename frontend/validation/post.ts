@@ -2,16 +2,21 @@ import * as yup from "yup";
 
 export const postValidationSchema = (page: string) => {
   const yupObject = {
-    title: yup
+    title: yup.string().trim().max(49, "Title must be 50 characters long"),
+    body: yup.string().max(300, "Title must be 300 characters long").trim(),
+    comment: yup
       .string()
-      .required("Title is required")
-      .min(3, "Title must be 3 or more characters")
-      .max(50, "Title must be 50 characters long"),
-    body: yup.string().max(300, "Title must be 300 characters long"),
+      .required()
+      .max(300, "Comment must be 300 characters long")
+      .trim(),
   };
-
-  return yup.object({
-    title: yupObject.title,
-    body: yupObject.body,
-  });
+  if (page === "postBox")
+    return yup.object({
+      title: yupObject.title,
+      body: yupObject.body,
+    });
+  if (page === "comment")
+    return yup.object({
+      comment: yupObject.comment,
+    });
 };

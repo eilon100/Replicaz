@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { useQueryClient } from "react-query";
 import { AuthContext } from "../../context/AuthContext";
 import { apiService } from "../../utills/apiService";
+import { postValidationSchema } from "../../validation/post";
 
 function NewComment() {
   const router = useRouter();
@@ -19,14 +20,13 @@ function NewComment() {
     handleChange,
     handleBlur,
     values: { comment: valuesComment },
-    touched: { comment: touchedComment },
-    errors: { comment: errorsComment },
     resetForm,
     handleSubmit,
   } = useFormik({
     initialValues: {
       comment: "",
     },
+    validationSchema: postValidationSchema("comment"),
     onSubmit: () => {
       NewCommentHandler();
     },
@@ -70,7 +70,6 @@ function NewComment() {
           onChange={handleChange}
           onBlur={handleBlur}
           value={valuesComment}
-          error={touchedComment && Boolean(errorsComment)}
           placeholder={
             loggedIn ? "What are your thoughts?" : "Please sign in to comment"
           }
