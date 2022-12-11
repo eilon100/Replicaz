@@ -8,9 +8,10 @@ import { useQueryClient } from "react-query";
 import ReactTimeago from "react-timeago";
 import { AuthContext } from "../../context/AuthContext";
 import { comment } from "../../types/comment";
+import ConfirmModal from "../../UI/modals/ConfirmModal";
+import InputModal from "../../UI/modals/InputModal";
 import { apiService } from "../../utills/apiService";
 import { postValidationSchema } from "../../validation/post";
-import ModalComponent from "../modals/Modal";
 
 interface AllCommentsProps {
   comment: comment;
@@ -23,7 +24,8 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
   const [commentLiked, setCommentLiked] = useState(
     comment.likes.includes(userId)
   );
-  const [modalOpen, setModalOpen] = React.useState(false);
+  const [reportModal, setReportModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [commentLength, setCommentLength] = useState(comment.likes.length);
   const [editComment, setEditComment] = useState(false);
   const queryClient = useQueryClient();
@@ -99,8 +101,17 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
       });
   };
 
-  const commentReportHandler = () => {
-    setModalOpen(true);
+  const commentReportHandler = (body: string) => {
+    const data = { commentId: comment._id, body };
+
+    apiService.post
+      .REPORT_COMMENT(data)
+      .then(({ data: { message } }) => {
+        toast.success(message);
+      })
+      .catch(({ response: { data } }) => {
+        toast.error(data.error);
+      });
   };
 
   const header = () => {
@@ -173,7 +184,7 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={valuesBody}
-                placeholder='Edit comment..'
+                placeholder="Edit comment.."
                 variant="soft"
                 className=" h-20 xs:h-28 rounded-md border border-gray-200 p-2 pl-4 
                outline-none disabled:bg-gray-50 resize-none text-xs xs:text-base"
@@ -216,7 +227,7 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
               </span>
               <span
                 className="hover:underline cursor-pointer"
-                onClick={() => commentDeleteHandler()}
+                onClick={() => setDeleteModal(true)}
               >
                 Delete
               </span>
@@ -224,7 +235,7 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
           ) : (
             <span
               className="hover:underline cursor-pointer"
-              onClick={() => commentReportHandler()}
+              onClick={() => setReportModal(true)}
             >
               Report
             </span>
@@ -236,11 +247,17 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
 
   return (
     <div key={comment._id}>
-      <ModalComponent
-        modalOpen={modalOpen}
-        setModalOpen={setModalOpen}
-        id={comment._id}
-        type={{ action: "report", type: "comment" }}
+      <InputModal
+        modalOpen={reportModal}
+        setModalOpen={setReportModal}
+        functionHandler={commentReportHandler}
+      />
+      <ConfirmModal
+        modalOpen={deleteModal}
+        setModalOpen={setDeleteModal}
+        functionHandler={commentDeleteHandler}
+        action="delete"
+        page="comment"
       />
       {header()}
       <div className=" border-l-2 px-6 flex flex-col xs:gap-2 ">

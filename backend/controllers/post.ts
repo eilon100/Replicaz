@@ -210,6 +210,8 @@ export const deletePost: RequestHandler = async (req, res, next) => {
     });
     await Promise.all(deleteSaves);
     await post.remove({ session: postDeletionSession });
+    //delete the post reports
+    await Report.findByIdAndDelete(postId, { session: postDeletionSession });
 
     //images Deletion
     await imagesFolderDeletion({
@@ -283,7 +285,6 @@ export const reportPost: RequestHandler = async (req, res, next) => {
       await newReport.save();
       res.status(201).json({ message: "Thank you for your report" });
     } else {
-      
       const reported = reportedPost.reports.find(
         (report: { reportedBy: string; body: string[] }) =>
           report.reportedBy.toString() === req.userData.userId

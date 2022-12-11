@@ -1,17 +1,19 @@
 import React from "react";
-import toast from "react-hot-toast";
-import { apiService } from "../../utills/apiService";
 import { Button, Modal, Textarea, Typography } from "@mui/joy";
 import { useFormik } from "formik";
+import { reportValidationSchema } from "../../validation/report";
 
 interface ReportModalProps {
   modalOpen: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  id: string;
-  type: string;
+  functionHandler: any;
 }
 
-function InputModal({ modalOpen, setModalOpen, id, type }: ReportModalProps) {
+function InputModal({
+  modalOpen,
+  setModalOpen,
+  functionHandler,
+}: ReportModalProps) {
   const {
     handleChange,
     handleBlur,
@@ -24,34 +26,13 @@ function InputModal({ modalOpen, setModalOpen, id, type }: ReportModalProps) {
     initialValues: {
       body: "",
     },
-
+    validationSchema: reportValidationSchema,
     onSubmit: (values) => {
-      reportHandler(values.body);
+      functionHandler(values.body.trim());
       setModalOpen(false);
       resetForm();
     },
   });
-  const reportHandler = (valuesBody: any) => {
-    const getRightApi = () => {
-      if (type === "post") {
-        const data = { postId: id, body: valuesBody };
-        return apiService.post.REPORT_POST(data);
-      }
-
-      const data = { commentId: id, body: valuesBody };
-      return apiService.post.REPORT_COMMENT(data);
-    };
-
-    const apiToCall = getRightApi();
-
-    apiToCall
-      .then(({ data: { message } }) => {
-        toast.success(message);
-      })
-      .catch(({ response: { data } }) => {
-        toast.error(data.error);
-      });
-  };
 
   return (
     <Modal
@@ -79,7 +60,6 @@ function InputModal({ modalOpen, setModalOpen, id, type }: ReportModalProps) {
           onChange={handleChange}
           onBlur={handleBlur}
           value={valuesBody}
-          error={touchedBody && Boolean(errorsBody)}
           placeholder="Text"
           variant="soft"
           className=" flex-1 w-full m-2 p-2 bg-gray-50 !outline-none !border-none rounded-md resize-none "
@@ -90,7 +70,13 @@ function InputModal({ modalOpen, setModalOpen, id, type }: ReportModalProps) {
           }
         />
         <div className="flex w-full justify-around">
-          <Button variant="outlined" onClick={() => setModalOpen(false)}>
+          <Button
+            variant="outlined"
+            onClick={() => {
+              setModalOpen(false);
+              resetForm();
+            }}
+          >
             Cancel
           </Button>
           <Button variant="outlined" type="submit">

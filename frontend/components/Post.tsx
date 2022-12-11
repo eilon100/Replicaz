@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useContext, FC } from "react";
+import React, { useContext, FC, useEffect } from "react";
 import toast from "react-hot-toast";
 import { BiComment, BiLike, BiShare } from "react-icons/bi";
 import ReactTimeago from "react-timeago";
@@ -34,7 +34,6 @@ const Post: FC<PostProps> = ({ post, page }) => {
     handleChange,
     handleBlur,
     values: { body: valuesBody, title: valuesTitle },
-    touched: { body: touchedBody, title: touchedTitle },
     errors: { body: errorsBody, title: errorsTitle },
     resetForm,
     handleSubmit,
@@ -49,8 +48,8 @@ const Post: FC<PostProps> = ({ post, page }) => {
     },
   });
 
-  const likePostHandler = (postId: string) => {
-    const data = { postId };
+  const likePostHandler = () => {
+    const data = { postId: post._id };
 
     apiService.post
       .LIKE_POST(data)
@@ -76,13 +75,17 @@ const Post: FC<PostProps> = ({ post, page }) => {
       .then(({ data: { message } }) => {
         toast.success(message);
         setEditPost(false);
+        resetForm();
         queryClient.refetchQueries(page === "post" ? "fetchPost" : "posts");
       })
       .catch(({ response: { data } }) => {
         toast.error(data.error);
       });
   };
-
+  const persistScrollPosition = (id: string) => {
+    sessionStorage.setItem("scroll-position-post-id-marker", id);
+  };
+  
   const Header = () => {
     return (
       <header className=" flex items-center mb-2 justify-between">
@@ -189,6 +192,7 @@ const Post: FC<PostProps> = ({ post, page }) => {
                 type="reset"
                 onClick={() => {
                   setEditPost(false);
+                  resetForm();
                 }}
               >
                 Cancel
@@ -215,7 +219,7 @@ const Post: FC<PostProps> = ({ post, page }) => {
           className={`postButtons ${postLiked ? "text-blue-600" : ""}`}
           onClick={() => {
             loggedIn
-              ? likePostHandler(post._id)
+              ? likePostHandler()
               : toast.error("Please sign in to like");
           }}
         >
@@ -224,7 +228,12 @@ const Post: FC<PostProps> = ({ post, page }) => {
         </div>
 
         <Link href={`/post/${post._id}`}>
-          <div className="postButtons">
+          <div
+            className="postButtons"
+            onClick={() => {
+              persistScrollPosition(post._id);
+            }}
+          >
             <BiComment className="mt-[2px]" />
             <p>Comment</p>
           </div>

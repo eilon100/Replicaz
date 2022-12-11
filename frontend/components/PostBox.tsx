@@ -2,10 +2,7 @@ import { PhotographIcon } from "@heroicons/react/outline";
 import React, { useContext, useState } from "react";
 import Image from "next/image";
 import { apiService } from "../utills/apiService";
-import {
-  TextField,
-  Typography,
-} from "@mui/material";
+import { TextField, Typography } from "@mui/material";
 import UploadPhotos from "./postbox-components/UploadPhotos";
 import toast from "react-hot-toast";
 import { AuthContext } from "../context/AuthContext";
@@ -18,8 +15,8 @@ import { postValidationSchema } from "../validation/post";
 const uploadImageLength = 5;
 
 function PostBox() {
-  const { state, dispatch } = useContext(AuthContext);
-  const { loggedIn, userName, userImage } = state;
+  const { state } = useContext(AuthContext);
+  const { loggedIn, userImage } = state;
   const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
   const [community, setCommunity] = useState("");
   const [disableButton, setDisableButton] = useState(false);
@@ -66,6 +63,7 @@ function PostBox() {
         });
         queryClient.invalidateQueries("posts");
         resetForm();
+        setCommunity("");
         setImageBoxOpen(false);
         setDisableButton(false);
       })
@@ -78,7 +76,7 @@ function PostBox() {
   };
 
   //components
-  const postBox = () => {
+  const titlePost = () => {
     return (
       <div className="flex items-start space-x-3 h-14 px-2 mt-2">
         <div className="relative h-10 w-10  ">
@@ -148,7 +146,6 @@ function PostBox() {
       </div>
     );
   };
-
   const createPostButton = () => {
     return (
       <div className="flex justify-center mt-2  xs:justify-end">
@@ -168,9 +165,9 @@ function PostBox() {
       onSubmit={(e) => {
         handleSubmit(e);
       }}
-      className="sticky top-[106px] z-10 bg-white px-3 py-2 rounded-lg border border-gray-300"
+      className="sticky top-[106px] z-10 bg-white px-3 pt-2 rounded-lg border border-gray-300"
     >
-      {postBox()}
+      {titlePost()}
       {isPostActive && (
         <div className="flex flex-col py-2 ">
           <CommunitySelect community={community} setCommunity={setCommunity} />

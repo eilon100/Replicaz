@@ -9,9 +9,9 @@ import ReactTimeago from "react-timeago";
 import Post from "../../components/Post";
 import AllComments from "../../components/post-components/AllComments";
 import NewComment from "../../components/post-components/NewComment";
-
 import { AuthContext } from "../../context/AuthContext";
 import { comment } from "../../types/comment";
+import SinglePostLoading from "../../UI/loadings/SinglePostLoading";
 import { apiService } from "../../utills/apiService";
 
 export async function getServerSideProps() {
@@ -37,7 +37,7 @@ function PostPage() {
   });
 
   if (isLoading) {
-    return <div>Loading....</div>;
+    return <SinglePostLoading />;
   }
   if (error) {
     return <div>Error</div>;

@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useInfiniteQuery } from "react-query";
 import { post } from "../types/post";
+import PostLoading from "../UI/loadings/PostLoading";
 import { apiService } from "../utills/apiService";
+import { scrollIntoPostPosition } from "../utills/scrollIntoPostPosition";
+import useIntersectionObserver from "../utills/useIntersectionObserver";
 import Post from "./Post";
 
 function Feed() {
@@ -16,6 +19,7 @@ function Feed() {
     isFetching,
     isFetchingNextPage,
     status,
+    refetch,
   } = useInfiniteQuery(["posts"], fetchPosts, {
     getNextPageParam: (_lastPage, currentPage) => {
       const isLastPage = !currentPage[currentPage.length - 1].data[0];
@@ -25,42 +29,57 @@ function Feed() {
       return currentPage.length;
     },
   });
+  let persistedId: string | null = "";
+  const loadMoreRef = useRef() as React.MutableRefObject<HTMLDivElement>;
+  const postRef = useRef() as React.MutableRefObject<HTMLDivElement>;
 
-  const loadingButton = () => {
+  if (typeof window !== "undefined") {
+    persistedId = sessionStorage.getItem("scroll-position-post-id-marker");
+  }
+
+  scrollIntoPostPosition(postRef);
+
+  useIntersectionObserver({
+    target: loadMoreRef,
+    onIntersect: fetchNextPage,
+    enabled: hasNextPage,
+    status,
+  });
+
+  if (status === "loading") {
+    return Array(8)
+      .fill(0)
+      .map((_, i) => {
+        return <PostLoading key={i} />;
+      });
+  }
+
+  if (status === "error") {
+    return <p>Could not fetch the posts</p>;
+  }
+
+  if (status === "success") {
     return (
-      <div>
-        <button
-          onClick={() => fetchNextPage()}
-          disabled={!hasNextPage || isFetchingNextPage}
-        >
-          {isFetchingNextPage
-            ? "Loading more..."
-            : hasNextPage
-            ? "Load More"
-            : "Nothing more to load"}
-        </button>
-      </div>
+      <>
+        {pages?.map((page, pageNumber) => (
+          <React.Fragment key={pageNumber}>
+            {page.data.map((post: post) => (
+              <div
+                ref={persistedId === post._id ? postRef : null}
+                key={post._id}
+              >
+                <Post post={post} />
+              </div>
+            ))}
+          </React.Fragment>
+        ))}
+        <div ref={loadMoreRef} className={`${!hasNextPage ? "hidden" : ""}`}>
+          {isFetchingNextPage ? "Loading more..." : ""}
+        </div>
+        <div>{!hasNextPage && "Nothing more to load"}</div>
+      </>
     );
-  };
-
-  return status === "loading" ? (
-    <p>Loading...</p>
-  ) : status === "error" ? (
-    <p></p>
-  ) : (
-    <>
-      {pages?.map((page, i) => (
-        <React.Fragment key={i}>
-          {page.data.map((post: post) => (
-            <Post post={post} key={post._id} />
-          ))}
-        </React.Fragment>
-      ))}
-
-      {loadingButton()}
-      <div>{isFetching && !isFetchingNextPage ? "Fetching..." : null}</div>
-    </>
-  );
+  }
 }
 
 export default Feed;

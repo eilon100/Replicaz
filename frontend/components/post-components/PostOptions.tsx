@@ -18,8 +18,9 @@ import { useState, useEffect } from "react";
 import Router, { useRouter } from "next/router";
 import { useQueryClient } from "react-query";
 import { user } from "../../types/user";
-import InputModal from "../modals/InputModal";
-import ModalComponent from "../modals/Modal";
+import InputModal from "../../UI/modals/InputModal";
+import ConfirmModal from "../../UI/modals/ConfirmModal";
+
 
 type PostOptionsProps = {
   postId: string;
@@ -61,7 +62,8 @@ export default function PostOptions({
   const { userId } = state;
   const [savedPost, setSavedPost] = useState(saves.includes(userId));
   const [closeOptions, setCloseOptions] = useState<null | HTMLElement>(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [reportModal, setReportModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const queryClient = useQueryClient();
   const open = Boolean(closeOptions);
 
@@ -106,10 +108,18 @@ export default function PostOptions({
   const editPostHandler = () => {
     setEditPost(true);
   };
-  const reportPostHandler = () => {
-    setModalOpen(true);
-  };
+  const reportPostHandler = (body: string) => {
+    const data = { postId, body };
 
+    apiService.post
+      .REPORT_POST(data)
+      .then(({ data: { message } }) => {
+        toast.success(message);
+      })
+      .catch(({ response: { data } }) => {
+        toast.error(data.error);
+      });
+  };
   const menu = () => {
     return (
       <Menu
@@ -141,7 +151,7 @@ export default function PostOptions({
           <div>
             <MenuItem
               onClick={() => {
-                deletePostHandler();
+                setDeleteModal(true);
               }}
             >
               <BsTrash className="mr-5" /> Delete
@@ -157,7 +167,7 @@ export default function PostOptions({
         ) : (
           <MenuItem
             onClick={() => {
-              reportPostHandler();
+              setReportModal(true);
             }}
           >
             <BsFlag className="mr-5" /> Report
@@ -166,14 +176,20 @@ export default function PostOptions({
       </Menu>
     );
   };
-  
+
   return (
     <React.Fragment>
-      <ModalComponent
-        modalOpen={modalOpen}
-        setModalOpen={setModalOpen}
-        id={postId}
-        type={{ action: "report", type: "post" }}
+      <InputModal
+        modalOpen={reportModal}
+        setModalOpen={setReportModal}
+        functionHandler={reportPostHandler}
+      />
+      <ConfirmModal
+        modalOpen={deleteModal}
+        setModalOpen={setDeleteModal}
+        functionHandler={deletePostHandler}
+        action="delete"
+        page="post"
       />
       <IconButton
         onClick={handleClick}

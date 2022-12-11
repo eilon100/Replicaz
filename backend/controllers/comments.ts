@@ -126,13 +126,19 @@ export const deleteComment: RequestHandler = async (req, res, next) => {
     }
 
     commentDeletionSession.startTransaction();
-
+    //delete the comment from all comments
     await Comment.findByIdAndDelete(
       { _id: commentId },
       { session: commentDeletionSession }
     );
+
+    //delete the comment from the post
     post.comments.pull(commentId);
     await post.save({ session: commentDeletionSession });
+    //delete teh comment reports
+    await Report.findByIdAndDelete(commentId, {
+      session: commentDeletionSession,
+    });
     await commentDeletionSession.commitTransaction();
 
     res.status(200).json({ message: "Your comment deleted!" });
