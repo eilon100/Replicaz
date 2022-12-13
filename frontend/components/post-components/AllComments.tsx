@@ -116,7 +116,7 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
 
   const header = () => {
     return (
-      <div className=" px-6 py-1 mt-3">
+      <div className="px-6 py-1 mt-3">
         <div className="flex items-center space-x-2 -ml-[38px] mb-1">
           <div className="relative h-8 w-8 ">
             <Image
@@ -130,7 +130,7 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
             {comment.postedBy?.userName}&nbsp;·&nbsp;
             <ReactTimeago
               date={comment.createdAt}
-              className="font-normal xs:text-sm text-[#65676B]"
+              className="font-[400] text-[0.5rem] xs:text-xs text-[#65676B]"
             />
           </div>
         </div>
@@ -169,38 +169,34 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
             }}
             className="w-full"
           >
-            <div className=" font-semibold  text-[#050505] s ">
-              <Textarea
-                maxRows={4}
-                minRows={4}
-                disabled={!loggedIn}
-                componentsProps={{
-                  textarea: {
-                    maxLength: 300,
-                    dir: "auto",
-                  },
-                }}
-                name="body"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={valuesBody}
-                placeholder="Edit comment.."
-                variant="soft"
-                className=" h-20 xs:h-28 rounded-md border border-gray-200 p-2 pl-4 
-               outline-none disabled:bg-gray-50 resize-none text-xs xs:text-base"
-                endDecorator={
-                  <Typography className=" text-[0.5rem] ml-auto  text-gray-500  xs:text-xs">
-                    {300 - valuesBody.length} character(s)
-                  </Typography>
-                }
-              />
-            </div>
+            <Textarea
+              maxRows={4}
+              minRows={4}
+              disabled={!loggedIn}
+              componentsProps={{
+                textarea: {
+                  maxLength: 300,
+                  dir: "auto",
+                },
+              }}
+              name="body"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={valuesBody}
+              placeholder="Edit comment.."
+              variant="soft"
+              className=" h-20 xs:h-28 font-normal rounded-md border border-gray-200 pl-4 text-xs xs:text-base"
+              endDecorator={
+                <Typography className=" text-[0.5rem] ml-auto  text-text-third xs:text-xs">
+                  {300 - valuesBody.length} character(s)
+                </Typography>
+              }
+            />
             <div className="flex justify-end items-center gap-2 font-semibold mt-1">
               <button
                 type="reset"
                 onClick={() => {
                   setEditComment(false);
-                  resetForm();
                 }}
               >
                 Cancel
@@ -216,7 +212,7 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
   const footer = () => {
     return (
       !editComment && (
-        <div className="flex items-center gap-2 text-[0.6rem] xs:text-xs text-[#65676B]">
+        <div className="flex items-center gap-2 text-[0.6rem] xs:text-xs text-text-second">
           {userId === comment.postedBy._id ? (
             <>
               <span
@@ -260,7 +256,7 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
         page="comment"
       />
       {header()}
-      <div className=" border-l-2 px-6 flex flex-col xs:gap-2 ">
+      <div className="border-l-2 px-6 flex flex-col xs:gap-2 ">
         {body()}
         {loggedIn ? footer() : ""}
       </div>

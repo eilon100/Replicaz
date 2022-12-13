@@ -78,7 +78,7 @@ function PostBox() {
   //components
   const titlePost = () => {
     return (
-      <div className="flex items-start space-x-3 h-14 px-2 mt-2">
+      <div className="flex space-x-3 h-14 px-2 mt-2">
         <div className="relative h-10 w-10  ">
           <Image
             className=" rounded-full "
@@ -88,17 +88,17 @@ function PostBox() {
           />
         </div>
         <TextField
-          className=" flex-1 h-1 px-1 min-w-[80px] "
+          className="flex-1 min-w-[80px] "
           type="text"
           name="title"
           disabled={!loggedIn}
-          variant="outlined"
           sx={{
             "& fieldset": { border: "none" },
           }}
           inputProps={{
-            className: "h-2 bg-gray-50 rounded-md",
+            className: "h-2 bg-second rounded-md",
             maxLength: 50,
+            dir: "auto",
           }}
           placeholder={loggedIn ? "Create a post" : "Sign in to post"}
           onChange={handleChange}
@@ -109,7 +109,7 @@ function PostBox() {
         />
         <PhotographIcon
           onClick={() => isPostActive && setImageBoxOpen(!imageBoxOpen)}
-          className={`h-7 text-gray-300 ${isPostActive && "cursor-pointer"} ${
+          className={`h-7 text-text-third ${isPostActive && "cursor-pointer"} ${
             imageBoxOpen && "text-blue-300 "
           } mt-[6px] `}
         />
@@ -118,32 +118,30 @@ function PostBox() {
   };
   const textArea = () => {
     return (
-      <div className="flex items-center">
-        <Textarea
-          minRows={4}
-          maxRows={4}
-          componentsProps={{
-            textarea: {
-              maxLength: 300,
-              dir: "auto",
-            },
-          }}
-          name="body"
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={valuesBody}
-          error={touchedBody && Boolean(errorsBody)}
-          placeholder="Text (optional)"
-          variant="soft"
-          disabled={!loggedIn}
-          className=" flex-1 m-2 p-2 bg-gray-50 !outline-none !border-none rounded-md resize-none "
-          endDecorator={
-            <Typography className="text-[0.5rem] xs:text-xs ml-auto text-gray-500">
-              {300 - valuesBody.length} character(s)
-            </Typography>
-          }
-        />
-      </div>
+      <Textarea
+        minRows={4}
+        maxRows={4}
+        componentsProps={{
+          textarea: {
+            maxLength: 300,
+            dir: "auto",
+          },
+        }}
+        name="body"
+        onChange={handleChange}
+        onBlur={handleBlur}
+        value={valuesBody}
+        error={touchedBody && Boolean(errorsBody)}
+        placeholder="Text (optional)"
+        variant="soft"
+        disabled={!loggedIn}
+        className=" flex-1 m-2 bg-second rounded-md"
+        endDecorator={
+          <Typography className="text-[0.5rem] xs:text-xs ml-auto text-text-third">
+            {300 - valuesBody.length} character(s)
+          </Typography>
+        }
+      />
     );
   };
   const createPostButton = () => {
@@ -151,7 +149,7 @@ function PostBox() {
       <div className="flex justify-center mt-2  xs:justify-end">
         <button
           disabled={disableButton}
-          className=" w-36 rounded-full bg-gray-300 p-2 text-white "
+          className=" w-36 rounded-full bg-button p-2 text-white "
           type="submit"
         >
           Create Post
@@ -165,7 +163,7 @@ function PostBox() {
       onSubmit={(e) => {
         handleSubmit(e);
       }}
-      className="sticky top-[106px] z-10 bg-white px-3 pt-2 rounded-lg border border-gray-300"
+      className="sticky top-[106px] z-10 bg-main px-3 pt-2 rounded-lg border border-gray-300"
     >
       {titlePost()}
       {isPostActive && (

@@ -168,7 +168,7 @@ const register = () => {
           <h1 className="font-bold text-5xl">Replicaz</h1>
           {textField()}
           <AuthButton page="register" />
-          <p className=" text-[#757171]">Or sign up with</p>
+          <p className=" text-text-second">Or sign up with</p>
           <AuthFooter page="register" />
         </form>
       </div>

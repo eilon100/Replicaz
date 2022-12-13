@@ -86,7 +86,7 @@ function Header() {
     <div
       className={`sticky top-0 z-50 ${
         isAuthPage ? "hidden" : "flex"
-      } justify-center items-center pl-16 py-5 h-[82px] bg-white shadow-sm sm:px-3 sm:pl-24 pr-3 `}
+      } justify-center items-center pl-16 py-5 h-[82px] bg-main shadow-sm sm:px-3 sm:pl-24 pr-3 `}
     >
       <SiteLogo />
       <GroupSelect />

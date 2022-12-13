@@ -48,7 +48,7 @@ function PostPage() {
       <div className="my-6 px-3 max-w-4xl mx-auto">
         <Post post={postData} page="post" />
         <div
-          className="-mt-1 rounded-b-md bg-white px-6 py-5 text-xs font-semibold 
+          className="-mt-1 rounded-b-md bg-main px-6 py-5 text-xs font-semibold 
           "
         >
           <NewComment />

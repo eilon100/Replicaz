@@ -21,7 +21,6 @@ import { user } from "../../types/user";
 import InputModal from "../../UI/modals/InputModal";
 import ConfirmModal from "../../UI/modals/ConfirmModal";
 
-
 type PostOptionsProps = {
   postId: string;
   userPost: boolean;
@@ -198,7 +197,7 @@ export default function PostOptions({
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
       >
-        <BiDotsHorizontalRounded className="text-black" />
+        <BiDotsHorizontalRounded className="text-text-main" />
       </IconButton>
       {menu()}
     </React.Fragment>

@@ -19,12 +19,12 @@ function NewComment() {
   const {
     handleChange,
     handleBlur,
-    values: { comment: valuesComment },
+    values: { body: valuesComment },
     resetForm,
     handleSubmit,
   } = useFormik({
     initialValues: {
-      comment: "",
+      body: "",
     },
     validationSchema: postValidationSchema("comment"),
     onSubmit: () => {
@@ -51,7 +51,7 @@ function NewComment() {
   const newCommentForm = () => {
     return (
       <form
-        className="flex max-w-4-xl flex-col mt-2"
+        className="flex flex-col mt-2"
         onSubmit={(e) => {
           handleSubmit(e);
         }}
@@ -66,7 +66,7 @@ function NewComment() {
               dir: "auto",
             },
           }}
-          name="comment"
+          name="body"
           onChange={handleChange}
           onBlur={handleBlur}
           value={valuesComment}
@@ -74,10 +74,10 @@ function NewComment() {
             loggedIn ? "What are your thoughts?" : "Please sign in to comment"
           }
           variant="soft"
-          className="h-20 xs:h-28 rounded-md border border-gray-200 p-2 pl-4 
-          outline-none disabled:bg-gray-50 resize-none text-xs xs:text-base"
+          className="h-20 xs:h-28 rounded-md border border-gray-200 pl-4 
+           text-xs xs:text-base"
           endDecorator={
-            <Typography className=" text-[0.5rem] ml-auto text-gray-500  xs:text-xs">
+            <Typography className=" text-[0.5rem] ml-auto text-text-third xs:text-xs">
               {300 - valuesComment.length} character(s)
             </Typography>
           }

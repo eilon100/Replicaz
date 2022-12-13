@@ -28,10 +28,10 @@ const pageObj: pageObj = {
 
 function AuthFooter({ page }: page) {
   return (
-    <p className="text-[#757171]  ">
+    <p className="text-text-second  ">
       {pageObj[page].p}&nbsp;
       <span
-        className="text-black hover:underline cursor-pointer"
+        className="text-text-main hover:underline cursor-pointer"
         onClick={() => {
           Router.push(pageObj[page].router);
         }}

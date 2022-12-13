@@ -42,7 +42,7 @@ const Post: FC<PostProps> = ({ post, page }) => {
       title: post?.title,
       body: post?.body,
     },
-    validationSchema: postValidationSchema("postBox"),
+    validationSchema: postValidationSchema("edit"),
     onSubmit: (s) => {
       editPostHandler();
     },
@@ -75,7 +75,6 @@ const Post: FC<PostProps> = ({ post, page }) => {
       .then(({ data: { message } }) => {
         toast.success(message);
         setEditPost(false);
-        resetForm();
         queryClient.refetchQueries(page === "post" ? "fetchPost" : "posts");
       })
       .catch(({ response: { data } }) => {
@@ -85,7 +84,7 @@ const Post: FC<PostProps> = ({ post, page }) => {
   const persistScrollPosition = (id: string) => {
     sessionStorage.setItem("scroll-position-post-id-marker", id);
   };
-  
+
   const Header = () => {
     return (
       <header className=" flex items-center mb-2 justify-between">
@@ -126,10 +125,10 @@ const Post: FC<PostProps> = ({ post, page }) => {
       <>
         {!editPost ? (
           <div>
-            <div className=" font-semibold text-[#050505] text-2xl " dir="auto">
+            <div className=" font-semibold text-text-main text-2xl " dir="auto">
               <h1>{post?.title}</h1>
             </div>
-            <div className="text-[#050505 ] font-[400]" dir="auto">
+            <div className="text-text-main font-[400]" dir="auto">
               <p>{post?.body}</p>
             </div>
           </div>
@@ -139,60 +138,55 @@ const Post: FC<PostProps> = ({ post, page }) => {
               handleSubmit(e);
             }}
           >
-            <div className=" font-semibold text-[#050505] ">
-              <TextField
-                className=" flex-1 w-full min-w-[80px] rounded-md  mb-2 outline-none "
-                type="text"
-                name="title"
-                disabled={!loggedIn}
-                variant="outlined"
-                sx={{
-                  "& fieldset": { border: "none" },
-                }}
-                inputProps={{
+            <TextField
+              className=" flex-1 w-full min-w-[80px] mb-2 "
+              type="text"
+              name="title"
+              disabled={!loggedIn}
+              sx={{
+                fieldset: { border: "none" },
+              }}
+              inputProps={{
+                dir: "auto",
+                className: "h-2 bg-second rounded-md",
+                maxLength: 50,
+              }}
+              placeholder={"Title"}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={valuesTitle}
+              error={!!errorsTitle}
+              helperText={errorsTitle}
+            />
+
+            <Textarea
+              minRows={4}
+              maxRows={4}
+              componentsProps={{
+                textarea: {
+                  maxLength: 300,
                   dir: "auto",
-                  className: "h-2 bg-gray-50 rounded-md",
-                  maxLength: 50,
-                }}
-                placeholder={"Title"}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={valuesTitle}
-                error={!!errorsTitle}
-                helperText={errorsTitle}
-              />
-            </div>
-            <div className="text-[#050505 ]">
-              <Textarea
-                minRows={4}
-                maxRows={4}
-                componentsProps={{
-                  textarea: {
-                    maxLength: 300,
-                    dir: "auto",
-                  },
-                }}
-                name="body"
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={valuesBody}
-                placeholder="Text (optional)"
-                variant="soft"
-                disabled={!loggedIn}
-                className="flex-1 px-3 bg-gray-50 !outline-none !border-none rounded-md resize-none text-xs xs:text-base"
-                endDecorator={
-                  <Typography className="text-[0.5rem] xs:text-xs ml-auto text-gray-500">
-                    {300 - valuesBody.length} character(s)
-                  </Typography>
-                }
-              />
-            </div>
-            <div className="flex justify-end items-center gap-2 font-semibold text-xs xs:text-base">
+                },
+              }}
+              name="body"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={valuesBody}
+              placeholder="Text (optional)"
+              variant="soft"
+              disabled={!loggedIn}
+              className="flex-1 pl-3 bg-second  rounded-md text-xs xs:text-base"
+              endDecorator={
+                <Typography className="text-[0.5rem] xs:text-xs ml-auto text-text-third">
+                  {300 - valuesBody.length} character(s)
+                </Typography>
+              }
+            />
+            <div className="flex justify-end items-center mt-2 gap-2 font-semibold text-xs xs:text-base">
               <button
                 type="reset"
                 onClick={() => {
                   setEditPost(false);
-                  resetForm();
                 }}
               >
                 Cancel
@@ -214,7 +208,7 @@ const Post: FC<PostProps> = ({ post, page }) => {
   };
   const Footer = () => {
     return (
-      <footer className="flex items-center justify-around mt-3 pt-1 text-gray-400 border-t-[1px] ">
+      <footer className="flex items-center justify-around mt-3 pt-1 border-t-[1px] ">
         <div
           className={`postButtons ${postLiked ? "text-blue-600" : ""}`}
           onClick={() => {
@@ -253,7 +247,7 @@ const Post: FC<PostProps> = ({ post, page }) => {
   };
 
   return (
-    <div className=" bg-white mt-2 pt-3 pb-1 px-6 rounded-md shadow-sm">
+    <div className="bg-main mt-2 pt-3 pb-1 px-6 rounded-md shadow-sm">
       {Header()}
       {Body()}
       {Footer()}

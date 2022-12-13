@@ -1,3 +1,4 @@
+import { CircularProgress } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { useInfiniteQuery } from "react-query";
 import { post } from "../types/post";
@@ -74,9 +75,21 @@ function Feed() {
           </React.Fragment>
         ))}
         <div ref={loadMoreRef} className={`${!hasNextPage ? "hidden" : ""}`}>
-          {isFetchingNextPage ? "Loading more..." : ""}
+          {isFetchingNextPage ? (
+            <div className="w-full flex justify-center my-4 ">
+              <CircularProgress className="text-text-second " />
+            </div>
+          ) : (
+            ""
+          )}
         </div>
-        <div>{!hasNextPage && "Nothing more to load"}</div>
+        <div>
+          {!hasNextPage && (
+            <div className="w-full flex justify-center my-4 ">
+              <p>No more posts..</p>
+            </div>
+          )}
+        </div>
       </>
     );
   }

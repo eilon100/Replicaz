@@ -12,7 +12,7 @@ const SiteLogo = () => {
           layout="fill"
         />
       </div>
-      <div className="flex bg-white absolute left-[10px] h-10 w-10 cursor-pointer mr-3 mt-[1px] sm:hidden">
+      <div className="flex absolute left-[10px] h-10 w-10 cursor-pointer mr-3 mt-[1px] sm:hidden">
         <Image objectFit="contain" src={sneaker} layout="fill" />
       </div>
     </>

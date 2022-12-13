@@ -4,14 +4,14 @@
 
 @layer components {
   .icons {
-    @apply h-9 w-9  lg:w-9 cursor-pointer rounded-xl lg:p-1 lg:hover:bg-gray-100;
+    @apply h-9 w-9  lg:w-9 cursor-pointer rounded-xl lg:p-1 lg:hover:bg-second;
   }
   .auth_textfield {
     @apply w-[80vw] max-w-xl;
   }
   .postButtons {
-    @apply flex items-center justify-center w-full py-1 space-x-1 text-[12px]  lg:text-sm lg:py-2 font-semibold text-[#65676B]
-     hover:bg-gray-100 cursor-pointer rounded-md;
+    @apply flex items-center justify-center w-full py-1 space-x-1 text-[12px] lg:text-sm lg:py-2 font-semibold text-text-second
+     hover:bg-second cursor-pointer rounded-md;
   }
 }
 

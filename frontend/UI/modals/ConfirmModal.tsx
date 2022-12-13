@@ -1,6 +1,7 @@
 import React from "react";
-import { Button, Modal } from "@mui/joy";
-
+import { Modal } from "@mui/joy";
+import Button from "@mui/material/Button";
+import { MdOutlineDeleteOutline, MdClose } from "react-icons/md";
 interface ReportModalProps {
   modalOpen: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -16,7 +17,6 @@ function ConfirmModal({
   action,
   page,
 }: ReportModalProps) {
-
   const onSubmit = () => {
     functionHandler();
     setModalOpen(false);
@@ -26,30 +26,49 @@ function ConfirmModal({
     <Modal
       open={modalOpen}
       onClose={() => setModalOpen(false)}
-      className="flex justify-center items-center bg-[rgba(0,0,0,0.3)] "
+      className="flex justify-center items-center bg-rgba(0,0,0,0.3)"
     >
       <form
-        className="flex flex-col h-44 justify-between items-center w-full max-w-xl p-5 mx-5 bg-white rounded-md"
+        className="flex flex-col items-center justify-center w-full max-w-xl  mx-5 p-4 bg-main rounded-md shadow-sm border"
         onSubmit={() => {
           onSubmit();
         }}
       >
-        <h1 className="font-bold text-xl">
-          {action === "delete"
-            ? `Are you sure you want to delete this ${page}?`
-            : ""}
-        </h1>
-        <div className="flex w-full justify-around">
+        <div
+          className="w-full flex justify-end cursor-pointer "
+          onClick={() => setModalOpen(false)}
+        >
+          <MdClose className="text-gray-400 text-2xl" />
+        </div>
+        <div className="flex flex-col items-center gap-5 font-bold my-3">
+          <MdOutlineDeleteOutline className=" text-red-500 text-5xl xs:text-7xl" />
+          <h1 className="text-md xs:text-2xl ">
+            {action === "delete" ? `You are about to delete this post` : ""}
+          </h1>
+          <div className="flex flex-col items-center text-gray-400 text-xs xs:text-base">
+            <p>This will delete your post from the feed </p>
+            <p>Are you sure?</p>
+          </div>
+        </div>
+        <div className="flex w-full justify-end ">
           <Button
-            variant="outlined"
+            variant="text"
             type="reset"
+            className=" font-semibold text-black text-xs h-8 p-3 xs:text-sm xs:h-10 xs:p-4"
             onClick={() => {
               setModalOpen(false);
             }}
           >
             Cancel
           </Button>
-          <Button variant="outlined" type="submit">
+          <Button
+            type="submit"
+            style={{
+              backgroundColor: "rgb(239 68 68)",
+            }}
+            variant="contained"
+            className=" rounded-md mx-1 text-xs h-8 p-3 xs:text-sm xs:h-10 xs:p-4"
+          >
             {action === "delete" ? "Delete" : ""}
           </Button>
         </div>
