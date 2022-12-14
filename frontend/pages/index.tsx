@@ -5,7 +5,7 @@ import Feed from "../components/Feed";
 
 const Home: NextPage = () => {
   return (
-    <div>
+    <>
       <Head>
         <title>Replicaz</title>
         <link rel="icon" href="/sneaker.png" />
@@ -14,7 +14,7 @@ const Home: NextPage = () => {
         <PostBox />
         <Feed />
       </div>
-    </div>
+    </>
   );
 };
 

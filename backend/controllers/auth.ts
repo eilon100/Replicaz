@@ -130,7 +130,7 @@ export const login = async (
         userId: loadedUser._id.toString(),
       },
       process.env.JWT_SECRET!,
-      { expiresIn: "24h" }
+      { expiresIn: "7d" }
     );
 
     const userData = {
@@ -140,9 +140,12 @@ export const login = async (
       userImage: loadedUser.image,
     };
 
-    res.cookie("token", token, { httpOnly: true, maxAge: 60 * 60 * 1000 });
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
     res.cookie("userData", JSON.stringify(userData), {
-      maxAge: 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return res.status(200).json({

@@ -56,7 +56,7 @@ function Feed() {
   }
 
   if (status === "error") {
-    return <p>Could not fetch the posts</p>;
+    return <h1>Could not fetch the posts error:</h1>;
   }
 
   if (status === "success") {
@@ -93,6 +93,8 @@ function Feed() {
       </>
     );
   }
+
+  return <p>Could not fetch the posts</p>;
 }
 
 export default Feed;

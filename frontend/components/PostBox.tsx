@@ -1,9 +1,8 @@
 import { PhotographIcon } from "@heroicons/react/outline";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { apiService } from "../utills/apiService";
 import { TextField, Typography } from "@mui/material";
-import UploadPhotos from "./postbox-components/UploadPhotos";
 import toast from "react-hot-toast";
 import { AuthContext } from "../context/AuthContext";
 import { useFormik } from "formik";
@@ -11,8 +10,9 @@ import Textarea from "@mui/joy/Textarea";
 import { useQueryClient } from "react-query";
 import CommunitySelect from "./postbox-components/CommunitySelect";
 import { postValidationSchema } from "../validation/post";
-
-const uploadImageLength = 5;
+import DropzoneComponent from "./postbox-components/DropZone";
+import Button from "@mui/material/Button";
+const maxImageLength = 5;
 
 function PostBox() {
   const { state } = useContext(AuthContext);
@@ -146,14 +146,33 @@ function PostBox() {
   };
   const createPostButton = () => {
     return (
-      <div className="flex justify-center mt-2  xs:justify-end">
-        <button
+      <div className="flex justify-center mt-2 gap-3 xs:justify-end mx-2">
+        <Button
           disabled={disableButton}
-          className=" w-36 rounded-full bg-button p-2 text-white "
+          style={{
+            color: "rgb(33, 150, 243, 0.8)",
+            backgroundColor: "transparent",
+            border: "1px solid rgb(33, 150, 243, 0.8)",
+          }}
+          className=" rounded-md bg-button text-xs normal-case px-3 mb-2"
+          type="reset"
+          onClick={() => {
+            resetForm();
+            setCommunity("");
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
+          disabled={disableButton}
+          style={{
+            backgroundColor: "rgb(33, 150, 243,0.8)",
+          }}
+          className="rounded-md bg-button text-white text-xs normal-case mb-2 px-4"
           type="submit"
         >
           Create Post
-        </button>
+        </Button>
       </div>
     );
   };
@@ -163,7 +182,7 @@ function PostBox() {
       onSubmit={(e) => {
         handleSubmit(e);
       }}
-      className="sticky top-[106px] z-10 bg-main px-3 pt-2 rounded-lg border border-gray-300"
+      className={` top-[106px] z-10 bg-main px-3 pt-2 rounded-lg border border-gray-300`}
     >
       {titlePost()}
       {isPostActive && (
@@ -171,9 +190,9 @@ function PostBox() {
           <CommunitySelect community={community} setCommunity={setCommunity} />
           {textArea()}
           {imageBoxOpen && (
-            <UploadPhotos
-              setImages={(image: File[]) => setImages(image)}
-              imageLength={uploadImageLength}
+            <DropzoneComponent
+              setImages={setImages}
+              maxImagesLength={maxImageLength}
             />
           )}
           {createPostButton()}
