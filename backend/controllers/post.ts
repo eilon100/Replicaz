@@ -10,10 +10,14 @@ import {
 } from "../utills/cloudinaryActions";
 
 export const getAllPosts: RequestHandler = (req, res, next) => {
-  const page: any = req.query.p || 0;
-  const postsPerPage = 5;
+  const { p: page }: any = req.query || 0;
+  const { currentPage } = req.query;
 
-  Post.find()
+  const postsPerPage = 5;
+  const findInCommunity =
+    currentPage !== "Main" ? { community: currentPage } : {};
+
+  Post.find(findInCommunity)
     .populate({ path: "postedBy", select: ["userName", "image"] })
     .sort({ _id: -1 })
     .skip(page * postsPerPage)

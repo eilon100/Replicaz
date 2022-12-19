@@ -16,7 +16,6 @@ module.exports = {
         "text-third": "rgb(156 163 175)",
         button: "#C0C0C0",
       },
-      animation: { wiggle: "wiggle 1s ease-in-out infinite" },
     },
   },
 

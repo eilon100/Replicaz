@@ -8,7 +8,7 @@ import Skeleton from "@mui/material/Skeleton";
 
 function PostLoading() {
   return (
-    <Card className="my-6 px-3 max-w-4xl mx-auto ">
+    <Card className="my-3 px-3 max-w-4xl mx-auto ">
       <CardHeader
         avatar={
           <Skeleton

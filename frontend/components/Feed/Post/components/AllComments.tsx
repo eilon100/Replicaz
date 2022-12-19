@@ -6,12 +6,12 @@ import toast from "react-hot-toast";
 import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
 import { useQueryClient } from "react-query";
 import ReactTimeago from "react-timeago";
-import { AuthContext } from "../../context/AuthContext";
-import { comment } from "../../types/comment";
-import ConfirmModal from "../../UI/modals/ConfirmModal";
-import InputModal from "../../UI/modals/InputModal";
-import { apiService } from "../../utills/apiService";
-import { postValidationSchema } from "../../validation/post";
+import { AuthContext } from "../../../../context/AuthContext";
+import { comment } from "../../../../types/comment";
+import ConfirmModal from "../../../../UI/modals/ConfirmModal";
+import InputModal from "../../../../UI/modals/InputModal";
+import { apiService } from "../../../../utills/apiService";
+import { postValidationSchema } from "../../../../validation/post";
 
 interface AllCommentsProps {
   comment: comment;

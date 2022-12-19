@@ -3,9 +3,9 @@ import { useFormik } from "formik";
 import Router from "next/router";
 import toast from "react-hot-toast";
 import { apiService } from "../../utills/apiService";
-import AuthHeader from "../../components/auth-components/AuthHeader";
-import AuthFooter from "../../components/auth-components/AuthFooter";
-import AuthButton from "../../components/auth-components/AuthButton";
+import AuthHeader from "../../components/Auth/AuthHeader";
+import AuthFooter from "../../components/Auth/AuthFooter";
+import AuthButton from "../../components/Auth/AuthButton";
 import { authValidationSchema } from "../../validation/auth";
 
 const register = () => {

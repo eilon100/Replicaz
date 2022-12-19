@@ -20,7 +20,7 @@
     "**/*.ts",
     "**/*.tsx",
     "pages/signin.tsx",
-    "components/header-components/GroupsSelect.jsx",
+    "components/Header/components/GroupsSelect.jsx",
     "pages/auth/register.js",
     "pages/api/lib/dbConnect.ts",
     "pages/api/resetPassword.js",

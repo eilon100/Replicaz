@@ -5,9 +5,9 @@ import { useRouter } from "next/router";
 import React, { useContext } from "react";
 import toast from "react-hot-toast";
 import { useQueryClient } from "react-query";
-import { AuthContext } from "../../context/AuthContext";
-import { apiService } from "../../utills/apiService";
-import { postValidationSchema } from "../../validation/post";
+import { AuthContext } from "../../../../context/AuthContext";
+import { apiService } from "../../../../utills/apiService";
+import { postValidationSchema } from "../../../../validation/post";
 
 function NewComment() {
   const router = useRouter();

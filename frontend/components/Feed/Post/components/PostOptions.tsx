@@ -10,16 +10,16 @@ import {
   BsTrash,
   BsFlag,
 } from "react-icons/bs";
-import { AuthContext } from "../../context/AuthContext";
+import { AuthContext } from "../../../../context/AuthContext";
 import { useContext } from "react";
-import { apiService } from "../../utills/apiService";
+import { apiService } from "../../../../utills/apiService";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
 import Router, { useRouter } from "next/router";
 import { useQueryClient } from "react-query";
-import { user } from "../../types/user";
-import InputModal from "../../UI/modals/InputModal";
-import ConfirmModal from "../../UI/modals/ConfirmModal";
+import { user } from "../../../../types/user";
+import InputModal from "../../../../UI/modals/InputModal";
+import ConfirmModal from "../../../../UI/modals/ConfirmModal";
 
 type PostOptionsProps = {
   postId: string;

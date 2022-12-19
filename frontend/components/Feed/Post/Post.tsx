@@ -3,23 +3,24 @@ import React, { useContext, FC, useEffect } from "react";
 import toast from "react-hot-toast";
 import { BiComment, BiLike, BiShare } from "react-icons/bi";
 import ReactTimeago from "react-timeago";
-import { apiService } from "../utills/apiService";
-import ImageSwiper from "./post-components/ImageSwiper";
+import { apiService } from "../../../utills/apiService";
+import ImageSwiper from "./components/ImageSwiper";
 import { useState } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../../../context/AuthContext";
 import { useFormik } from "formik";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import PostOptions from "./post-components/PostOptions";
+import PostOptions from "./components/PostOptions";
 import { Textarea } from "@mui/joy";
 import { Typography } from "@mui/material";
 import { useQueryClient } from "react-query";
 import Link from "next/link";
-import { post } from "../types/post";
-import { postValidationSchema } from "../validation/post";
+import { post } from "../../../types/post";
+import { postValidationSchema } from "../../../validation/post";
 import { TextField } from "@mui/material";
+import { currentPage } from "../../../types/currentPage";
 interface PostProps {
   post: post;
-  page?: string;
+  page?: currentPage;
 }
 
 const Post: FC<PostProps> = ({ post, page }) => {
@@ -75,20 +76,23 @@ const Post: FC<PostProps> = ({ post, page }) => {
       .then(({ data: { message } }) => {
         toast.success(message);
         setEditPost(false);
-        queryClient.refetchQueries(page === "post" ? "fetchPost" : "posts");
+        queryClient.refetchQueries(
+          page === "SinglePost" ? "fetchPost" : "posts"
+        );
       })
       .catch(({ response: { data } }) => {
         toast.error(data.error);
       });
   };
-  const persistScrollPosition = (id: string) => {
-    sessionStorage.setItem("scroll-position-post-id-marker", id);
-  };
 
   const Header = () => {
     return (
       <header className=" flex items-center mb-2 justify-between">
-        <div className="flex items-center space-x-3">
+        <div
+          className={`flex items-center ${
+            page === "Main" || page === "SinglePost" ? "space-x-2" : ""
+          }`}
+        >
           <div className="relative h-10 w-10 -ml-2">
             <Image
               className=" rounded-full "
@@ -98,9 +102,11 @@ const Post: FC<PostProps> = ({ post, page }) => {
             />
           </div>
           <div className="flex items-center">
-            <div className=" font-bold text-sm xs:text-xl">
-              {post.community}
-            </div>
+            <a href={`/community/${post.community.toLowerCase()}`}>
+              <div className=" font-bold text-sm xs:text-xl cursor-pointer hover:underline">
+                {page === "Main" || page === "SinglePost" ? post.community : ""}
+              </div>
+            </a>
             <div className=" font-[400] mt-[1px] text-[0.5rem] xs:text-xs text-[#65676B] ">
               &nbsp; - Posted by {post.postedBy?.userName}&nbsp;
               <ReactTimeago date={post.createdAt} />
@@ -222,19 +228,14 @@ const Post: FC<PostProps> = ({ post, page }) => {
         </div>
 
         <Link href={`/post/${post._id}`}>
-          <div
-            className="postButtons"
-            onClick={() => {
-              persistScrollPosition(post._id);
-            }}
-          >
+          <div className="postButtons">
             <BiComment className="mt-[2px]" />
             <p>Comment</p>
           </div>
         </Link>
 
         <CopyToClipboard
-          text={`${window.location}/post/${post._id}`}
+          text={`http://localhost:3000/post/${post._id}`}
           onCopy={() => toast.success("Copied to clipboard")}
         >
           <div className="postButtons">
@@ -247,7 +248,7 @@ const Post: FC<PostProps> = ({ post, page }) => {
   };
 
   return (
-    <div className="bg-main mt-2 pt-3 pb-1 px-6 rounded-md shadow-sm">
+    <div className="bg-main mt-2 pt-3 pb-1 px-6  rounded-md shadow-sm">
       {Header()}
       {Body()}
       {Footer()}

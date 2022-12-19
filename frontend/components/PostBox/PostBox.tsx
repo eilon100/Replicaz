@@ -1,20 +1,24 @@
 import { PhotographIcon } from "@heroicons/react/outline";
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-import { apiService } from "../utills/apiService";
+import { apiService } from "../../utills/apiService";
 import { TextField, Typography } from "@mui/material";
 import toast from "react-hot-toast";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 import { useFormik } from "formik";
 import Textarea from "@mui/joy/Textarea";
 import { useQueryClient } from "react-query";
-import CommunitySelect from "./postbox-components/CommunitySelect";
-import { postValidationSchema } from "../validation/post";
-import DropzoneComponent from "./postbox-components/DropZone";
+import CommunitySelect from "./components/CommunitySelect";
+import { postValidationSchema } from "../../validation/post";
+import DropzoneComponent from "./components/DropZone";
 import Button from "@mui/material/Button";
-const maxImageLength = 5;
+import { currentPage } from "../../types/currentPage";
 
-function PostBox() {
+const maxImageLength = 5;
+type PostBoxProps = {
+  currentPage: currentPage;
+};
+function PostBox({ currentPage }: PostBoxProps) {
   const { state } = useContext(AuthContext);
   const { loggedIn, userImage } = state;
   const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
@@ -48,12 +52,14 @@ function PostBox() {
   const onSubmit = () => {
     const notification = toast.loading("uploading post...");
     setDisableButton(true);
+
     const data = {
       postTitle: valuesTitle,
       postBody: valuesBody,
-      community,
+      community: !community ? currentPage : community,
       postImage: images,
     };
+    console.log(data);
 
     apiService.post
       .CREATE_POST(data)
@@ -187,7 +193,14 @@ function PostBox() {
       {titlePost()}
       {isPostActive && (
         <div className="flex flex-col py-2 ">
-          <CommunitySelect community={community} setCommunity={setCommunity} />
+          {currentPage === "Main" ? (
+            <CommunitySelect
+              community={community}
+              setCommunity={setCommunity}
+            />
+          ) : (
+            ""
+          )}
           {textArea()}
           {imageBoxOpen && (
             <DropzoneComponent

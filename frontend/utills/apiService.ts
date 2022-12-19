@@ -51,8 +51,12 @@ export const apiService = {
     },
   },
   get: {
-    GET_ALLPOSTS(params: getType.GET_ALLPOSTS) {
-      return axiosInstance.get(`/post/allposts?p=${params}`);
+    GET_ALLPOSTS({ pageParam, currentPage }: any) {
+      return axiosInstance.get(`/post/allposts?p=${pageParam}`, {
+        params: {
+          currentPage,
+        },
+      });
     },
     GET_POST_BY_ID(postId: getType.GET_POST_BY_ID) {
       return axiosInstance.get(`/post/getpost/${postId}`);

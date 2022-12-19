@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import sneaker from "../../public/sneaker.png";
+import sneaker from "../../../public/sneaker.png";
 
 const SiteLogo = () => {
   return (

@@ -1,15 +1,16 @@
 import React from "react";
 import { LoginIcon, BellIcon, ChatIcon } from "@heroicons/react/outline";
-import MenuDrawer from "./header-components/MenuDrawer";
-import GroupSelect from "./header-components/GroupsSelect";
-import SiteLogo from "./header-components/SiteLogo";
-import SearchBar from "./header-components/SearchBar";
+import MenuDrawer from "./components/MenuDrawer";
+import GroupSelect from "./components/GroupsSelect";
+
+import SearchBar from "./components/SearchBar";
 import { useRouter } from "next/router";
 import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 import Image from "next/image";
-import { apiService } from "../utills/apiService";
+import { apiService } from "../../utills/apiService";
 import toast from "react-hot-toast";
+import SiteLogo from "./components/SiteLogo";
 
 function Header() {
   const router = useRouter();
