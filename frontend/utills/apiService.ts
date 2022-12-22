@@ -49,10 +49,20 @@ export const apiService = {
     REPORT_COMMENT(data: postType.REPORT_COMMENT) {
       return axiosInstance.post("/comment/reportcomment", data);
     },
+    ADD_NEW_ITEM(data: postType.ADD_NEW_ITEM) {
+      return axiosInstance.post("community/addnewitem", data);
+    },
   },
   get: {
-    GET_ALLPOSTS({ pageParam, currentPage }: any) {
+    GET_ALL_POSTS({ pageParam, currentPage }: any) {
       return axiosInstance.get(`/post/allposts?p=${pageParam}`, {
+        params: {
+          currentPage,
+        },
+      });
+    },
+    GET_ALL_ITEMS({ pageParam, currentPage }: any) {
+      return axiosInstance.get(`/community/getallitems?p=${pageParam}`, {
         params: {
           currentPage,
         },

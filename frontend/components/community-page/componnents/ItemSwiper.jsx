@@ -6,7 +6,7 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 
-const ImageSwiper = ({ images }) => {
+const ItemSwiper = ({ images }) => {
   const [thumbsSwiper, setThumbsSwiper] = useState(null);
 
   return (
@@ -22,13 +22,13 @@ const ImageSwiper = ({ images }) => {
           swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
         }}
         modules={[FreeMode, Navigation, Thumbs]}
-        className="mySwiper2"
+        className="swiperItems"
       >
         {images.map((url, i) => {
           return (
             <SwiperSlide key={i}>
               <a href={url} target="new">
-                <img src={url} />
+                <img src={url} className="max-h-96 px-10  " />
               </a>
             </SwiperSlide>
           );
@@ -42,12 +42,12 @@ const ImageSwiper = ({ images }) => {
           freeMode={true}
           watchSlidesProgress={true}
           modules={[FreeMode, Navigation, Thumbs]}
-          className="mySwiper"
+          className="myItemSwiper"
         >
           {images.map((url, i) => {
             return (
-              <SwiperSlide key={i}>
-                <img src={url} />
+              <SwiperSlide key={i} className="w-1/4 opacity-50 mt-8">
+                <img src={url} className="rounded-sm object-contain max-h-20" />
               </SwiperSlide>
             );
           })}
@@ -58,4 +58,4 @@ const ImageSwiper = ({ images }) => {
     </>
   );
 };
-export default ImageSwiper;
+export default ItemSwiper;

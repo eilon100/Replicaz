@@ -65,7 +65,11 @@ export default function PostOptions({
   const [deleteModal, setDeleteModal] = useState(false);
   const queryClient = useQueryClient();
   const open = Boolean(closeOptions);
+  const router = useRouter();
 
+  useEffect(() => {
+    setSavedPost(saves.includes(userId));
+  }, [saves]);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setCloseOptions(event.currentTarget);
   };
@@ -95,7 +99,7 @@ export default function PostOptions({
           id: notification,
         });
         queryClient.fetchQuery("posts");
-        Router.push("/");
+        router.back();
       })
       .catch(({ response: { data } }) => {
         toast.error(data.error, {

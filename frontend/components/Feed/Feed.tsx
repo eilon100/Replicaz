@@ -14,7 +14,7 @@ type FeedProps = {
 function Feed({ currentPage }: FeedProps) {
   const fetchPosts = async ({ pageParam = 0 }) => {
     const data = { pageParam, currentPage };
-    const res = await apiService.get.GET_ALLPOSTS(data);
+    const res = await apiService.get.GET_ALL_POSTS(data);
     return res;
   };
 
@@ -38,6 +38,8 @@ function Feed({ currentPage }: FeedProps) {
       return currentPage.length;
     },
   });
+
+  
 
   let persistedId: string | null = "";
   const loadMoreRef = useRef() as React.MutableRefObject<HTMLDivElement>;

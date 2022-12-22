@@ -1,12 +1,7 @@
 import { Types } from "mongoose";
 import cloudinary from "./cloudinary";
 
-interface pathObj {
-  postedBy: string;
-  postId: Types.ObjectId;
-}
-
-export const imagesUpload = async (images: any[], path: pathObj) => {
+export const imagesUpload = async (images: any[], path: string) => {
   if (!images || images.length < 0) return [];
   try {
     const imagesUrl: any[] = [];
@@ -14,7 +9,7 @@ export const imagesUpload = async (images: any[], path: pathObj) => {
     const uploadImages = images.map(async (img) => {
       const upload = cloudinary.uploader
         .upload(img, {
-          folder: `posts/${path.postedBy}/${path.postId}`,
+          folder: path,
         })
         .then((res: any) => imagesUrl.push(res.secure_url));
       return upload;
@@ -27,13 +22,11 @@ export const imagesUpload = async (images: any[], path: pathObj) => {
   }
 };
 
-export const imagesFolderDeletion = async (path: pathObj) => {
+export const imagesFolderDeletion = async (path: string) => {
   try {
-    await cloudinary.api
-      .delete_resources_by_prefix(`posts/${path.postedBy}/${path.postId}`)
-      .then(() => {
-        cloudinary.api.delete_folder(`posts/${path.postedBy}/${path.postId}`);
-      });
+    await cloudinary.api.delete_resources_by_prefix(path).then(() => {
+      cloudinary.api.delete_folder(path);
+    });
   } catch (err) {
     console.log(err);
   }

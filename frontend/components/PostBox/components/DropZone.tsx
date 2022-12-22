@@ -55,7 +55,6 @@ function DropzoneComponent({ setImages, maxImagesLength }: DropzoneComponent) {
       );
     } else {
       let filesArrClone: File[] = [...files];
-      console.log(filesArrClone, files);
       filesArrClone.push(
         ...acceptedFiles.map((file: any) =>
           Object.assign(file, {

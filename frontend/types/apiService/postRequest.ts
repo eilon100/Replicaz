@@ -1,3 +1,5 @@
+import { string } from "yup";
+
 export type REGISTER_USER = {
   userName: string;
   firstName: string;
@@ -33,3 +35,23 @@ export type DELETE_COMMENT = {
   commentId: string;
 };
 export type REPORT_COMMENT = { commentId: string; body: string };
+export type ADD_NEW_ITEM = {
+  community: string;
+  company: string;
+  brand: string;
+  name: string;
+  sizeType: string;
+  description: string;
+  mainImage: File;
+  images: File[];
+  bestBatch: {
+    name: string;
+    price: string;
+    url: string;
+  };
+  cheapestBatch: {
+    name: string;
+    price: string;
+    url: string;
+  };
+};

@@ -31,6 +31,11 @@ const Post: FC<PostProps> = ({ post, page }) => {
   const [editPost, setEditPost] = useState(false);
   const queryClient = useQueryClient();
 
+  useEffect(() => {
+    setLikesLength(post.likes.length);
+    setPostLiked(post.likes.includes(userId));
+  }, [post.likes.length]);
+
   const {
     handleChange,
     handleBlur,
@@ -203,7 +208,7 @@ const Post: FC<PostProps> = ({ post, page }) => {
         )}
 
         <div className="mt-4">
-          <ImageSwiper arr={post?.images} />
+          <ImageSwiper images={post?.images} />
         </div>
         <div className="flex justify-between items-center mt-4 text-[#65676B] text-xs md:text-sm">
           <div>{likesLength} Likes</div>

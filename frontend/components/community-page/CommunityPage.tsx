@@ -3,16 +3,18 @@ import { AiOutlineCloudUpload } from "react-icons/ai";
 import Feed from "../../components/Feed/Feed";
 import PostBox from "../../components/PostBox/PostBox";
 import { communityPages } from "../../types/currentPage";
-import UploadItemsModal from "../../UI/modals/UploadItems";
+import UploadItemModal from "../../UI/modals/UploadItemModal";
 import { communityData } from "../../utills/data/communityPageData";
-import CommunitySwiper from "./componnents/CommunitySwiper";
+import AllItems from "./componnents/AllItems";
+import ItemCard from "./componnents/ItemCard";
 
 function CommunityPage({ page }: communityPages) {
   const [currentPage, setCurrentPage] = useState("posts");
-  const [uploadModal, setUploadModal] = useState(false);
+  const [Modal, setModal] = useState(false);
   const {
-    [page]: { backgroundImage, mainImage, options },
+    [page]: { backgroundImage, mainImage, items },
   } = communityData;
+
   const header = () => {
     return (
       <div className=" bg-white">
@@ -68,46 +70,28 @@ function CommunityPage({ page }: communityPages) {
     );
   };
 
-  const uploadItemHandler = () => {};
-
   return (
     <div>
-      <UploadItemsModal
-        modalOpen={uploadModal}
-        setModalOpen={setUploadModal}
-        functionHandler={uploadItemHandler}
-        page={page}
-      />
+      <UploadItemModal modalOpen={Modal} setModalOpen={setModal} page={page} />
       {header()}
-      <div className="mt-5 pb-10">
+      <div className="pb-10 mt-6">
         {currentPage === "posts" ? (
           <div className="my-6 px-3 max-w-4xl mx-auto">
             <PostBox currentPage={page} />
             <Feed currentPage={page} />
           </div>
         ) : (
-          options?.map(({ company, items }: any) => {
-            return (
-              <div className="max-w-7xl mx-auto">
-                {items.map(({ type, items }: any) => {
-                  return (
-                    <div className="w-full px-3 mb-10 ">
-                      <div className="flex items-center mb-4 gap-3">
-                        <h1 className="font-semibold">{type}</h1>
-                        <AiOutlineCloudUpload
-                          className="cursor-pointer"
-                          onClick={() => {
-                            setUploadModal(true);
-                          }}
-                        />
-                      </div>
-                      <CommunitySwiper items={items} />
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })
+          <div className="mx-3">
+            <p
+              className="mx-auto cursor-pointer w-full flex justify-center"
+              onClick={() => setModal(true)}
+            >
+              upload item
+            </p>
+            <div className="max-w-6xl mx-auto flex flex-wrap bg-white pt-5 p-3 rounded-md">
+              <AllItems currentPage={page} />
+            </div>
+          </div>
         )}
       </div>
     </div>

@@ -69,10 +69,10 @@ export const createPost: RequestHandler = async (req, res, next) => {
       return res.status(400).json({ error: "Could not find user" });
     }
 
-    const imageArr = await imagesUpload(postImage, {
-      postedBy: postedBy.userName,
-      postId: mongoosePostId,
-    });
+    const imageArr = await imagesUpload(
+      postImage,
+      `posts/${postedBy.userName}/${mongoosePostId}`
+    );
 
     const newPost = new Post({
       _id: mongoosePostId,
@@ -92,10 +92,7 @@ export const createPost: RequestHandler = async (req, res, next) => {
 
     res.status(201).json({ message: "New post created!" });
   } catch (err) {
-    await imagesFolderDeletion({
-      postedBy: postedBy.userName,
-      postId: mongoosePostId,
-    });
+    await imagesFolderDeletion(`posts/${postedBy.userName}/${mongoosePostId}`);
     return res
       .status(400)
       .json({ error: "Error on '/post/createPost': " + err });
@@ -218,10 +215,7 @@ export const deletePost: RequestHandler = async (req, res, next) => {
     await Report.findByIdAndDelete(postId, { session: postDeletionSession });
 
     //images Deletion
-    await imagesFolderDeletion({
-      postedBy: user.userName,
-      postId: postId,
-    });
+    await imagesFolderDeletion(`posts/${user.userName}/${postId}`);
 
     await postDeletionSession.commitTransaction();
     res.status(200).json({ message: "Your post deleted!" });

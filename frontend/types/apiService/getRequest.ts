@@ -1,4 +1,4 @@
-export type GET_ALLPOSTS = {
+export type GET_ALL_POSTS = {
   pageParam: number;
   currentPage: string;
 };
