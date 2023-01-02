@@ -1,30 +1,41 @@
 import React, { useState } from "react";
+import { communityItem } from "../../../types/communityItem";
 import ItemCardModal from "../../../UI/modals/ItemCardModal";
 
-function ItemCard({ item }: any) {
+type itemCardProps = { item: communityItem };
+function ItemCard({ item }: itemCardProps) {
+  console.log(item);
+
   const [Modal, setModal] = useState(false);
   const {
     mainImage,
+    company,
     brand,
     name,
     bestBatch: { price: bestBatchPrice },
     cheapestBatch: { price: cheapestBatchPrice },
   } = item;
+
   return (
-    <div className="max-w-[50%] xs:w-[33%] sm:max-w-[25%] ">
+    <div className="w-[50%] sm:max-w-[33%] lg:max-w-[25%]">
       <ItemCardModal modalOpen={Modal} setModalOpen={setModal} item={item} />
-      <div className="flex flex-col rounded-md border border-black m-2 pb-4 px-3">
+      <div className="flex flex-col rounded-md m-5">
         <div
           className="flex flex-col justify-center cursor-pointer"
           onClick={() => setModal(true)}
         >
-          <img src={mainImage} className="object-contain h-28 " />
-          <p className="text-xs md:text-base flex justify-center">{brand}</p>
-          <p className="text-xs md:text-base flex justify-center">{name}</p>
+          <img src={mainImage} className="object-contain max-h-32 " />
+          <p className="text-xs md:text-[sm] mb-3 mt-5 flex justify-center uppercase font-semibold text-center">
+            {company}
+          </p>
+          <p className="text-base md:text-xl text-center">
+            {brand} {name}
+          </p>
         </div>
         <div className="w-full flex justify-center">
           <p className="text-xs md:text-base font-bold">
-            {cheapestBatchPrice}¥ - {bestBatchPrice}¥
+            {cheapestBatchPrice ? `${cheapestBatchPrice}¥ - ` : " "}
+            {bestBatchPrice}¥
           </p>
         </div>
       </div>

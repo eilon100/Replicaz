@@ -1,11 +1,14 @@
-import { CircularProgress } from "@mui/joy";
 import React, { useRef } from "react";
-import { useInfiniteQuery } from "react-query";
-import { currentPage } from "../../../types/currentPage";
+
+import { CircularProgress } from "@mui/joy";
+import ItemCard from "./ItemCard";
 import PostLoading from "../../../UI/loadings/PostLoading";
 import { apiService } from "../../../utills/apiService";
+import { currentPage } from "../../../types/currentPage";
+import { useInfiniteQuery } from "react-query";
 import useIntersectionObserver from "../../../utills/useIntersectionObserver";
-import ItemCard from "./ItemCard";
+import { communityItem } from "../../../types/communityItem";
+
 type FeedProps = {
   currentPage: currentPage;
 };
@@ -63,7 +66,7 @@ function AllItems({ currentPage }: FeedProps) {
     <>
       {pages?.map((page, pageNumber) => (
         <React.Fragment key={pageNumber}>
-          {page?.data.map((item: any) => (
+          {page?.data.map((item: communityItem) => (
             <ItemCard item={item} key={item._id} />
           ))}
         </React.Fragment>

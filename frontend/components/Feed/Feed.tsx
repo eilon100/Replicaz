@@ -1,6 +1,6 @@
 import { CircularProgress } from "@mui/material";
-import React, { useEffect, useRef, useState } from "react";
-import { isError, useInfiniteQuery } from "react-query";
+import React, { useRef } from "react";
+import { useInfiniteQuery } from "react-query";
 import { post } from "../../types/post";
 import PostLoading from "../../UI/loadings/PostLoading";
 import { apiService } from "../../utills/apiService";
@@ -38,8 +38,6 @@ function Feed({ currentPage }: FeedProps) {
       return currentPage.length;
     },
   });
-
-  
 
   let persistedId: string | null = "";
   const loadMoreRef = useRef() as React.MutableRefObject<HTMLDivElement>;

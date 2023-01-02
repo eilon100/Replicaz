@@ -13,7 +13,7 @@ export const addNewItem: RequestHandler = async (req, res, next) => {
     brand,
     name,
     sizeType,
-    mainImage,
+    color,
     images,
     bestBatch,
     cheapestBatch,
@@ -31,12 +31,14 @@ export const addNewItem: RequestHandler = async (req, res, next) => {
       images,
       `/items/${company}/${brand}/${name}`
     );
+
     const currentItem = new newItem({
       community,
       company,
       brand,
       name,
       sizeType,
+      color,
       mainImage: imageArr![0] || "",
       images: imageArr,
       bestBatch,

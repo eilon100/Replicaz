@@ -131,6 +131,7 @@ const Post: FC<PostProps> = ({ post, page }) => {
       </header>
     );
   };
+
   const Body = () => {
     return (
       <>
@@ -217,6 +218,7 @@ const Post: FC<PostProps> = ({ post, page }) => {
       </>
     );
   };
+  
   const Footer = () => {
     return (
       <footer className="flex items-center justify-around mt-3 pt-1 border-t-[1px] ">

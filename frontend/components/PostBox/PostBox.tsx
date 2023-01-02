@@ -1,5 +1,5 @@
 import { PhotographIcon } from "@heroicons/react/outline";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext,  useState } from "react";
 import Image from "next/image";
 import { apiService } from "../../utills/apiService";
 import { TextField, Typography } from "@mui/material";
@@ -10,7 +10,7 @@ import Textarea from "@mui/joy/Textarea";
 import { useQueryClient } from "react-query";
 import CommunitySelect from "./components/CommunitySelect";
 import { postValidationSchema } from "../../validation/post";
-import DropzoneComponent from "./components/DropZone";
+import DropzoneComponent from "../../utills/DropZone";
 import Button from "@mui/material/Button";
 import { currentPage } from "../../types/currentPage";
 

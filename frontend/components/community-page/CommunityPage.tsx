@@ -1,18 +1,37 @@
-import React, { useState, useEffect } from "react";
-import { AiOutlineCloudUpload } from "react-icons/ai";
+import React, { useState } from "react";
+
+import AllItems from "./componnents/AllItems";
 import Feed from "../../components/Feed/Feed";
 import PostBox from "../../components/PostBox/PostBox";
-import { communityPages } from "../../types/currentPage";
 import UploadItemModal from "../../UI/modals/UploadItemModal";
-import { communityData } from "../../utills/data/communityPageData";
-import AllItems from "./componnents/AllItems";
-import ItemCard from "./componnents/ItemCard";
+
+import { communityPages } from "../../types/currentPage";
+const communityData = {
+  Shoes: {
+    backgroundImage:
+      "https://res.cloudinary.com/dcpuvkirc/image/upload/v1671619932/defualt%20images/shoes-page_bndubq.webp",
+    mainImage:
+      "https://res.cloudinary.com/dcpuvkirc/image/upload/v1671619941/defualt%20images/shoes-page-profile_r6mwbj.webp",
+  },
+  Bags: {
+    backgroundImage:
+      "https://res.cloudinary.com/dcpuvkirc/image/upload/v1671619902/defualt%20images/louis_vuitton_uiz1zo.jpg",
+    mainImage:
+      "https://res.cloudinary.com/dcpuvkirc/image/upload/v1671619899/defualt%20images/Balenciaga-bag_mvzrul.jpg",
+  },
+  Clothes: {
+    backgroundImage:
+      "https://res.cloudinary.com/dcpuvkirc/image/upload/v1671619954/defualt%20images/clothes-page_dozh9y.jpg",
+    mainImage:
+      "https://res.cloudinary.com/dcpuvkirc/image/upload/v1671619901/defualt%20images/12cfd520-bb1c-42fa-a5af-c914d71cd737_yjyd5f.jpg",
+  },
+};
 
 function CommunityPage({ page }: communityPages) {
   const [currentPage, setCurrentPage] = useState("posts");
   const [Modal, setModal] = useState(false);
   const {
-    [page]: { backgroundImage, mainImage, items },
+    [page]: { backgroundImage, mainImage },
   } = communityData;
 
   const header = () => {
@@ -88,7 +107,7 @@ function CommunityPage({ page }: communityPages) {
             >
               upload item
             </p>
-            <div className="max-w-6xl mx-auto flex flex-wrap bg-white pt-5 p-3 rounded-md">
+            <div className="max-w-[90rem] mx-auto flex flex-wrap bg-white pt-5 rounded-md">
               <AllItems currentPage={page} />
             </div>
           </div>

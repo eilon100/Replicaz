@@ -15,7 +15,7 @@ import { useContext } from "react";
 import { apiService } from "../../../../utills/apiService";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
-import Router, { useRouter } from "next/router";
+import  { useRouter } from "next/router";
 import { useQueryClient } from "react-query";
 import { user } from "../../../../types/user";
 import InputModal from "../../../../UI/modals/InputModal";
@@ -98,8 +98,7 @@ export default function PostOptions({
         toast.success(message, {
           id: notification,
         });
-        queryClient.fetchQuery("posts");
-        router.back();
+        if (router.pathname.includes("/post")) router.back();
       })
       .catch(({ response: { data } }) => {
         toast.error(data.error, {

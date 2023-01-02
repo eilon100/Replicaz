@@ -41,8 +41,8 @@ export type ADD_NEW_ITEM = {
   brand: string;
   name: string;
   sizeType: string;
+  color: string;
   description: string;
-  mainImage: File;
   images: File[];
   bestBatch: {
     name: string;

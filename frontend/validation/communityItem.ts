@@ -6,19 +6,19 @@ export const itemValidationSchema = (page: string) => {
     name: yup
       .string()
       .required()
-      .max(19, "Name must be 20 characters long")
+      .max(29, "Name must be 30 characters long")
       .trim(),
     bestBatchName: yup
       .string()
       .required()
-      .max(19, "Name must be 20 characters long")
+      .max(29, "Name must be 30 characters long")
       .trim(),
     bestBatchPrice: yup.number().required(),
     bestBatchUrl: yup.string().required().trim(),
     cheapestBatchName: yup
       .string()
       .required()
-      .max(19, "Name must be 20 characters long")
+      .max(29, "Name must be 30 characters long")
       .trim(),
     cheapestBatchPrice: yup.number().required(),
     cheapestBatchUrl: yup.string().required().trim(),

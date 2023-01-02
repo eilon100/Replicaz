@@ -1,6 +1,5 @@
 import { createContext, useEffect, useReducer } from "react";
 import { getCookie } from "cookies-next";
-import toast from "react-hot-toast";
 
 interface AuthProps {
   children: React.ReactNode;

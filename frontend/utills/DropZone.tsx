@@ -15,12 +15,13 @@ const baseStyle = {
   color: "#bdbdbd",
   transition: "border .3s ease-in-out",
 };
+
 type DropzoneComponent = {
   setImages: React.Dispatch<React.SetStateAction<any[]>>;
   maxImagesLength: number;
 };
 function DropzoneComponent({ setImages, maxImagesLength }: DropzoneComponent) {
-  const [files, setFiles] = useState<any[]>([]);
+  const [files, setFiles] = useState<File[]>([]);
 
   useEffect(() => {
     const imagesResultArr = files.reduce(
@@ -37,7 +38,7 @@ function DropzoneComponent({ setImages, maxImagesLength }: DropzoneComponent) {
     setImages(imagesResultArr);
   }, [files]);
 
-  const onDrop = (acceptedFiles: any) => {
+  const onDrop = (acceptedFiles: File[]) => {
     if (
       acceptedFiles.length > maxImagesLength ||
       acceptedFiles.length + files.length > maxImagesLength
@@ -47,7 +48,7 @@ function DropzoneComponent({ setImages, maxImagesLength }: DropzoneComponent) {
     }
     if (files?.length === 0) {
       setFiles(
-        acceptedFiles.map((file: any) =>
+        acceptedFiles.map((file: File) =>
           Object.assign(file, {
             preview: URL.createObjectURL(file),
           })
@@ -56,7 +57,7 @@ function DropzoneComponent({ setImages, maxImagesLength }: DropzoneComponent) {
     } else {
       let filesArrClone: File[] = [...files];
       filesArrClone.push(
-        ...acceptedFiles.map((file: any) =>
+        ...acceptedFiles.map((file: File) =>
           Object.assign(file, {
             preview: URL.createObjectURL(file),
           })
@@ -83,6 +84,7 @@ function DropzoneComponent({ setImages, maxImagesLength }: DropzoneComponent) {
     let filesArrClone: File[] = [...files];
 
     filesArrClone.map((file: any) => {
+      console.log(file);
       if (file.preview === filePreview) {
         let index: number = filesArrClone.indexOf(file);
         filesArrClone.splice(index, 1);
@@ -108,7 +110,7 @@ function DropzoneComponent({ setImages, maxImagesLength }: DropzoneComponent) {
       </div>
     ));
   };
-  
+
   const DropZone = () => {
     return files?.length === 0 ? (
       <div

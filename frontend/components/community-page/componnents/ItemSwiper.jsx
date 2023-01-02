@@ -28,7 +28,12 @@ const ItemSwiper = ({ images }) => {
           return (
             <SwiperSlide key={i}>
               <a href={url} target="new">
-                <img src={url} className="max-h-96 px-10  " />
+                <img
+                  src={url}
+                  className={`max-h-96 px-10 ${
+                    images.length === 1 ? "mb-10" : ""
+                  } `}
+                />
               </a>
             </SwiperSlide>
           );
@@ -38,7 +43,7 @@ const ItemSwiper = ({ images }) => {
         <Swiper
           onSwiper={setThumbsSwiper}
           spaceBetween={10}
-          slidesPerView={images.length > 3 ? 3 : images.length}
+          slidesPerView={images.length}
           freeMode={true}
           watchSlidesProgress={true}
           modules={[FreeMode, Navigation, Thumbs]}
@@ -46,8 +51,8 @@ const ItemSwiper = ({ images }) => {
         >
           {images.map((url, i) => {
             return (
-              <SwiperSlide key={i} className="w-1/4 opacity-50 mt-8">
-                <img src={url} className="rounded-sm object-contain max-h-20" />
+              <SwiperSlide key={i} className="opacity-50 mt-0 md:mt-8">
+                <img src={url} className="rounded-sm object-contain max-h-16" />
               </SwiperSlide>
             );
           })}

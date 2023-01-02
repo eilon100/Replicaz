@@ -1,11 +1,6 @@
-import { useFormik } from "formik";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect } from "react";
-import toast from "react-hot-toast";
-import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import { useQuery, useQueryClient } from "react-query";
-import ReactTimeago from "react-timeago";
+import { useQuery} from "react-query";
 import Post from "../../components/Feed/Post/Post";
 import AllComments from "../../components/Feed/Post/components/AllComments";
 import NewComment from "../../components/Feed/Post/components/NewComment";
@@ -14,16 +9,8 @@ import { comment } from "../../types/comment";
 import SinglePostLoading from "../../UI/loadings/SinglePostLoading";
 import { apiService } from "../../utills/apiService";
 
-export async function getServerSideProps() {
-  return {
-    props: {},
-  };
-}
-
 function PostPage() {
   const router = useRouter();
-  const { state, dispatch } = useContext(AuthContext);
-  const { loggedIn, userName, userImage } = state;
   const { postId } = router.query;
 
   useEffect(() => {
@@ -44,7 +31,7 @@ function PostPage() {
     return <SinglePostLoading />;
   }
   if (error) {
-    return <div >Post not found</div>;
+    return <div>Post not found</div>;
   }
 
   if (postData) {

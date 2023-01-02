@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Modal, Textarea, Typography } from "@mui/joy";
 import { useFormik } from "formik";
-import { reportValidationSchema } from "../../validation/report";
 import { MdClose } from "react-icons/md";
 import Button from "@mui/material/Button";
 import SendIcon from "@mui/icons-material/Send";
-import { Autocomplete, InputLabel, MenuItem, TextField } from "@mui/material";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import DropzoneComponent from "../../components/PostBox/components/DropZone";
+import { MenuItem, TextField } from "@mui/material";
+import Select from "@mui/material/Select";
+import DropzoneComponent from "../../utills/DropZone";
 import { itemValidationSchema } from "../../validation/communityItem";
-import { boolean } from "yup";
 import { toast } from "react-hot-toast";
 import { apiService } from "../../utills/apiService";
 interface UploadItemModalProps {
@@ -24,6 +22,7 @@ function UploadItemModal({
   page,
 }: UploadItemModalProps) {
   const [sizeType, setSizeType] = useState("");
+  const [color, setColor] = useState("");
   const [company, setCompany] = useState("");
   const [brand, setBrand] = useState("");
   const [images, setImages] = useState<File[]>([]);
@@ -72,7 +71,7 @@ function UploadItemModal({
       cheapestBatchPrice: "",
       description: "",
     },
-    validationSchema: itemValidationSchema(page),
+    // validationSchema: itemValidationSchema(page),
     onSubmit: (values) => {
       onSubmit();
       //   setModalOpen(false);
@@ -87,7 +86,7 @@ function UploadItemModal({
       brand,
       name: valuesName,
       sizeType,
-      mainImage: images[0],
+      color,
       images,
       description: valuesDescription,
       bestBatch: {
@@ -116,9 +115,39 @@ function UploadItemModal({
     }
   };
 
-  const companiesArr = ["adidas", "nike"];
-  const brandsArr = ["Yeezy 350 v2", "nike"];
-  const sizeTypeArr = ["EU", "AUS", "USA", "JAP", "UK"];
+  const companiesArr = [
+    "adidas",
+    "nike",
+    "new balance",
+    "balenciaga",
+    "Alexander McQueen",
+  ];
+  const brandsArr = [
+    "Dunk Low",
+    "Off-White x Dunk Low",
+    "Air Force 1",
+    "New Balance 327",
+    "Triple S",
+    "Track 2",
+    "Speed Trainer",
+    "Oversized Sneaker",
+  ];
+  const sizeTypeArr = ["EU", "AUS", "US", "JAP", "UK"];
+  const colors = [
+    "red",
+    "blue",
+    "yellow",
+    "grey",
+    "brown",
+    "green",
+    "orange",
+    "black",
+    "purple",
+    "white",
+    "pink",
+    "all",
+  ];
+
   const textFields = () => {
     return (
       <div className="w-full flex flex-col gap-2 z-100">
@@ -191,6 +220,26 @@ function UploadItemModal({
               return (
                 <MenuItem value={sizeType} key={sizeType}>
                   {sizeType}
+                </MenuItem>
+              );
+            })}
+          </Select>
+        </div>
+        <div className="flex w-full justify-between">
+          <label>color:</label>
+          <Select
+            id="demo-simple-select"
+            value={color}
+            className=" w-1/2 mx-2 "
+            onChange={(event) => {
+              setColor(event.target.value as string);
+            }}
+            required
+          >
+            {colors.map((color) => {
+              return (
+                <MenuItem value={color} key={color}>
+                  {color}
                 </MenuItem>
               );
             })}
@@ -310,7 +359,7 @@ function UploadItemModal({
             maxRows={1}
             componentsProps={{
               textarea: {
-                maxLength: 50,
+                maxLength: 100,
                 dir: "auto",
               },
             }}
@@ -323,7 +372,7 @@ function UploadItemModal({
             className=" flex-1 p-2 rounded-md border "
             endDecorator={
               <Typography className="text-xs ml-auto text-gray-500">
-                {50 - valuesDescription.length} character(s)
+                {100 - valuesDescription.length} character(s)
               </Typography>
             }
           />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import CommunityPage from "../../../components/community-page/CommunityPage";
 
 function index() {

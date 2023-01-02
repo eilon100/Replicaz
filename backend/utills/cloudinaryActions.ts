@@ -6,12 +6,12 @@ export const imagesUpload = async (images: any[], path: string) => {
   try {
     const imagesUrl: any[] = [];
 
-    const uploadImages = images.map(async (img) => {
+    const uploadImages = images.map(async (img, i) => {
       const upload = cloudinary.uploader
         .upload(img, {
           folder: path,
         })
-        .then((res: any) => imagesUrl.push(res.secure_url));
+        .then((res: any) => (imagesUrl[i] = res.secure_url));
       return upload;
     });
     await Promise.all(uploadImages);

@@ -88,7 +88,10 @@
   margin-bottom: 6px;
   cursor: pointer;
 }
-
+.myItemSwiper .swiper-wrapper {
+  display: flex;
+  align-items: center;
+}
 .myItemSwiper .swiper-slide-thumb-active {
   opacity: 1;
 }

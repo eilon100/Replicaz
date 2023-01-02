@@ -8,7 +8,7 @@ import SendIcon from "@mui/icons-material/Send";
 interface ReportModalProps {
   modalOpen: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  functionHandler: any;
+  functionHandler: (body: string) => void;
 }
 
 function InputModal({
@@ -20,8 +20,6 @@ function InputModal({
     handleChange,
     handleBlur,
     values: { body: valuesBody },
-    touched: { body: touchedBody },
-    errors: { body: errorsBody },
     resetForm,
     handleSubmit,
   } = useFormik({
@@ -35,7 +33,34 @@ function InputModal({
       resetForm();
     },
   });
-
+  const buttons = () => {
+    return (
+      <div className="flex w-full justify-end mt-3">
+        <Button
+          variant="text"
+          type="reset"
+          className=" font-semibold text-black text-xs h-8 p-3 xs:text-sm xs:h-10 xs:p-4"
+          onClick={() => {
+            setModalOpen(false);
+            resetForm();
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
+          type="submit"
+          style={{
+            backgroundColor: "#1183ca",
+          }}
+          variant="contained"
+          endIcon={<SendIcon />}
+          className=" rounded-md mx-1 text-xs h-8 p-3 xs:text-sm xs:h-10 xs:p-4"
+        >
+          Send
+        </Button>
+      </div>
+    );
+  };
   return (
     <Modal
       open={modalOpen}
@@ -79,30 +104,7 @@ function InputModal({
             </Typography>
           }
         />
-        <div className="flex w-full justify-end mt-3">
-          <Button
-            variant="text"
-            type="reset"
-            className=" font-semibold text-black text-xs h-8 p-3 xs:text-sm xs:h-10 xs:p-4"
-            onClick={() => {
-              setModalOpen(false);
-              resetForm();
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            style={{
-              backgroundColor: "#1183ca",
-            }}
-            variant="contained"
-            endIcon={<SendIcon />}
-            className=" rounded-md mx-1 text-xs h-8 p-3 xs:text-sm xs:h-10 xs:p-4"
-          >
-            Send
-          </Button>
-        </div>
+        {buttons()}
       </form>
     </Modal>
   );
