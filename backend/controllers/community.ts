@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import mongoose from "mongoose";
-import newItem from "../modal/communityItems";
+import CommunityItem from "../modal/communityItems";
 import {
   imagesFolderDeletion,
   imagesUpload,
@@ -21,7 +21,7 @@ export const addNewItem: RequestHandler = async (req, res, next) => {
   } = req.body;
 
   try {
-    const [existsItem] = await newItem.find({ name, brand });
+    const [existsItem] = await CommunityItem.find({ name, brand });
 
     if (existsItem) {
       return res.status(300).json({ error: "This item name already exists" });
@@ -32,7 +32,7 @@ export const addNewItem: RequestHandler = async (req, res, next) => {
       `/items/${company}/${brand}/${name}`
     );
 
-    const currentItem = new newItem({
+    const currentItem = new CommunityItem({
       community,
       company,
       brand,
@@ -61,8 +61,7 @@ export const getAllItems: RequestHandler = async (req, res, next) => {
   const { currentPage } = req.query;
   const itemsPerPAge = 8;
 
-  newItem
-    .find({ community: currentPage })
+  CommunityItem.find({ community: currentPage })
     .sort({ _id: -1 })
     .skip(page * itemsPerPAge)
     .limit(itemsPerPAge)
@@ -72,4 +71,16 @@ export const getAllItems: RequestHandler = async (req, res, next) => {
     .catch((err) => {
       return res.status(500).json({ message: "Could not fetch the items" });
     });
+};
+export const getItemsData: RequestHandler = async (req, res, next) => {
+  const { page } = req.params;
+  try {
+    const itemsNumber = await CommunityItem.countDocuments({ community: page });
+
+    return res.status(201).json({ message: "New item added!" });
+  } catch (err) {
+    return res
+      .status(400)
+      .json({ error: "Error on '/community/addnewitem': " + err });
+  }
 };

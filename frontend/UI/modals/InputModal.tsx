@@ -5,7 +5,8 @@ import { reportValidationSchema } from "../../validation/report";
 import { MdClose } from "react-icons/md";
 import Button from "@mui/material/Button";
 import SendIcon from "@mui/icons-material/Send";
-interface ReportModalProps {
+
+interface inputModalProps {
   modalOpen: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   functionHandler: (body: string) => void;
@@ -15,7 +16,7 @@ function InputModal({
   modalOpen,
   setModalOpen,
   functionHandler,
-}: ReportModalProps) {
+}: inputModalProps) {
   const {
     handleChange,
     handleBlur,

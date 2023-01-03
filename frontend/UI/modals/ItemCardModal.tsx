@@ -7,16 +7,17 @@ import Tooltip from "@mui/material/Tooltip";
 import { Zoom } from "@mui/material";
 import { communityItem } from "../../types/communityItem";
 
-interface ItemCardModalProps {
+interface itemCardModalProps {
   modalOpen: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   item: communityItem;
 }
 
-function ItemCardModal({ modalOpen, setModalOpen, item }: ItemCardModalProps) {
+function ItemCardModal({ modalOpen, setModalOpen, item }: itemCardModalProps) {
   const [toolTip, setToolTip] = useState("Copy");
   const {
     description,
+    company,
     images,
     name,
     brand,
@@ -124,21 +125,32 @@ function ItemCardModal({ modalOpen, setModalOpen, item }: ItemCardModalProps) {
             onClick={() => setModalOpen(false)}
           />
         </div>
-        <div className="w-full py-10 flex flex-col items-center md:flex-row justify-around mb-2 h-full ">
-          <h1 className=" text-base xs:text-lg md:hidden font-bold ">
-            {brand} {name}
-          </h1>
+        <div className="py-10 flex flex-col items-center md:flex-row justify-around mb-2">
+          <div className="text-center md:hidden">
+            <h1 className=" text-lg xs:text-2xl  font-bold ">{company}</h1>
+            <h1 className=" text-base xs:text-lg font-bold ">
+              {brand} {name}
+            </h1>
+          </div>
           <div className=" w-3/4 xs:w-1/2 h-full my-1">
             <ItemSwiper images={images} />
           </div>
           <div className="  flex flex-col gap-1 mx-5 font-semibold text-xs xs:text-base lg:text-base md:text-sm md:gap-3">
-            <h1 className=" text-base hidden md:flex lg:mb-10 md:text-xl lg:text-2xl xl:text-4xl  font-bold ">
-              {brand} {name}
-            </h1>
+            <div className="hidden md:flex flex-col">
+              <h1 className="text-base lg:mb-2 md:text-2xl lg:text-4xl xl:text-6xl font-bold capitalize">
+                {company}
+              </h1>
+              <h1 className=" text-base lg:mb-10 md:text-lg lg:text-2xl xl:text-3xl font-semibold ">
+                {brand} {name}
+              </h1>
+            </div>
             <p>
               Prices:
               <span className="font-normal">
-                {cheapestBatchPrice ? ` ${cheapestBatchPrice}¥ -` : " "}
+                {cheapestBatchPrice
+                  ? ` ${cheapestBatchPrice}¥ -
+                `
+                  : " "}
                 {bestBatchPrice}¥
               </span>
             </p>

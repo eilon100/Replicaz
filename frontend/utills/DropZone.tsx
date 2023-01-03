@@ -1,5 +1,5 @@
 import { PlusIcon, UploadIcon, XIcon } from "@heroicons/react/outline";
-import React, { useCallback, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-hot-toast";
 const baseStyle = {

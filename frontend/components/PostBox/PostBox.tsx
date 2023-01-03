@@ -193,7 +193,7 @@ function PostBox({ currentPage }: PostBoxProps) {
       {titlePost()}
       {isPostActive && (
         <div className="flex flex-col py-2 ">
-          {currentPage === "Main" ? (
+          {currentPage === "main" ? (
             <CommunitySelect
               community={community}
               setCommunity={setCommunity}

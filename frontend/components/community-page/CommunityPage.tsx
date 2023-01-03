@@ -4,30 +4,31 @@ import AllItems from "./componnents/AllItems";
 import Feed from "../../components/Feed/Feed";
 import PostBox from "../../components/PostBox/PostBox";
 import UploadItemModal from "../../UI/modals/UploadItemModal";
-
 import { communityPages } from "../../types/currentPage";
 const communityData = {
-  Shoes: {
+  shoes: {
     backgroundImage:
       "https://res.cloudinary.com/dcpuvkirc/image/upload/v1671619932/defualt%20images/shoes-page_bndubq.webp",
     mainImage:
       "https://res.cloudinary.com/dcpuvkirc/image/upload/v1671619941/defualt%20images/shoes-page-profile_r6mwbj.webp",
   },
-  Bags: {
+  bags: {
     backgroundImage:
       "https://res.cloudinary.com/dcpuvkirc/image/upload/v1671619902/defualt%20images/louis_vuitton_uiz1zo.jpg",
     mainImage:
       "https://res.cloudinary.com/dcpuvkirc/image/upload/v1671619899/defualt%20images/Balenciaga-bag_mvzrul.jpg",
   },
-  Clothes: {
+  clothes: {
     backgroundImage:
       "https://res.cloudinary.com/dcpuvkirc/image/upload/v1671619954/defualt%20images/clothes-page_dozh9y.jpg",
     mainImage:
       "https://res.cloudinary.com/dcpuvkirc/image/upload/v1671619901/defualt%20images/12cfd520-bb1c-42fa-a5af-c914d71cd737_yjyd5f.jpg",
   },
 };
-
-function CommunityPage({ page }: communityPages) {
+interface communityPageProps {
+  page: communityPages;
+}
+function CommunityPage({ page }: communityPageProps) {
   const [currentPage, setCurrentPage] = useState("posts");
   const [Modal, setModal] = useState(false);
   const {

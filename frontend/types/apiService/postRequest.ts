@@ -1,4 +1,5 @@
 import { string } from "yup";
+import { communityPages } from "../currentPage";
 
 export type REGISTER_USER = {
   userName: string;
@@ -36,7 +37,7 @@ export type DELETE_COMMENT = {
 };
 export type REPORT_COMMENT = { commentId: string; body: string };
 export type ADD_NEW_ITEM = {
-  community: string;
+  community: communityPages;
   company: string;
   brand: string;
   name: string;

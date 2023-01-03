@@ -2,7 +2,7 @@ import React from "react";
 import { Modal } from "@mui/joy";
 import Button from "@mui/material/Button";
 import { MdOutlineDeleteOutline, MdClose } from "react-icons/md";
-interface ReportModalProps {
+interface confirmModalProps {
   modalOpen: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   functionHandler: () => void;
@@ -16,7 +16,7 @@ function ConfirmModal({
   functionHandler,
   action,
   page,
-}: ReportModalProps) {
+}: confirmModalProps) {
   const onSubmit = () => {
     functionHandler();
     setModalOpen(false);

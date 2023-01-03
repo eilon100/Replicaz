@@ -11,8 +11,8 @@ const Home: NextPage = () => {
         <link rel="icon" href="/sneaker.png" />
       </Head>
       <div className="my-6 px-3 max-w-4xl mx-auto ">
-        <PostBox currentPage="Main" />
-        <Feed currentPage="Main" />
+        <PostBox currentPage="main" />
+        <Feed currentPage="main" />
       </div>
     </>
   );

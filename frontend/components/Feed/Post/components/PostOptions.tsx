@@ -15,18 +15,11 @@ import { useContext } from "react";
 import { apiService } from "../../../../utills/apiService";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
-import  { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { useQueryClient } from "react-query";
 import { user } from "../../../../types/user";
 import InputModal from "../../../../UI/modals/InputModal";
 import ConfirmModal from "../../../../UI/modals/ConfirmModal";
-
-type PostOptionsProps = {
-  postId: string;
-  userPost: boolean;
-  saves: user[];
-  setEditPost: React.Dispatch<React.SetStateAction<boolean>>;
-};
 const style = {
   overflow: "visible",
   filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
@@ -51,7 +44,13 @@ const style = {
   },
 };
 
-export default function PostOptions({
+type PostOptionsProps = {
+  postId: string;
+  userPost: boolean;
+  saves: user[];
+  setEditPost: React.Dispatch<React.SetStateAction<boolean>>;
+};
+function PostOptions({
   postId,
   userPost,
   saves,
@@ -206,3 +205,4 @@ export default function PostOptions({
     </React.Fragment>
   );
 }
+export default PostOptions;

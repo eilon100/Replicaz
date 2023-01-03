@@ -19,9 +19,9 @@ function CommunitySelect({ community, setCommunity }: CommunitySelectProps) {
           setCommunity(event.target.value);
         }}
       >
-        <MenuItem value={"Shoes"}>Shoes</MenuItem>
-        <MenuItem value={"Bags"}>Bags</MenuItem>
-        <MenuItem value={"Clothes"}>Clothes</MenuItem>
+        <MenuItem value={"shoes"}>Shoes</MenuItem>
+        <MenuItem value={"bags"}>Bags</MenuItem>
+        <MenuItem value={"clothes"}>Clothes</MenuItem>
       </Select>
     </FormControl>
   );

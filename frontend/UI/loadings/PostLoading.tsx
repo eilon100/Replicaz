@@ -31,8 +31,11 @@ function PostLoading() {
 
       <CardContent>
         <React.Fragment>
+          <div className="flex justify-between mb-2">
+            <Skeleton animation="wave" height={10} width="10%" />
+            <Skeleton animation="wave" height={10} width="10%" />
+          </div>
           <Skeleton animation="wave" height={10} style={{ marginBottom: 6 }} />
-          <Skeleton animation="wave" height={10} width="80%" />
         </React.Fragment>
       </CardContent>
     </Card>

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useContext, FC, useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import toast from "react-hot-toast";
 import { BiComment, BiLike, BiShare } from "react-icons/bi";
 import ReactTimeago from "react-timeago";
@@ -18,12 +18,13 @@ import { post } from "../../../types/post";
 import { postValidationSchema } from "../../../validation/post";
 import { TextField } from "@mui/material";
 import { currentPage } from "../../../types/currentPage";
+
 interface PostProps {
   post: post;
   page?: currentPage;
 }
 
-const Post: FC<PostProps> = ({ post, page }) => {
+function Post({ post, page }: PostProps) {
   const { state } = useContext(AuthContext);
   const { loggedIn, userId } = state;
   const [postLiked, setPostLiked] = useState(post.likes.includes(userId));
@@ -82,7 +83,7 @@ const Post: FC<PostProps> = ({ post, page }) => {
         toast.success(message);
         setEditPost(false);
         queryClient.refetchQueries(
-          page === "SinglePost" ? "fetchPost" : "posts"
+          page === "singlePost" ? "fetchPost" : "posts"
         );
       })
       .catch(({ response: { data } }) => {
@@ -95,7 +96,7 @@ const Post: FC<PostProps> = ({ post, page }) => {
       <header className=" flex items-center mb-2 justify-between">
         <div
           className={`flex items-center ${
-            page === "Main" || page === "SinglePost" ? "space-x-2" : ""
+            page === "main" || page === "singlePost" ? "space-x-2" : ""
           }`}
         >
           <div className="relative h-10 w-10 -ml-2">
@@ -107,9 +108,9 @@ const Post: FC<PostProps> = ({ post, page }) => {
             />
           </div>
           <div className="flex items-center">
-            <a href={`/community/${post.community.toLowerCase()}`}>
-              <div className=" font-bold text-sm xs:text-xl cursor-pointer hover:underline">
-                {page === "Main" || page === "SinglePost" ? post.community : ""}
+            <a href={`/community/${post.community}`}>
+              <div className=" font-bold text-sm xs:text-xl cursor-pointer hover:underline capitalize">
+                {page === "main" || page === "singlePost" ? post.community : ""}
               </div>
             </a>
             <div className=" font-[400] mt-[1px] text-[0.5rem] xs:text-xs text-[#65676B] ">
@@ -218,7 +219,7 @@ const Post: FC<PostProps> = ({ post, page }) => {
       </>
     );
   };
-  
+
   const Footer = () => {
     return (
       <footer className="flex items-center justify-around mt-3 pt-1 border-t-[1px] ">
@@ -261,6 +262,6 @@ const Post: FC<PostProps> = ({ post, page }) => {
       {Footer()}
     </div>
   );
-};
+}
 
 export default Post;

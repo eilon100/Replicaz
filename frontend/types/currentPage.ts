@@ -1,4 +1,2 @@
-export type currentPage = "Main" | "SinglePost" | "Shoes" | "Clothes" | "Bags";
-export type communityPages = {
-  page: "Shoes" | "Bags" | "Clothes";
-};
+export type currentPage = "main" | "singlePost" | "shoes" | "clothes" | "bags";
+export type communityPages = "shoes" | "bags" | "clothes";

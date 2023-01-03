@@ -68,6 +68,9 @@ export const apiService = {
         },
       });
     },
+    GET_COMMUNITY_ITEMS_DATA(ctx: any) {
+      return axiosInstance.get(`/community/itemsdata/${ctx.query.page}`);
+    },
     GET_POST_BY_ID(postId: getType.GET_POST_BY_ID) {
       return axiosInstance.get(`/post/getpost/${postId}`);
     },

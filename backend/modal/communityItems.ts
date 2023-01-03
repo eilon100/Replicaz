@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const newItemSchema = new Schema(
+const communityItemSchema = new Schema(
   {
     community: { type: String, required: true },
     company: {
@@ -42,7 +42,7 @@ const newItemSchema = new Schema(
   { timestamps: true }
 );
 
-const communityItem =
+const CommunityItem =
   mongoose.models.communityItem ||
-  mongoose.model("communityItem", newItemSchema);
-export default communityItem;
+  mongoose.model("CommunityItem", communityItemSchema);
+export default CommunityItem;

@@ -13,12 +13,11 @@ import InputModal from "../../../../UI/modals/InputModal";
 import { apiService } from "../../../../utills/apiService";
 import { postValidationSchema } from "../../../../validation/post";
 
-interface AllCommentsProps {
+interface CommentProps {
   comment: comment;
-  postId: string | string[] | undefined;
 }
 
-const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
+function Comment({ comment }: CommentProps) {
   const { state } = useContext(AuthContext);
   const { loggedIn, userId } = state;
   const [commentLiked, setCommentLiked] = useState(
@@ -262,6 +261,6 @@ const AllComments: FC<AllCommentsProps> = ({ comment, postId }) => {
       </div>
     </div>
   );
-};
+}
 
-export default AllComments;
+export default Comment;

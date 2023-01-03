@@ -1,9 +1,15 @@
 import express from "express";
-import { addNewItem, getAllItems } from "../controllers/community";
+import {
+  addNewItem,
+  getAllItems,
+  getItemsData,
+} from "../controllers/community";
 import { isAuth } from "../middleware/isAuth";
 
 const communityRouter = express.Router();
 communityRouter.get("/getallitems", getAllItems);
+
+communityRouter.get("/itemsdata/:page", getItemsData);
 
 communityRouter.use(isAuth);
 

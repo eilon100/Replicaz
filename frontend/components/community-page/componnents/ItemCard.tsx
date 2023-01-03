@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import { communityItem } from "../../../types/communityItem";
 import ItemCardModal from "../../../UI/modals/ItemCardModal";
 
-type itemCardProps = { item: communityItem };
-function ItemCard({ item }: itemCardProps) {
-  console.log(item);
+type itemCardProps = {
+  item: communityItem;
+};
 
+function ItemCard({ item }: itemCardProps) {
   const [Modal, setModal] = useState(false);
   const {
     mainImage,

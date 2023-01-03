@@ -10,17 +10,18 @@ import DropzoneComponent from "../../utills/DropZone";
 import { itemValidationSchema } from "../../validation/communityItem";
 import { toast } from "react-hot-toast";
 import { apiService } from "../../utills/apiService";
-interface UploadItemModalProps {
+import { communityPages } from "../../types/currentPage";
+interface uploadItemModalProps {
   modalOpen: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  page: string;
+  page: communityPages;
 }
 
 function UploadItemModal({
   modalOpen,
   setModalOpen,
   page,
-}: UploadItemModalProps) {
+}: uploadItemModalProps) {
   const [sizeType, setSizeType] = useState("");
   const [color, setColor] = useState("");
   const [company, setCompany] = useState("");

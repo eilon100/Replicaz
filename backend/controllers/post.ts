@@ -15,7 +15,7 @@ export const getAllPosts: RequestHandler = (req, res, next) => {
 
   const postsPerPage = 5;
   const findInCommunity =
-    currentPage !== "Main" ? { community: currentPage } : {};
+    currentPage !== "main" ? { community: currentPage } : {};
 
   Post.find(findInCommunity)
     .populate({ path: "postedBy", select: ["userName", "image"] })
@@ -77,7 +77,7 @@ export const createPost: RequestHandler = async (req, res, next) => {
     const newPost = new Post({
       _id: mongoosePostId,
       postedBy: req.userData.userId,
-      community: community,
+      community,
       title: postTitle,
       body: postBody,
       images: imageArr,
