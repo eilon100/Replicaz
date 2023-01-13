@@ -25,10 +25,12 @@ const communityData = {
       "https://res.cloudinary.com/dcpuvkirc/image/upload/v1671619901/defualt%20images/12cfd520-bb1c-42fa-a5af-c914d71cd737_yjyd5f.jpg",
   },
 };
+
 interface communityPageProps {
   page: communityPages;
+  itemsData: any;
 }
-function CommunityPage({ page }: communityPageProps) {
+function CommunityPage({ page, itemsData }: communityPageProps) {
   const [currentPage, setCurrentPage] = useState("posts");
   const [Modal, setModal] = useState(false);
   const {
@@ -65,19 +67,19 @@ function CommunityPage({ page }: communityPageProps) {
                 currentPage === "posts"
                   ? "font-semibold border-b-4"
                   : " mb-1 cursor-pointer"
-              }`}
+              } capitalize`}
               onClick={() => {
                 setCurrentPage("posts");
               }}
             >
-              Posts
+              posts
             </span>
             <span
               className={`px-2 py-1 ${
                 currentPage === page
                   ? "font-semibold border-b-4"
                   : " mb-1 cursor-pointer"
-              }`}
+              } capitalize`}
               onClick={() => {
                 setCurrentPage(page);
               }}
@@ -109,7 +111,7 @@ function CommunityPage({ page }: communityPageProps) {
               upload item
             </p>
             <div className="max-w-[90rem] mx-auto flex flex-wrap bg-white pt-5 rounded-md">
-              <AllItems currentPage={page} />
+              <AllItems currentPage={page} itemsData={itemsData} />
             </div>
           </div>
         )}

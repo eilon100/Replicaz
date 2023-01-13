@@ -58,26 +58,38 @@ export const addNewItem: RequestHandler = async (req, res, next) => {
 
 export const getAllItems: RequestHandler = async (req, res, next) => {
   const { p: page }: any = req.query || 0;
-  const { currentPage } = req.query;
-  const itemsPerPAge = 8;
+  const { currentPage, sortSelect, colorSelect, companySelect } = req.query;
 
-  CommunityItem.find({ community: currentPage })
-    .sort({ _id: -1 })
-    .skip(page * itemsPerPAge)
-    .limit(itemsPerPAge)
-    .then((items) => {
-      return res.status(200).send(items);
-    })
-    .catch((err) => {
-      return res.status(500).json({ message: "Could not fetch the items" });
-    });
+  const filterObj = {
+    community: currentPage,
+    color: colorSelect === "all" ? { $exists: true } : colorSelect,
+    company: companySelect === "all" ? { $exists: true } : companySelect,
+  };
+  const itemsNumber = await CommunityItem.countDocuments(filterObj);
+  const itemsBrands = await CommunityItem.find({
+    community: currentPage,
+    company: companySelect === "all" ? { $exists: true } : companySelect,
+  }).distinct("brand");
+
+  const itemsPerPAge = 12;
+  try {
+    const items = await CommunityItem.find(filterObj)
+      .sort({ _id: -1 })
+      .skip(page * itemsPerPAge)
+      .limit(itemsPerPAge);
+
+    return res.status(200).send({ items, itemsNumber });
+  } catch (error) {
+    return res.status(500).json({ message: "Could not fetch the items" });
+  }
 };
 export const getItemsData: RequestHandler = async (req, res, next) => {
   const { page } = req.params;
   try {
-    const itemsNumber = await CommunityItem.countDocuments({ community: page });
+    const itemsColors = await CommunityItem.distinct("color");
+    const itemsCompanies = await CommunityItem.distinct("company");
 
-    return res.status(201).json({ message: "New item added!" });
+    return res.status(201).json({ itemsColors, itemsCompanies });
   } catch (err) {
     return res
       .status(400)

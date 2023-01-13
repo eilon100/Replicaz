@@ -125,14 +125,16 @@ function ItemCardModal({ modalOpen, setModalOpen, item }: itemCardModalProps) {
             onClick={() => setModalOpen(false)}
           />
         </div>
-        <div className="py-10 flex flex-col items-center md:flex-row justify-around mb-2">
+        <div className="md:py-10 flex flex-col items-center md:flex-row justify-around mb-2">
           <div className="text-center md:hidden">
-            <h1 className=" text-lg xs:text-2xl  font-bold ">{company}</h1>
-            <h1 className=" text-base xs:text-lg font-bold ">
+            <h1 className=" text-xl xs:text-2xl  font-bold capitalize">
+              {company}
+            </h1>
+            <h1 className=" text-base xs:text-lg font-semibold ">
               {brand} {name}
             </h1>
           </div>
-          <div className=" w-3/4 xs:w-1/2 h-full my-1">
+          <div className=" w-3/4 sm:w-1/2 h-full my-1">
             <ItemSwiper images={images} />
           </div>
           <div className="  flex flex-col gap-1 mx-5 font-semibold text-xs xs:text-base lg:text-base md:text-sm md:gap-3">

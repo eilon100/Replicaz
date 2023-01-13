@@ -24,7 +24,7 @@ function index({ data, error }: any) {
     return <div>error loading this page</div>;
   }
   if (page === "shoes" || page === "bags" || page === "clothes") {
-    return <CommunityPage page={page} />;
+    return <CommunityPage page={page} itemsData={data} />;
   }
 
   return <div>page not found</div>;

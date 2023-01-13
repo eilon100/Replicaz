@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { CircularProgress } from "@mui/joy";
 import ItemCard from "./ItemCard";
 import { apiService } from "../../../utills/apiService";
@@ -9,15 +9,39 @@ import { communityItem } from "../../../types/communityItem";
 import ItemLoading from "../../../UI/loadings/ItemLoading";
 import { FormControl, MenuItem } from "@mui/material";
 import Select from "@mui/material/Select";
+import Drawer from "@mui/material/Drawer";
+import Button from "@mui/material/Button";
+import List from "@mui/material/List";
+import Divider from "@mui/material/Divider";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import InboxIcon from "@mui/icons-material/MoveToInbox";
+import MailIcon from "@mui/icons-material/Mail";
+import { Box } from "@mui/system";
 
 type AllItemsProps = {
   currentPage: currentPage;
+  itemsData: any;
 };
 
-function AllItems({ currentPage }: AllItemsProps) {
-  const [sortSelectState, setSortSelectState] = React.useState("All");
-  const fetchItems = async ({ pageParam = 0 }) => {
-    const data = { pageParam, currentPage };
+function AllItems({ currentPage, itemsData }: AllItemsProps) {
+  const [sortSelect, setSortSelect] = useState("all");
+  const [colorSelect, setColorSelect] = useState("all");
+  const [companySelect, setCompanySelect] = useState("all");
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const { itemsNumber, itemsColors, itemsCompanies } = itemsData;
+
+  const fetchItems = async ({
+    pageParam = 0,
+    queryKey: [, queryData],
+  }: any) => {
+    const data = {
+      pageParam,
+      ...queryData,
+    };
+
     const res = await apiService.get.GET_ALL_ITEMS(data);
     return res;
   };
@@ -33,15 +57,21 @@ function AllItems({ currentPage }: AllItemsProps) {
     isFetchingNextPage,
     status,
     refetch,
-  } = useInfiniteQuery(["items"], fetchItems, {
-    getNextPageParam: (_lastPage, currentPage) => {
-      const isLastPage = !currentPage[currentPage.length - 1]?.data[0];
-      if (isLastPage) {
-        return undefined;
-      }
-      return currentPage.length;
-    },
-  });
+  } = useInfiniteQuery(
+    ["items", { currentPage, sortSelect, colorSelect, companySelect }],
+    (queryFunctionContext) => fetchItems(queryFunctionContext),
+    {
+      getNextPageParam: (_lastPage, currentPage) => {
+        const isLastPage = !currentPage[currentPage.length - 1]?.data?.items[0];
+
+        if (isLastPage) {
+          return undefined;
+        }
+        return currentPage.length;
+      },
+    }
+  );
+
   const loadMoreRef = useRef() as React.MutableRefObject<HTMLDivElement>;
   useIntersectionObserver({
     target: loadMoreRef,
@@ -50,58 +80,74 @@ function AllItems({ currentPage }: AllItemsProps) {
     status,
   });
 
-  const ColorSelect = () => {
+  const header = () => {
     return (
-      <FormControl variant="standard" sx={{ m: 1, minWidth: 110 }}>
-        <Select
-          value={sortSelectState}
-          onChange={(event) => {
-            setSortSelectState(event.target.value);
-          }}
-        >
-          <MenuItem value="All">All</MenuItem>
-          <MenuItem value="Lowest first">Lowest first</MenuItem>
-          <MenuItem value="Highest first">Highest first</MenuItem>
-        </Select>
-      </FormControl>
-    );
-  };
-  const CompanySelect = () => {
-    return (
-      <FormControl variant="standard" sx={{ m: 1, minWidth: 110 }}>
-        <Select
-          value={sortSelectState}
-          onChange={(event) => {
-            setSortSelectState(event.target.value);
-          }}
-        >
-          <MenuItem value="All">All</MenuItem>
-          <MenuItem value="Lowest first">Lowest first</MenuItem>
-          <MenuItem value="Highest first">Highest first</MenuItem>
-        </Select>
-      </FormControl>
-    );
-  };
-  const SortSelect = () => {
-    return (
-      <FormControl variant="standard" sx={{ m: 1, minWidth: 110 }}>
-        <Select
-          value={sortSelectState}
-          onChange={(event) => {
-            setSortSelectState(event.target.value);
-          }}
-        >
-          <MenuItem value="All">All</MenuItem>
-          <MenuItem value="Lowest first">Lowest first</MenuItem>
-          <MenuItem value="Highest first">Highest first</MenuItem>
-        </Select>
-      </FormControl>
+      <div className="w-full mx-5 flex flex-col sm:flex-row justify-between items-center my-2">
+        <div className="flex flex-col w-full sm:flex-row sm:w-fit  text-sm p-2 sm:gap-4">
+          <div className=" flex flex-col sm:flex-row items-center sm:gap-2">
+            <p className="font-bold">Company</p>
+            <FormControl variant="standard" className="m-1 w-full">
+              <Select
+                className="capitalize text-sm w-full min-w-[110px]"
+                value={companySelect}
+                onChange={(event) => {
+                  setCompanySelect(event.target.value);
+                }}
+              >
+                <MenuItem value="all">All</MenuItem>
+                {itemsCompanies.map((company: string) => {
+                  return (
+                    <MenuItem
+                      value={company}
+                      className="capitalize"
+                      key={company}
+                    >
+                      {company}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center sm:gap-2">
+            <p className="font-bold">Color</p>
+            <FormControl
+              variant="standard"
+              className="m-1 w-full min-w-[110px]"
+            >
+              <Select
+                className="capitalize text-sm"
+                value={colorSelect}
+                onChange={(event) => {
+                  setColorSelect(event.target.value);
+                }}
+              >
+                {itemsColors.map((color: string) => {
+                  return (
+                    <MenuItem value={color} className="capitalize" key={color}>
+                      {color}
+                    </MenuItem>
+                  );
+                })}
+              </Select>
+            </FormControl>
+          </div>
+        </div>
+        <div className="p-2 ">
+          Total of:{" "}
+          <span className="font-bold">
+            {pages ? pages[0]?.data?.itemsNumber : ""}
+          </span>{" "}
+          {currentPage}
+        </div>
+      </div>
     );
   };
 
   if (isLoading) {
     return (
       <>
+        {header()}
         {Array(16)
           .fill(0)
           .map((_, i) => {
@@ -116,28 +162,10 @@ function AllItems({ currentPage }: AllItemsProps) {
   }
   return (
     <>
-      <div className="w-full mx-10 flex justify-between items-center">
-        <div className="flex">
-          <div className="p-2 flex items-center">
-            <p className=" ">Sort By:</p>
-            {SortSelect()}
-          </div>
-          <div className="p-2 flex items-center">
-            <p className=" ">Color:</p>
-            {ColorSelect()}
-          </div>
-          <div className="p-2 flex items-center">
-            <p className=" ">Company:</p>
-            {CompanySelect()}
-          </div>
-        </div>
-        <div className="p-2">
-          Total of: ${} {currentPage}
-        </div>
-      </div>
-      {pages?.map((page, pageNumber) => (
+      {header()}
+      {pages?.map(({ data: { items } }, pageNumber) => (
         <React.Fragment key={pageNumber}>
-          {page?.data.map((item: communityItem) => (
+          {items?.map((item: communityItem) => (
             <ItemCard item={item} key={item._id} />
           ))}
         </React.Fragment>

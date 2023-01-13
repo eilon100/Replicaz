@@ -61,10 +61,19 @@ export const apiService = {
         },
       });
     },
-    GET_ALL_ITEMS({ pageParam, currentPage }: any) {
+    GET_ALL_ITEMS({
+      pageParam,
+      currentPage,
+      sortSelect,
+      colorSelect,
+      companySelect,
+    }: any) {
       return axiosInstance.get(`/community/getallitems?p=${pageParam}`, {
         params: {
           currentPage,
+          sortSelect,
+          colorSelect,
+          companySelect,
         },
       });
     },
