@@ -27,7 +27,8 @@ export const signup = async (
   const API_KEY: string = process.env.SG_API!;
   sgMail.setApiKey(API_KEY);
 
-  const { userName, firstName, lastName, email, password } = req.body;
+  const { userName, firstName, lastName, email, password, phone, birthDate } =
+    req.body;
 
   // hash password
   const hashedPassword = await bcrypt.hash(password, 12);
@@ -37,6 +38,8 @@ export const signup = async (
     email,
     firstName,
     lastName,
+    phone,
+    birthDate,
     emailToken: crypto.randomBytes(64).toString("hex"),
     hashedPassword,
     emailVerified: false,
@@ -86,6 +89,8 @@ export const activateAccount = async (
     firstName: pendingUser.firstName,
     lastName: pendingUser.lastName,
     email: pendingUser.email,
+    phone: pendingUser.phone,
+    birthDate: pendingUser.birthDate,
     hashedPassword: pendingUser.hashedPassword,
     image: `https://ui-avatars.com/api/?background=random&name=${pendingUser.firstName}+${pendingUser.lastName}`,
     emailVerified: true,

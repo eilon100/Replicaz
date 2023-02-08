@@ -1,5 +1,5 @@
 import TextField from "@mui/material/TextField";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import Router from "next/router";
 import toast from "react-hot-toast";
@@ -10,6 +10,10 @@ import AuthButton from "../../components/Auth/AuthButton";
 import { apiService } from "../../utills/apiService";
 import { AuthContext } from "../../context/AuthContext";
 import { authValidationSchema } from "../../validation/auth";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { IconButton } from "@mui/joy";
 
 const SignIn = () => {
   useEffect(() => {
@@ -25,7 +29,15 @@ const SignIn = () => {
   }, []);
 
   const { state, dispatch } = useContext(AuthContext);
+  const [showPassword, setShowPassword] = useState(false);
 
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
   const {
     handleChange,
     handleBlur,
@@ -91,9 +103,22 @@ const SignIn = () => {
           className="auth_textfield"
           id="password"
           label="Password"
-          type="password"
           name="password"
+          type={showPassword ? "text" : "password"}
           variant="outlined"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
           onChange={handleChange}
           onBlur={handleBlur}
           value={valuesPassword}

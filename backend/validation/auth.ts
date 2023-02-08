@@ -23,6 +23,11 @@ export function UserSignUpValidation() {
       .withMessage("First name must be 3 or more characters")
       .isLength({ max: 15 })
       .withMessage("First name must be 12 characters long"),
+    body("phone")
+      .matches(/^[0-9]+$/)
+      .withMessage("Phone can only contain numbers")
+      .isLength({ max: 10 })
+      .withMessage("Phone must be 10 characters long"),
     body("lastName")
       .trim()
       .matches(/^[a-zA-Z]+$/)

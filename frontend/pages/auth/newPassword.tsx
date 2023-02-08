@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { useFormik } from "formik";
 import { toast } from "react-hot-toast";
@@ -8,10 +8,22 @@ import AuthHeader from "../../components/Auth/AuthHeader";
 import AuthFooter from "../../components/Auth/AuthFooter";
 import AuthButton from "../../components/Auth/AuthButton";
 import { authValidationSchema } from "../../validation/auth";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { IconButton } from "@mui/joy";
 
 function newPassword() {
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
 
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
   const {
     handleChange,
     handleBlur,
@@ -57,9 +69,22 @@ function newPassword() {
           className="auth_textfield"
           id="password"
           label=" New password"
-          type="password"
           name="password"
+          type={showPassword ? "text" : "password"}
           variant="outlined"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
           onChange={handleChange}
           onBlur={handleBlur}
           value={valuesPassword}

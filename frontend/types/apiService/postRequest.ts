@@ -6,6 +6,8 @@ export type REGISTER_USER = {
   firstName: string;
   lastName: string;
   email: string;
+  phone: string;
+  birthDate: string;
   password: string;
 };
 export type ACTIVATE_USER = { token: string | string[] | undefined };

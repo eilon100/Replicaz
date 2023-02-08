@@ -8,13 +8,25 @@ import AuthHeader from "../../components/Auth/AuthHeader";
 import AuthFooter from "../../components/Auth/AuthFooter";
 import AuthButton from "../../components/Auth/AuthButton";
 import { authValidationSchema } from "../../validation/auth";
-import { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { log } from "console";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { IconButton } from "@mui/joy";
 
 const register = () => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+
   const {
     handleChange,
     handleBlur,
@@ -79,16 +91,16 @@ const register = () => {
       birthDate: valuesBirthDate,
       phone: valuesPhone,
     };
-    console.log(data);
-    // apiService.post
-    //   .REGISTER_USER(data)
-    //   .then(() => {
-    //     toast.success("Verification has been sent to your email");
-    //     Router.push("/auth/signin");
-    //   })
-    //   .catch(({ response: { data } }) => {
-    //     toast.error(data.error);
-    //   });
+
+    apiService.post
+      .REGISTER_USER(data)
+      .then(() => {
+        toast.success("Verification has been sent to your email");
+        Router.push("/auth/signin");
+      })
+      .catch(({ response: { data } }) => {
+        toast.error(data.error);
+      });
   };
 
   //components
@@ -186,8 +198,21 @@ const register = () => {
           className="auth_textfield"
           id="password"
           label="Password"
-          type="password"
+          type={showPassword ? "text" : "password"}
           variant="outlined"
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
           onChange={handleChange}
           onBlur={handleBlur}
           value={valuesPassword}

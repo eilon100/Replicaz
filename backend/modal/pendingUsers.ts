@@ -16,6 +16,8 @@ const pendingUserSchema = new Schema(
       type: String,
       required: true,
     },
+    phone: { type: String, required: true },
+    birthDate: { type: String, required: true },
     email: {
       type: String,
       required: true,
@@ -48,5 +50,6 @@ const pendingUserSchema = new Schema(
 );
 
 const pendingUsers =
-  mongoose.models.pendingUsers || mongoose.model("PendingUsers", pendingUserSchema);
+  mongoose.models.pendingUsers ||
+  mongoose.model("PendingUsers", pendingUserSchema);
 export default pendingUsers;
