@@ -133,7 +133,6 @@ const SignIn = () => {
           {textField()}
           {forgetPassword()}
           <AuthButton page="signIn" />
-          <p className=" text-text-second">Or sign in with</p>
           <AuthFooter page="signIn" />
         </form>
       </div>

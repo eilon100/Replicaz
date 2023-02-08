@@ -34,6 +34,12 @@ export const authValidationSchema = (page: string) => {
       .trim()
       .email("Enter a valid email")
       .required("Email is required"),
+    birthDate: yup.date().required("Birth date is required"),
+    phone: yup
+      .string()
+      .required("Phone is required")
+      .matches(/^[0-9]+$/, "Phone can only contain numbers")
+      .max(10, "Phone must be 10 characters long"),
     password: yup
       .string()
       .required("No password provided.")
@@ -55,6 +61,8 @@ export const authValidationSchema = (page: string) => {
       userName: yupObject.userName,
       firstName: yupObject.firstName,
       lastName: yupObject.lastName,
+      birthDate: yupObject.birthDate,
+      phone: yupObject.phone,
       email: yupObject.email,
       password: yupObject.password,
       confirm: yupObject.confirm,

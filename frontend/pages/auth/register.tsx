@@ -1,4 +1,5 @@
 import TextField from "@mui/material/TextField";
+import { useState } from "react";
 import { useFormik } from "formik";
 import Router from "next/router";
 import toast from "react-hot-toast";
@@ -7,15 +8,23 @@ import AuthHeader from "../../components/Auth/AuthHeader";
 import AuthFooter from "../../components/Auth/AuthFooter";
 import AuthButton from "../../components/Auth/AuthButton";
 import { authValidationSchema } from "../../validation/auth";
+import { Dayjs } from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { log } from "console";
 
 const register = () => {
   const {
     handleChange,
     handleBlur,
+    setFieldValue,
     values: {
       userName: valuesUserName,
       firstName: valuesFirstName,
       lastName: valuesLastName,
+      birthDate: valuesBirthDate,
+      phone: valuesPhone,
       email: valuesEmail,
       password: valuesPassword,
       confirm: valuesConfirm,
@@ -24,6 +33,8 @@ const register = () => {
       userName: touchedUserName,
       firstName: touchedFirstName,
       lastName: touchedLastName,
+      birthDate: touchedBirthDate,
+      phone: touchedPhone,
       email: touchedEmail,
       password: touchedPassword,
       confirm: touchedConfirm,
@@ -32,6 +43,8 @@ const register = () => {
       userName: errorsUserName,
       firstName: errorsFirstName,
       lastName: errorsLastName,
+      birthDate: errorsBirthDate,
+      phone: errorsPhone,
       email: errorsEmail,
       password: errorsPassword,
       confirm: errorsConfirm,
@@ -42,6 +55,8 @@ const register = () => {
       userName: "",
       firstName: "",
       lastName: "",
+      birthDate: "",
+      phone: "",
       email: "",
       password: "",
       confirm: "",
@@ -61,57 +76,99 @@ const register = () => {
       lastName: valuesLastName.toLowerCase(),
       email: valuesEmail.toLowerCase(),
       password: valuesPassword,
+      birthDate: valuesBirthDate,
+      phone: valuesPhone,
     };
-
-    apiService.post
-      .REGISTER_USER(data)
-      .then(() => {
-        toast.success("Verification has been sent to your email");
-        Router.push("/auth/signin");
-      })
-      .catch(({ response: { data } }) => {
-        toast.error(data.error);
-      });
+    console.log(data);
+    // apiService.post
+    //   .REGISTER_USER(data)
+    //   .then(() => {
+    //     toast.success("Verification has been sent to your email");
+    //     Router.push("/auth/signin");
+    //   })
+    //   .catch(({ response: { data } }) => {
+    //     toast.error(data.error);
+    //   });
   };
+
   //components
   const textField = () => {
     return (
       <>
+        <div className="auth_textfield flex gap-2">
+          <TextField
+            className="auth_textfield"
+            id="firstName"
+            label="First name"
+            type="text"
+            variant="outlined"
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={valuesFirstName}
+            error={touchedFirstName && Boolean(errorsFirstName)}
+            helperText={touchedFirstName && errorsFirstName}
+          />
+          <TextField
+            className="auth_textfield"
+            id="lastName"
+            label="Last name"
+            type="text"
+            variant="outlined"
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={valuesLastName}
+            error={touchedLastName && Boolean(errorsLastName)}
+            helperText={touchedLastName && errorsLastName}
+          />
+        </div>
+        <div className="auth_textfield flex gap-2">
+          <TextField
+            className="w-full"
+            id="userName"
+            label="User name"
+            type="text"
+            variant="outlined"
+            onChange={handleChange}
+            onBlur={handleBlur}
+            value={valuesUserName}
+            error={touchedUserName && Boolean(errorsUserName)}
+            helperText={touchedUserName && errorsUserName}
+          />
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Birth date"
+              value={valuesBirthDate}
+              onChange={(newValue) => {
+                setFieldValue("birthDate", newValue);
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  onBlur={handleBlur}
+                  error={touchedBirthDate && Boolean(errorsBirthDate)}
+                  helperText={touchedBirthDate && errorsBirthDate}
+                />
+              )}
+            />
+          </LocalizationProvider>
+        </div>
         <TextField
           className="auth_textfield"
-          id="userName"
-          label="User name"
-          type="text"
+          id="phone"
+          label="Phone"
+          type="tel"
           variant="outlined"
-          onChange={handleChange}
+          onChange={(e) => {
+            const regex = /^[0-9\b]+$/;
+            if (e.target.value === "" || regex.test(e.target.value)) {
+              setFieldValue("phone", e.target.value);
+            }
+          }}
           onBlur={handleBlur}
-          value={valuesUserName}
-          error={touchedUserName && Boolean(errorsUserName)}
-          helperText={touchedUserName && errorsUserName}
-        />
-        <TextField
-          className="auth_textfield"
-          id="firstName"
-          label="First name"
-          type="text"
-          variant="outlined"
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={valuesFirstName}
-          error={touchedFirstName && Boolean(errorsFirstName)}
-          helperText={touchedFirstName && errorsFirstName}
-        />
-        <TextField
-          className="auth_textfield"
-          id="lastName"
-          label="Last name"
-          type="text"
-          variant="outlined"
-          onChange={handleChange}
-          onBlur={handleBlur}
-          value={valuesLastName}
-          error={touchedLastName && Boolean(errorsLastName)}
-          helperText={touchedLastName && errorsLastName}
+          value={valuesPhone}
+          error={touchedPhone && Boolean(errorsPhone)}
+          helperText={touchedPhone && errorsPhone}
+          inputProps={{ maxLength: 10 }}
         />
         <TextField
           className="auth_textfield"
@@ -158,7 +215,7 @@ const register = () => {
       <div className="flex flex-col">
         <AuthHeader page="register" />
         <form
-          className="flex flex-col justify-center items-center space-y-8 "
+          className="flex flex-col justify-center items-center space-y-6"
           onSubmit={(e) => {
             handleSubmit(e);
           }}
@@ -168,7 +225,6 @@ const register = () => {
           <h1 className="font-bold text-5xl">Replicaz</h1>
           {textField()}
           <AuthButton page="register" />
-          <p className=" text-text-second">Or sign up with</p>
           <AuthFooter page="register" />
         </form>
       </div>
