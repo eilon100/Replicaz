@@ -21,6 +21,7 @@ export const getUserData: RequestHandler = async (req, res, next) => {
 };
 export const EditUserData: RequestHandler = async (req, res, next) => {
   const data = req.body;
+
   try {
     const user = await User.findByIdAndUpdate(req.userData.userId, data);
 

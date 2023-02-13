@@ -85,7 +85,10 @@ function UserPage({
     if (editField) {
       let editedData = {};
       if (editField === "name") {
-        editedData = { firstName: valuesFirstName, lastName: valuesLastName };
+        editedData = {
+          firstName: valuesFirstName.toLowerCase(),
+          lastName: valuesLastName.toLowerCase(),
+        };
       } else if (editField === "birthDate") {
         editedData = { birthDate: new Date(valuesBirthDate) };
       } else {
