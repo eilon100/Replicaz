@@ -25,8 +25,10 @@ interface PostProps {
 }
 
 function Post({ post, page }: PostProps) {
-  const { state } = useContext(AuthContext);
-  const { loggedIn, userId } = state;
+  const {
+    state: { loggedIn, userId },
+  } = useContext(AuthContext);
+
   const [postLiked, setPostLiked] = useState(post.likes.includes(userId));
   const [likesLength, setLikesLength] = useState(post.likes.length);
   const [editPost, setEditPost] = useState(false);
@@ -114,7 +116,13 @@ function Post({ post, page }: PostProps) {
               </div>
             </a>
             <div className=" font-[400] mt-[1px] text-[0.5rem] xs:text-xs text-[#65676B] ">
-              &nbsp; - Posted by {post.postedBy?.userName}&nbsp;
+              &nbsp; - Posted by{" "}
+              <a
+                href={`/user/${post.postedBy?.userName}`}
+                className="hover:underline"
+              >
+                {post.postedBy?.userName}&nbsp;
+              </a>
               <ReactTimeago date={post.createdAt} />
             </div>
           </div>
@@ -199,12 +207,21 @@ function Post({ post, page }: PostProps) {
               <button
                 type="reset"
                 onClick={() => {
+                  resetForm();
                   setEditPost(false);
                 }}
               >
                 Cancel
               </button>
-              <button type="submit">Save</button>
+              <button
+                type="submit"
+                disabled={
+                  valuesBody === post?.body && valuesTitle === post?.title
+                }
+                className="disabled:text-gray-400"
+              >
+                Save
+              </button>
             </div>
           </form>
         )}

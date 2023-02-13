@@ -54,10 +54,11 @@ export const apiService = {
     },
   },
   get: {
-    GET_ALL_POSTS({ pageParam, currentPage }: getType.GET_ALL_POSTS) {
+    GET_ALL_POSTS({ pageParam, currentPage, userId }: getType.GET_ALL_POSTS) {
       return axiosInstance.get(`/post/allposts?p=${pageParam}`, {
         params: {
           currentPage,
+          userId,
         },
       });
     },
@@ -83,8 +84,8 @@ export const apiService = {
     GET_POST_BY_ID(postId: getType.GET_POST_BY_ID) {
       return axiosInstance.get(`/post/getpost/${postId}`);
     },
-    GET_USER_DATA() {
-      return axiosInstance.get("/account/getuserdata");
+    GET_USER_DATA(ctx: any) {
+      return axiosInstance.get(`/user/getuserdata/${ctx.query.username}`);
     },
     LOGOUT() {
       return axiosInstance.get("/auth/logout");
@@ -96,6 +97,9 @@ export const apiService = {
     },
     EDIT_COMMENT(data: patchType.EDIT_COMMENT) {
       return axiosInstance.patch("/comment/editcomment", data);
+    },
+    EDIT_USER_DATA(data: patchType.EDIT_USER_DATA) {
+      return axiosInstance.patch("/user/edit", data);
     },
   },
 };

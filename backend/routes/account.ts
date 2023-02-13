@@ -1,6 +1,6 @@
 import express from "express";
 import {
-  getUserData,
+  getAccountData,
   newPassword,
   resetPassword,
 } from "../controllers/account";
@@ -15,6 +15,6 @@ accountRouter.post("/newpassword", UserNewPasswordValidation(), newPassword);
 
 accountRouter.use(isAuth);
 
-accountRouter.get("/getuserdata", getUserData);
+accountRouter.get("/getaccountdata", getAccountData);
 
 export { accountRouter };

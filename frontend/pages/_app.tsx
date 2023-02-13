@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <AuthContextProvider>
         <Toaster />
-        <div className="h-screen w-screen overflow-y-auto bg-slate-200">
+        <div className="h-screen w-screen overflow-y-auto bg-slate-100">
           <Header />
           <Component {...pageProps} />
         </div>

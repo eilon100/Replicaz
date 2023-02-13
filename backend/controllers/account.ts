@@ -80,7 +80,7 @@ export const newPassword: RequestHandler = async (req, res, next) => {
       .json({ error: "Reset password times out please try again" });
   }
 };
-export const getUserData: RequestHandler = async (req: Request, res, next) => {
+export const getAccountData: RequestHandler = async (req, res, next) => {
   try {
     const user = await User.findById(req.userData.userId);
     if (!user) {

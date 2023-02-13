@@ -39,6 +39,7 @@ export const authValidationSchema = (page: string) => {
       .string()
       .required("Phone is required")
       .matches(/^[0-9]+$/, "Phone can only contain numbers")
+      .min(10, "Phone must be 10 characters long")
       .max(10, "Phone must be 10 characters long"),
     password: yup
       .string()
@@ -83,6 +84,14 @@ export const authValidationSchema = (page: string) => {
     return yup.object({
       password: yupObject.password,
       confirm: yupObject.confirm,
+    });
+  }
+  if (page === "editUser") {
+    return yup.object({
+      firstName: yupObject.firstName,
+      lastName: yupObject.lastName,
+      phone: yupObject.phone,
+      birthDate: yupObject.birthDate,
     });
   }
 };

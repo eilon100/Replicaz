@@ -20,6 +20,7 @@ import { useQueryClient } from "react-query";
 import { user } from "../../../../types/user";
 import InputModal from "../../../../UI/modals/InputModal";
 import ConfirmModal from "../../../../UI/modals/ConfirmModal";
+
 const style = {
   overflow: "visible",
   filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
@@ -97,7 +98,11 @@ function PostOptions({
         toast.success(message, {
           id: notification,
         });
-        if (router.pathname.includes("/post")) router.back();
+        if (router.pathname.includes("/post")) {
+          router.back();
+        } else {
+          queryClient.invalidateQueries("posts");
+        }
       })
       .catch(({ response: { data } }) => {
         toast.error(data.error, {
@@ -109,6 +114,7 @@ function PostOptions({
   const editPostHandler = () => {
     setEditPost(true);
   };
+  
   const reportPostHandler = (body: string) => {
     const data = { postId, body };
 

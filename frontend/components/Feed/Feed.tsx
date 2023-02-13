@@ -8,12 +8,14 @@ import { scrollIntoPostPosition } from "../../utills/scrollIntoPostPosition";
 import useIntersectionObserver from "../../utills/useIntersectionObserver";
 import Post from "./Post/Post";
 import { currentPage } from "../../types/currentPage";
+
 type FeedProps = {
   currentPage: currentPage;
+  userId?: string;
 };
-function Feed({ currentPage }: FeedProps) {
+function Feed({ currentPage, userId }: FeedProps) {
   const fetchPosts = async ({ pageParam = 0 }) => {
-    const data = { pageParam, currentPage };
+    const data = { pageParam, currentPage, userId };
     const res = await apiService.get.GET_ALL_POSTS(data);
     return res;
   };
