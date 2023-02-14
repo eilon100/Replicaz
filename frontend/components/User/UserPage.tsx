@@ -1,7 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import Feed from "../Feed/Feed";
 import { FaPhoneAlt, FaBirthdayCake, FaUser } from "react-icons/fa";
-import { AiOutlineEdit, AiOutlineClose, AiOutlineCheck } from "react-icons/ai";
+import {
+  AiOutlineEdit,
+  AiOutlineClose,
+  AiOutlineCheck,
+  AiOutlineCamera,
+} from "react-icons/ai";
 import { MdMail } from "react-icons/md";
 import { user } from "../../types/user";
 import images from "../../public/iU6oQ8.png";
@@ -13,6 +18,8 @@ import { toast } from "react-hot-toast";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { authValidationSchema } from "../../validation/auth";
+import { useQueryClient } from "react-query";
+import { getCookie, setCookie } from "cookies-next";
 
 interface userPageProps {
   userData: user;
@@ -31,17 +38,19 @@ function UserPage({
     email,
   },
 }: userPageProps) {
-  const {
-    state: { userId },
-  } = useContext(AuthContext);
-  const allowToEdit = _id === userId;
+  const { state, dispatch } = useContext(AuthContext);
+  const allowToEdit = _id === state.userId;
   const [editField, setEditField] = useState("");
   const [userData, setUserData] = useState({
     firstName,
     lastName,
     birthDate,
     phone,
+    image,
   });
+
+  const queryClient = useQueryClient();
+  const imageInputRef = useRef<HTMLInputElement>(null);
   const {
     handleChange,
     handleBlur,
@@ -53,6 +62,7 @@ function UserPage({
       lastName: valuesLastName,
       birthDate: valuesBirthDate,
       phone: valuesPhone,
+      image: valuesImage,
     },
     touched: {
       firstName: touchedFirstName,
@@ -73,6 +83,7 @@ function UserPage({
       lastName: userData.lastName,
       birthDate: userData.birthDate,
       phone: userData.phone,
+      image: null,
     },
     validationSchema: authValidationSchema("editUser"),
 
@@ -81,7 +92,16 @@ function UserPage({
     },
   });
 
-  const EditHandler = (values: any) => {
+  const EditHandler = async (values: any) => {
+    const readFileAsDataURL = (file: File) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    };
+
     if (editField) {
       let editedData = {};
       if (editField === "name") {
@@ -91,20 +111,43 @@ function UserPage({
         };
       } else if (editField === "birthDate") {
         editedData = { birthDate: new Date(valuesBirthDate) };
+      } else if (editField === "image" && valuesImage) {
+        try {
+          const dataURL = await readFileAsDataURL(valuesImage);
+          editedData = { image: dataURL };
+        } catch (error) {
+          return toast.error("Change profile failed");
+        }
       } else {
         editedData = { [editField]: values[editField] };
       }
 
+      const notification = toast.loading("saving...");
       apiService.patch
         .EDIT_USER_DATA(editedData)
-        .then(({ data: { message } }) => {
-          toast.success(message);
+        .then(({ data: { message, userImage } }) => {
+          toast.success(message, { id: notification });
           setUserData({ ...userData, ...editedData });
+
+          if (editField === "image") {
+            queryClient.invalidateQueries("posts");
+            console.log(image, state);
+            console.log(userImage);
+
+            dispatch({
+              type: "LOGIN",
+              payload: { ...state, userImage },
+            });
+            setCookie("userData", {
+              ...state,
+              userImage,
+            });
+          }
           setSubmitting(false);
           setEditField("");
         })
         .catch(({ response: { data } }) => {
-          toast.error(data.error);
+          toast.error(data.error, { id: notification });
         });
     }
   };
@@ -206,7 +249,7 @@ function UserPage({
           >
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
-                className=" w-28 lg:w-36"
+                className=" w-32 lg:w-36"
                 label="Birth date"
                 value={valuesBirthDate}
                 onChange={(newValue) => {
@@ -277,9 +320,7 @@ function UserPage({
               type="text"
               variant="outlined"
               onChange={handleChange}
-              onBlur={(e) => {
-                handleBlur(e);
-              }}
+              onBlur={handleBlur}
               value={valuesFirstName}
               error={touchedFirstName && Boolean(errorsFirstName)}
               inputProps={{
@@ -333,6 +374,85 @@ function UserPage({
     );
   };
 
+  const editImage = () => {
+    return (
+      <div>
+        <div
+          className={`relative bg-white -mt-8 sm:-mt-28
+            w-24 h-24 sm:w-52 sm:h-52 lg:w-60 lg:h-60 
+          rounded-full p-1 shadow-xl ${
+            editField !== "image" && allowToEdit ? "group cursor-pointer" : ""
+          }`}
+          onClick={() => {
+            if (editField !== "image" && allowToEdit)
+              imageInputRef.current?.click();
+          }}
+        >
+          <img
+            src={userData.image}
+            alt="Shoes"
+            className="rounded-full object-cover h-full w-full group-hover:brightness-75"
+          />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 hidden group-hover:block ">
+            <AiOutlineCamera className="text-xl sm:text-6xl text-white" />
+          </div>
+          {editField === "image" ? (
+            <div className="absolute w-full flex justify-around left-1/2 -translate-x-1/2 -translate-y-[80%] sm:-translate-y-[100%] text-xs sm:text-xl">
+              <button
+                type="reset"
+                className="bg-white rounded-full p-1  text-red-500 cursor-pointer"
+                onClick={() => {
+                  setEditField("");
+                  setUserData({
+                    ...userData,
+                    image,
+                  });
+                  setFieldValue("image", null);
+                }}
+              >
+                <AiOutlineClose />
+              </button>
+              <button
+                type="submit"
+                form="imageForm"
+                className="bg-white rounded-full p-1 text-green-500 disabled:text-gray-500 cursor-pointer "
+              >
+                <AiOutlineCheck />
+              </button>
+            </div>
+          ) : (
+            ""
+          )}
+        </div>
+        <form
+          id="imageForm"
+          onSubmit={(e) => {
+            handleSubmit(e);
+          }}
+        >
+          <input
+            id="image"
+            type="file"
+            ref={imageInputRef}
+            className="hidden"
+            accept="image/*"
+            onChange={(event) => {
+              const files = event.currentTarget?.files;
+              if (files && files[0]) {
+                setUserData({
+                  ...userData,
+                  image: URL.createObjectURL(files[0]),
+                });
+                setFieldValue("image", files[0]);
+                setEditField("image");
+              }
+            }}
+          />
+        </form>
+      </div>
+    );
+  };
+
   const header = () => {
     return (
       <div className="bg-white ">
@@ -342,22 +462,10 @@ function UserPage({
           className=" object-cover w-full h-28 sm:h-44 lg:h-64"
         />
         <div className=" m-auto flex justify-around max-w-[90rem] items-center sm:space-x-12 pb-6 px-5 ">
-          <div className=" hidden -mt-28 sm:w-52 lg:w-60 sm:flex  bg-white rounded-full p-1 shadow-xl">
-            <img
-              src={image}
-              alt="Shoes"
-              className="rounded-full object-cover h-full w-full"
-            />
-          </div>
+          <div className="hidden sm:block">{editImage()}</div>
           <div className="flex flex-col gap-2 w-full sm:w-[70%] pt-3 lg:pt-0">
             <div className="flex items-center gap-1 border-b-[1px] pb-2">
-              <div className="bg-white flex w-20 sm:hidden rounded-full p-1 shadow-xl">
-                <img
-                  src={image}
-                  alt="Shoes"
-                  className="rounded-full object-cover h-full w-full"
-                />
-              </div>
+              <div className="block sm:hidden">{editImage()}</div>
               <div className="flex flex-col lg:gap-2">
                 {editName()}
                 <div className="flex items-center gap-2">

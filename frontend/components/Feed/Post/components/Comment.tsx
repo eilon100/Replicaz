@@ -120,13 +120,19 @@ function Comment({ comment }: CommentProps) {
           <div className="relative h-8 w-8 ">
             <Image
               className=" rounded-full "
-              objectFit="contain"
+              objectFit="cover"
               src={comment.postedBy.image || "/../public/EmptyProfile.png"}
               layout="fill"
             />
           </div>
           <div className="flex items-center font-semibold text-xs xs:text-lg ">
-            {comment.postedBy?.userName}&nbsp;·&nbsp;
+            <a
+              href={`/user/${comment.postedBy?.userName}`}
+              className="hover:underline"
+            >
+              {comment.postedBy?.userName}
+            </a>
+            &nbsp;·&nbsp;
             <ReactTimeago
               date={comment.createdAt}
               className="font-[400] text-[0.5rem] xs:text-xs text-[#65676B]"

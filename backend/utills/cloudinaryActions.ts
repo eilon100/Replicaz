@@ -31,3 +31,15 @@ export const imagesFolderDeletion = async (path: string) => {
     console.log(err);
   }
 };
+
+export const singleImageUpload = async (image: string, path: string) => {
+  if (!image) return;
+  try {
+    const uploadedImage = await cloudinary.uploader.upload(image, {
+      public_id: path,
+    });
+    return uploadedImage.secure_url;
+  } catch (err) {
+    console.log(err);
+  }
+};

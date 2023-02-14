@@ -1,5 +1,5 @@
 import { PhotographIcon } from "@heroicons/react/outline";
-import React, { useContext,  useState } from "react";
+import React, { useContext, useState } from "react";
 import Image from "next/image";
 import { apiService } from "../../utills/apiService";
 import { TextField, Typography } from "@mui/material";
@@ -59,7 +59,6 @@ function PostBox({ currentPage }: PostBoxProps) {
       community: !community ? currentPage : community,
       postImage: images,
     };
-    console.log(data);
 
     apiService.post
       .CREATE_POST(data)
@@ -88,7 +87,7 @@ function PostBox({ currentPage }: PostBoxProps) {
         <div className="relative h-10 w-10  ">
           <Image
             className=" rounded-full "
-            objectFit="contain"
+            objectFit="cover"
             src={userImage || "/../public/EmptyProfile.png"}
             layout="fill"
           />

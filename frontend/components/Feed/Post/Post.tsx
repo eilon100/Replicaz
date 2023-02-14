@@ -104,7 +104,7 @@ function Post({ post, page }: PostProps) {
           <div className="relative h-10 w-10 -ml-2">
             <Image
               className=" rounded-full "
-              objectFit="contain"
+              objectFit="cover"
               src={post?.postedBy.image || "/../public/EmptyProfile.png"}
               layout="fill"
             />
