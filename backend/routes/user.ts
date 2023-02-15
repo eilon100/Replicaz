@@ -1,5 +1,5 @@
 import express from "express";
-import { editUserData, getUserData } from "../controllers/user";
+import { editUserData, getUserPosts, getUserData, getSavedPosts } from "../controllers/user";
 import { isAuth } from "../middleware/isAuth";
 import { UserPatchValidation } from "../validation/user";
 
@@ -7,8 +7,11 @@ const userRouter = express.Router();
 
 userRouter.get("/getuserdata/:username", getUserData);
 
+userRouter.get("/posts", getUserPosts);
+
 userRouter.use(isAuth);
 
 userRouter.patch("/edit", UserPatchValidation(), editUserData);
 
+userRouter.get("/savedposts", getSavedPosts);
 export { userRouter };

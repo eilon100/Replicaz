@@ -98,7 +98,9 @@ function Post({ post, page }: PostProps) {
       <header className=" flex items-center mb-2 justify-between">
         <div
           className={`flex items-center ${
-            page === "main" || page === "singlePost" ? "space-x-2" : ""
+            page === "main" || page === "singlePost" || page === "user"
+              ? "space-x-2"
+              : ""
           }`}
         >
           <div className="relative h-10 w-10 -ml-2">
@@ -112,7 +114,9 @@ function Post({ post, page }: PostProps) {
           <div className="flex items-center">
             <a href={`/community/${post.community}`}>
               <div className=" font-bold text-sm xs:text-xl cursor-pointer hover:underline capitalize">
-                {page === "main" || page === "singlePost" ? post.community : ""}
+                {page === "main" || page === "singlePost" || page === "user"
+                  ? post.community
+                  : ""}
               </div>
             </a>
             <div className=" font-[400] mt-[1px] text-[0.5rem] xs:text-xs text-[#65676B] ">

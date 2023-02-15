@@ -4,5 +4,6 @@ export type EDIT_USER_DATA = {
   phone?: string;
   lastName?: string;
   firstName?: string;
-  birthDate?: string;
+  birthDate?: Date | string;
+  image: string;
 };

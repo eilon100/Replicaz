@@ -11,17 +11,15 @@ import {
 
 export const getAllPosts: RequestHandler = (req, res, next) => {
   const { p: page }: any = req.query || 0;
-  const { currentPage, userId } = req.query;
+  const { currentPage } = req.query;
   const postsPerPage = 5;
-  let options = {};
-  if (currentPage !== "main") {
-    options = { community: currentPage };
-  }
-  if (currentPage === "user") {
-    options = { postedBy: userId };
-  }
+  const isMainPage = currentPage === "main";
+  const filter = {
+    ...(isMainPage && {}),
+    ...(!isMainPage && { community: currentPage }),
+  };
 
-  Post.find(options)
+  Post.find(filter)
     .populate({ path: "postedBy", select: ["userName", "image"] })
     .sort({ _id: -1 })
     .skip(page * postsPerPage)

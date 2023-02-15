@@ -1,4 +1,5 @@
 import { createContext, useEffect, useReducer } from "react";
+
 import { getCookie } from "cookies-next";
 
 interface AuthProps {
@@ -34,6 +35,7 @@ export const authReducer = (state: any, action: any) => {
 
 export const AuthContextProvider = ({ children }: AuthProps) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
+
   useEffect(() => {
     const cookie = getCookie("userData");
     if (!cookie) return;

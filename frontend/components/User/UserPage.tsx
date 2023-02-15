@@ -1,25 +1,35 @@
-import React, { useContext, useRef, useState } from "react";
-import Feed from "../Feed/Feed";
-import { FaPhoneAlt, FaBirthdayCake, FaUser } from "react-icons/fa";
 import {
-  AiOutlineEdit,
-  AiOutlineClose,
-  AiOutlineCheck,
   AiOutlineCamera,
+  AiOutlineCheck,
+  AiOutlineClose,
+  AiOutlineEdit,
 } from "react-icons/ai";
-import { MdMail } from "react-icons/md";
-import { user } from "../../types/user";
-import images from "../../public/iU6oQ8.png";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { FaBirthdayCake, FaPhoneAlt, FaUser } from "react-icons/fa";
+import React, { useContext, useRef, useState } from "react";
+
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { AuthContext } from "../../context/AuthContext";
-import { useFormik } from "formik";
+import Feed from "../Feed/Feed";
+import { MdMail } from "react-icons/md";
 import { TextField } from "@mui/material";
 import { apiService } from "../../utills/apiService";
-import { toast } from "react-hot-toast";
-import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { authValidationSchema } from "../../validation/auth";
+import images from "../../public/iU6oQ8.png";
+import { setCookie } from "cookies-next";
+import { toast } from "react-hot-toast";
+import { useFormik } from "formik";
 import { useQueryClient } from "react-query";
-import { getCookie, setCookie } from "cookies-next";
+import { user } from "../../types/user";
+
+const readFileAsDataURL = (file: File) => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+};
 
 interface userPageProps {
   userData: user;
@@ -48,9 +58,77 @@ function UserPage({
     phone,
     image,
   });
-
+  const [currentUserPosts, setCurrentUserPosts] = useState<"posts" | "saved">(
+    "posts"
+  );
   const queryClient = useQueryClient();
   const imageInputRef = useRef<HTMLInputElement>(null);
+
+  const EditHandler = async (values: any) => {
+    if (!editField) {
+      return;
+    }
+    try {
+      const isNameEdited = editField === "name";
+      const isBirthDateEdited = editField === "birthDate";
+      const isImageEdited = editField === "image" && valuesImage != null;
+      const isPhoneEdited = editField === "phone";
+      const imageUrlConverter = () => {
+        if (isImageEdited) {
+          return readFileAsDataURL(valuesImage)
+            .then((dataURL) => dataURL)
+            .catch((err) => {
+              toast.error("Change profile failed");
+              throw Error(err);
+            });
+        } else {
+          toast.error("Change profile failed");
+          throw Error();
+        }
+      };
+
+      const editedData: any = {
+        ...(isNameEdited && {
+          firstName: valuesFirstName.toLowerCase(),
+          lastName: valuesLastName.toLowerCase(),
+        }),
+        ...(isBirthDateEdited && { birthDate: new Date(valuesBirthDate) }),
+        ...(isImageEdited && {
+          image: await imageUrlConverter(),
+        }),
+        ...(isPhoneEdited && { phone: valuesPhone }),
+      };
+
+      const notification = toast.loading("saving...");
+      apiService.patch
+        .EDIT_USER_DATA(editedData)
+        .then(({ data: { message, userImage } }) => {
+          toast.success(message, { id: notification });
+          setUserData({ ...userData, ...editedData });
+
+          if (editField === "image") {
+            queryClient.invalidateQueries("posts");
+
+            dispatch({
+              type: "LOGIN",
+              payload: { ...state, userImage },
+            });
+            setCookie("userData", {
+              ...state,
+              userImage,
+            });
+          }
+          setSubmitting(false);
+          setEditField("");
+        })
+        .catch(({ response: { data } }) => {
+          toast.error(data.error, { id: notification });
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const {
     handleChange,
     handleBlur,
@@ -86,71 +164,8 @@ function UserPage({
       image: null,
     },
     validationSchema: authValidationSchema("editUser"),
-
-    onSubmit: (values) => {
-      EditHandler(values);
-    },
+    onSubmit: EditHandler,
   });
-
-  const EditHandler = async (values: any) => {
-    const readFileAsDataURL = (file: File) => {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    };
-
-    if (editField) {
-      let editedData = {};
-      if (editField === "name") {
-        editedData = {
-          firstName: valuesFirstName.toLowerCase(),
-          lastName: valuesLastName.toLowerCase(),
-        };
-      } else if (editField === "birthDate") {
-        editedData = { birthDate: new Date(valuesBirthDate) };
-      } else if (editField === "image" && valuesImage) {
-        try {
-          const dataURL = await readFileAsDataURL(valuesImage);
-          editedData = { image: dataURL };
-        } catch (error) {
-          return toast.error("Change profile failed");
-        }
-      } else {
-        editedData = { [editField]: values[editField] };
-      }
-
-      const notification = toast.loading("saving...");
-      apiService.patch
-        .EDIT_USER_DATA(editedData)
-        .then(({ data: { message, userImage } }) => {
-          toast.success(message, { id: notification });
-          setUserData({ ...userData, ...editedData });
-
-          if (editField === "image") {
-            queryClient.invalidateQueries("posts");
-            console.log(image, state);
-            console.log(userImage);
-
-            dispatch({
-              type: "LOGIN",
-              payload: { ...state, userImage },
-            });
-            setCookie("userData", {
-              ...state,
-              userImage,
-            });
-          }
-          setSubmitting(false);
-          setEditField("");
-        })
-        .catch(({ response: { data } }) => {
-          toast.error(data.error, { id: notification });
-        });
-    }
-  };
 
   const editPhone = () => {
     return (
@@ -453,9 +468,40 @@ function UserPage({
     );
   };
 
+  const changeUserPosts = () => {
+    return (
+      <div className="px-5 lg:px-0 lg:absolute lg:top-[6.9rem] gap-5 flex text-sm lg:text-base">
+        <p
+          className={`${
+            currentUserPosts === "posts"
+              ? "font-semibold border-b-4"
+              : "cursor-pointer"
+          }  px-1`}
+          onClick={() => {
+            setCurrentUserPosts("posts");
+          }}
+        >
+          Posts
+        </p>
+        <p
+          className={`${
+            currentUserPosts === "saved"
+              ? "font-semibold border-b-4 "
+              : "cursor-pointer"
+          } px-1`}
+          onClick={() => {
+            setCurrentUserPosts("saved");
+          }}
+        >
+          Saved
+        </p>
+      </div>
+    );
+  };
+
   const header = () => {
     return (
-      <div className="bg-white ">
+      <div className="bg-white">
         <img
           src={images.src}
           alt="Shoes"
@@ -464,7 +510,7 @@ function UserPage({
         <div className=" m-auto flex justify-around max-w-[90rem] items-center sm:space-x-12 pb-6 px-5 ">
           <div className="hidden sm:block">{editImage()}</div>
           <div className="flex flex-col gap-2 w-full sm:w-[70%] pt-3 lg:pt-0">
-            <div className="flex items-center gap-1 border-b-[1px] pb-2">
+            <div className="relative flex items-center gap-1 border-b-[1px] pb-2">
               <div className="block sm:hidden">{editImage()}</div>
               <div className="flex flex-col lg:gap-2">
                 {editName()}
@@ -473,18 +519,27 @@ function UserPage({
                     {userName}
                   </p>
                 </div>
+                {allowToEdit && (
+                  <div className="hidden lg:block">{changeUserPosts()}</div>
+                )}
               </div>
             </div>
             <div className="flex lg:hidden">{userInfo()}</div>
           </div>
         </div>
+        {allowToEdit && (
+          <div className="block lg:hidden">{changeUserPosts()}</div>
+        )}
       </div>
     );
   };
 
   const userInfo = () => {
     return (
-      <div className="flex flex-col gap-2 lg:gap-5 py-2 text-sm lg:text-lg">
+      <div className="flex flex-col bg-white rounded-md lg:shadow-sm gap-2 h-max lg:gap-5 p-4 mt-2 text-sm lg:text-lg">
+        <h1 className="hidden lg:block border-b-[1px] pb-2 font-semibold">
+          About
+        </h1>
         {editPhone()}
         <div className="flex items-center gap-4">
           <MdMail className="mt-1 text-gray-400" />
@@ -506,7 +561,11 @@ function UserPage({
       <div className="flex flex-col justify-around lg:flex-row max-w-[90rem] w-full px-5">
         <div className="hidden lg:flex">{userInfo()}</div>
         <div className="w-full lg:w-[70%]">
-          <Feed currentPage="user" userId={_id} />
+          <Feed
+            currentPage="user"
+            options={{ type: currentUserPosts, userName }}
+            key={currentUserPosts}
+          />
         </div>
       </div>
     );

@@ -11,12 +11,26 @@ import { currentPage } from "../../types/currentPage";
 
 type FeedProps = {
   currentPage: currentPage;
-  userId?: string;
+  options?: any;
 };
-function Feed({ currentPage, userId }: FeedProps) {
+function Feed({ currentPage, options }: FeedProps) {
   const fetchPosts = async ({ pageParam = 0 }) => {
-    const data = { pageParam, currentPage, userId };
-    const res = await apiService.get.GET_ALL_POSTS(data);
+    const isUserPage = currentPage === "user";
+    const isSavedPosts = isUserPage && options?.type === "saved";
+    let Route = apiService.get.GET_ALL_POSTS({ pageParam, currentPage });
+    if (isUserPage) {
+      Route = apiService.get.GET_USER_POSTS({
+        pageParam,
+        options,
+      });
+    }
+    if (isSavedPosts) {
+      Route = apiService.get.GET_USER_SAVED_POSTS({
+        pageParam,
+      });
+    }
+
+    const res = await Route;
     return res;
   };
 

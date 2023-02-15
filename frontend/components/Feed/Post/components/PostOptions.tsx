@@ -82,6 +82,7 @@ function PostOptions({
       .then(({ data: { message, saved } }) => {
         toast.success(message);
         saved ? setSavedPost(true) : setSavedPost(false);
+        queryClient.invalidateQueries("posts");
       })
       .catch(({ response: { data } }) => {
         toast.error(data.error);
@@ -114,7 +115,7 @@ function PostOptions({
   const editPostHandler = () => {
     setEditPost(true);
   };
-  
+
   const reportPostHandler = (body: string) => {
     const data = { postId, body };
 
