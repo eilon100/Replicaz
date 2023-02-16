@@ -52,6 +52,10 @@ export const apiService = {
     ADD_NEW_ITEM(data: postType.ADD_NEW_ITEM) {
       return axiosInstance.post("community/addnewitem", data);
     },
+
+    REPORT_USER(data: postType.REPORT_USER) {
+      return axiosInstance.post("/user/reportuser", data);
+    },
   },
   get: {
     GET_ALL_POSTS({ pageParam, currentPage }: getType.GET_ALL_POSTS) {

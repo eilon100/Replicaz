@@ -58,3 +58,5 @@ export type ADD_NEW_ITEM = {
     url: string;
   };
 };
+
+export type REPORT_USER = { userId: string; body: string };

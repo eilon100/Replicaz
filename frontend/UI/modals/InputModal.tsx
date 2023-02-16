@@ -51,7 +51,7 @@ function InputModal({
         <Button
           type="submit"
           style={{
-            backgroundColor: "#1183ca",
+            backgroundColor: "rgb(220 38 38)",
           }}
           variant="contained"
           endIcon={<SendIcon />}
@@ -81,7 +81,7 @@ function InputModal({
           <MdClose className="text-gray-400 text-2xl" />
         </div>
         <div className="flex flex-col items-center gap-5 font-bold mb-3">
-          <h1 className="text-md xs:text-2xl ">Report</h1>
+          <h1 className="text-md xs:text-3xl ">Report</h1>
         </div>
         <Textarea
           minRows={4}

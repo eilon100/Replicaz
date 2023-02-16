@@ -1,36 +1,40 @@
+import React, { useRef, useState } from "react";
+
 import { CircularProgress } from "@mui/material";
-import React, { useRef } from "react";
-import { useInfiniteQuery } from "react-query";
-import { post } from "../../types/post";
+import Post from "./Post/Post";
 import PostLoading from "../../UI/loadings/PostLoading";
 import { apiService } from "../../utills/apiService";
-import { scrollIntoPostPosition } from "../../utills/scrollIntoPostPosition";
-import useIntersectionObserver from "../../utills/useIntersectionObserver";
-import Post from "./Post/Post";
 import { currentPage } from "../../types/currentPage";
+import { post } from "../../types/post";
+import { scrollIntoPostPosition } from "../../utills/scrollIntoPostPosition";
+import { useInfiniteQuery } from "react-query";
+import useIntersectionObserver from "../../utills/useIntersectionObserver";
 
 type FeedProps = {
   currentPage: currentPage;
   options?: any;
 };
 function Feed({ currentPage, options }: FeedProps) {
-  const fetchPosts = async ({ pageParam = 0 }) => {
+  const fetchPosts = async ({ pageParam = 0 }: any) => {
     const isUserPage = currentPage === "user";
-    const isSavedPosts = isUserPage && options?.type === "saved";
-    let Route = apiService.get.GET_ALL_POSTS({ pageParam, currentPage });
+    const isSavedPosts = options?.type === "saved";
+
+    if (isSavedPosts) {
+      const res = await apiService.get.GET_USER_SAVED_POSTS({
+        pageParam,
+      });
+      return res;
+    }
+
     if (isUserPage) {
-      Route = apiService.get.GET_USER_POSTS({
+      const res = await apiService.get.GET_USER_POSTS({
         pageParam,
         options,
       });
-    }
-    if (isSavedPosts) {
-      Route = apiService.get.GET_USER_SAVED_POSTS({
-        pageParam,
-      });
+      return res;
     }
 
-    const res = await Route;
+    const res = await apiService.get.GET_ALL_POSTS({ pageParam, currentPage });
     return res;
   };
 
@@ -45,15 +49,19 @@ function Feed({ currentPage, options }: FeedProps) {
     isFetchingNextPage,
     status,
     refetch,
-  } = useInfiniteQuery(["posts"], fetchPosts, {
-    getNextPageParam: (_lastPage, currentPage) => {
-      const isLastPage = !currentPage[currentPage.length - 1]?.data[0];
-      if (isLastPage) {
-        return undefined;
-      }
-      return currentPage.length;
-    },
-  });
+  } = useInfiniteQuery(
+    ["posts", { currentPage, options }],
+    (queryFunctionContext) => fetchPosts(queryFunctionContext),
+    {
+      getNextPageParam: (_lastPage, currentPage) => {
+        const isLastPage = !currentPage[currentPage.length - 1]?.data[0];
+        if (isLastPage) {
+          return undefined;
+        }
+        return currentPage.length;
+      },
+    }
+  );
 
   let persistedId: string | null = "";
   const loadMoreRef = useRef() as React.MutableRefObject<HTMLDivElement>;

@@ -7,7 +7,6 @@ import {
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { FaBirthdayCake, FaPhoneAlt, FaUser } from "react-icons/fa";
 import React, { useContext, useRef, useState } from "react";
-
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { AuthContext } from "../../context/AuthContext";
 import Feed from "../Feed/Feed";
@@ -21,6 +20,7 @@ import { toast } from "react-hot-toast";
 import { useFormik } from "formik";
 import { useQueryClient } from "react-query";
 import { user } from "../../types/user";
+import UserPageButton from "./components/UserPageButton";
 
 const readFileAsDataURL = (file: File) => {
   return new Promise((resolve, reject) => {
@@ -306,7 +306,7 @@ function UserPage({
 
   const editName = () => {
     return (
-      <div className=" flex text-xl sm:text-5xl gap-4">
+      <div className=" flex text-xl sm:text-5xl gap-4 h-12">
         {editField !== "name" ? (
           <>
             <h1 className=" font-semibold capitalize">
@@ -340,7 +340,7 @@ function UserPage({
               error={touchedFirstName && Boolean(errorsFirstName)}
               inputProps={{
                 maxLength: 15,
-                className: "text-sm sm:text-3xl w-12 sm:w-32",
+                className: "text-sm sm:text-3xl w-12 sm:w-32 h-full",
               }}
             />
             <TextField
@@ -357,7 +357,7 @@ function UserPage({
               error={touchedLastName && Boolean(errorsLastName)}
               inputProps={{
                 maxLength: 15,
-                className: "text-sm sm:text-3xl w-12 sm:w-32",
+                className: "text-sm sm:text-3xl w-12 sm:w-32 h-full",
               }}
             />
             <div className="flex gap-1">
@@ -470,7 +470,7 @@ function UserPage({
 
   const changeUserPosts = () => {
     return (
-      <div className="px-5 lg:px-0 lg:absolute lg:top-[6.9rem] gap-5 flex text-sm lg:text-base">
+      <div className="px-5 lg:px-0 lg:absolute lg:top-[1.3rem] gap-5 flex text-sm lg:text-base">
         <p
           className={`${
             currentUserPosts === "posts"
@@ -510,21 +510,31 @@ function UserPage({
         <div className=" m-auto flex justify-around max-w-[90rem] items-center sm:space-x-12 pb-6 px-5 ">
           <div className="hidden sm:block">{editImage()}</div>
           <div className="flex flex-col gap-2 w-full sm:w-[70%] pt-3 lg:pt-0">
-            <div className="relative flex items-center gap-1 border-b-[1px] pb-2">
+            <div className="flex items-center gap-1 border-b-[1px] pb-2">
               <div className="block sm:hidden">{editImage()}</div>
               <div className="flex flex-col lg:gap-2">
                 {editName()}
-                <div className="flex items-center gap-2">
-                  <p className="text-xs sm:text-base text-text-second">
-                    {userName}
-                  </p>
-                </div>
+                <p className="text-xs sm:text-base text-text-second">
+                  {userName}
+                </p>
+
                 {allowToEdit && (
-                  <div className="hidden lg:block">{changeUserPosts()}</div>
+                  <div className="relative hidden lg:block">
+                    {changeUserPosts()}
+                  </div>
                 )}
               </div>
             </div>
-            <div className="flex lg:hidden">{userInfo()}</div>
+            <div className="flex lg:hidden flex-col">
+              {userInfo()}
+              <div className="max-w-[13rem] px-4 lg:p-0">
+                <UserPageButton
+                  reportedUserId={_id}
+                  allowToEdit={allowToEdit}
+                  email={email}
+                />
+              </div>
+            </div>
           </div>
         </div>
         {allowToEdit && (
@@ -543,7 +553,9 @@ function UserPage({
         {editPhone()}
         <div className="flex items-center gap-4">
           <MdMail className="mt-1 text-gray-400" />
-          <p className="font-light">{email}</p>
+          <a className="font-light text-sky-500" href={`mailto:${email}`}>
+            {email}
+          </a>
         </div>
         {editBirthDate()}
         <div className="flex items-center gap-4">
@@ -559,13 +571,20 @@ function UserPage({
   const body = () => {
     return (
       <div className="flex flex-col justify-around lg:flex-row max-w-[90rem] w-full px-5">
-        <div className="hidden lg:flex">{userInfo()}</div>
-        <div className="w-full lg:w-[70%]">
-          <Feed
-            currentPage="user"
-            options={{ type: currentUserPosts, userName }}
-            key={currentUserPosts}
+        <div className="hidden lg:flex gap-5 flex-col">
+          {userInfo()}
+          <UserPageButton
+            reportedUserId={_id}
+            allowToEdit={allowToEdit}
+            email={email}
           />
+        </div>
+        <div className="w-full lg:w-[70%]">
+          {currentUserPosts === "saved" ? (
+            <Feed currentPage="user" options={{ type: "saved", userName }} />
+          ) : (
+            <Feed currentPage="user" options={{ type: "posts", userName }} />
+          )}
         </div>
       </div>
     );
