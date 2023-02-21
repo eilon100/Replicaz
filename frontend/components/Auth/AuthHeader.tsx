@@ -37,7 +37,7 @@ const pageObj: pageObj = {
 
 function AuthHeader({ page }: page) {
   return (
-    <header className="flex flex-col items-start mt-12 mb-10">
+    <header className="flex flex-col items-start my-10">
       <div className="flex font-bold items-center ">
         <h1 className=" text-lg ">{pageObj[page].h1}</h1>
         {pageObj[page].icon}

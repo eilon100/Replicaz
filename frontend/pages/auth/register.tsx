@@ -107,7 +107,7 @@ const register = () => {
   const textField = () => {
     return (
       <>
-        <div className="auth_textfield flex gap-2">
+        <div className="auth_textfield flex gap-1 lg:gap-2">
           <TextField
             className="auth_textfield"
             id="firstName"

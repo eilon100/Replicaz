@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import AllItems from "./componnents/AllItems";
 import Feed from "../../components/Feed/Feed";
@@ -76,7 +76,7 @@ function CommunityPage({ page, itemsData }: communityPageProps) {
             </span>
             <span
               className={`px-2 py-1 ${
-                currentPage === page
+                currentPage !== "posts"
                   ? "font-semibold border-b-4"
                   : " mb-1 cursor-pointer"
               } capitalize`}

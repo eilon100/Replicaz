@@ -86,8 +86,12 @@ export const getAllItems: RequestHandler = async (req, res, next) => {
 export const getItemsData: RequestHandler = async (req, res, next) => {
   const { page } = req.params;
   try {
-    const itemsColors = await CommunityItem.distinct("color");
-    const itemsCompanies = await CommunityItem.distinct("company");
+    const itemsColors = await CommunityItem.distinct("color", {
+      community: page,
+    });
+    const itemsCompanies = await CommunityItem.distinct("company", {
+      community: page,
+    });
 
     return res.status(201).json({ itemsColors, itemsCompanies });
   } catch (err) {

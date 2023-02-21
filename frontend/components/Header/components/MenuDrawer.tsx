@@ -39,7 +39,7 @@ function MenuDrawer() {
         className="hover:bg-transparent"
         onClick={() => setIsDrawerOpen(true)}
       >
-        <MenuIcon className="icons" />
+        <MenuIcon className="h-9"/>
       </IconButton>
       <Drawer
         anchor="right"

@@ -119,7 +119,7 @@ function Feed({ currentPage, options }: FeedProps) {
       <div>
         {!hasNextPage && (
           <div className="w-full flex justify-center my-4 ">
-            <p>No more posts..</p>
+            <p>No posts..</p>
           </div>
         )}
       </div>

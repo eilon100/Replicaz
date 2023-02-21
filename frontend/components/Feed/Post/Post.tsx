@@ -113,13 +113,13 @@ function Post({ post, page }: PostProps) {
           </div>
           <div className="flex items-center">
             <a href={`/community/${post.community}`}>
-              <div className=" font-bold text-sm xs:text-xl cursor-pointer hover:underline capitalize">
+              <div className=" font-bold text-lg xs:text-2xl cursor-pointer hover:underline capitalize">
                 {page === "main" || page === "singlePost" || page === "user"
                   ? post.community
                   : ""}
               </div>
             </a>
-            <div className=" font-[400] mt-[1px] text-[0.5rem] xs:text-xs text-[#65676B] ">
+            <div className="mt-[3px] text-[0.55rem] xs:text-xs text-[#65676B] ">
               &nbsp; - Posted by{" "}
               <a
                 href={`/user/${post.postedBy?.userName}`}
