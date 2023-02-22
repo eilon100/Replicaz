@@ -1,4 +1,5 @@
 import { comment } from "./comment";
+import { communityPages } from "./currentPage";
 import { user } from "./user";
 
 export interface post {
@@ -6,7 +7,7 @@ export interface post {
   title: string;
   body: string;
   postedBy: user;
-  community: "Bags" | "Shoes" | "Clothes";
+  community: communityPages;
   images: string[];
   comments: comment[];
   likes: user[];

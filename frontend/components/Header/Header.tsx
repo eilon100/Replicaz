@@ -1,16 +1,11 @@
 import React from "react";
-import { LoginIcon, BellIcon, ChatIcon } from "@heroicons/react/outline";
 import MenuDrawer from "./components/MenuDrawer";
 import { TbShoe, TbShirt, TbHome, TbBell } from "react-icons/tb";
 import { RiShoppingBagLine } from "react-icons/ri";
 import SearchBar from "./components/SearchBar";
 import { useRouter } from "next/router";
-import { useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
-import Image from "next/image";
-import { apiService } from "../../utills/apiService";
-import toast from "react-hot-toast";
 import SiteLogo from "./components/SiteLogo";
+import UserProfile from "./components/UserProfile";
 
 const iconStyle = "text-4xl p-1 cursor-pointer rounded-xl hover:bg-gray-200";
 
@@ -74,26 +69,9 @@ function Header() {
     },
   ];
   const isAuthPage = router.pathname.includes("auth");
-  const {
-    state: { loggedIn, userName, userImage },
-    dispatch,
-  } = useContext(AuthContext);
-
-  const logOut = () => {
-    dispatch({ type: "LOGOUT" });
-
-    apiService.get
-      .LOGOUT()
-      .then(() => {
-        toast.success("Logout successfully");
-      })
-      .catch((error) => {
-        toast.error(error);
-      });
-  };
 
   const notification = () => (
-    <div className=" hidden text-gray-500 items-center space-x-1 mx-5 lg:inline-flex">
+    <div className=" text-gray-500 ml-2 mr-1 lg:mx-4 ">
       <TbBell className={`${iconStyle}`} />
     </div>
   );
@@ -117,62 +95,23 @@ function Header() {
   };
 
   const menuDrawer = () => (
-    <div className="flex ml-2 items-center lg:hidden">
+    <div className="lg:hidden">
       <MenuDrawer />
     </div>
   );
-
-  const authentication = () => {
-    if (loggedIn) {
-      return (
-        <div
-          onClick={() => logOut()}
-          className="hidden rounded-xl cursor-pointer items-center space-x-2 border
-       border-gray-100 p-2 lg:flex"
-        >
-          <div className="relative h-6 w-6">
-            <Image
-              className=" rounded-full "
-              objectFit="contain"
-              src={userImage || "/../public/EmptyProfile.png"}
-              layout="fill"
-            />
-          </div>
-          <div className="flex-1 text-xs">
-            <p className="truncate ">{userName}</p>
-            <p className="text-gray-400 ">Sign out</p>
-          </div>
-        </div>
-      );
-    }
-    return (
-      <div
-        onClick={() => {
-          router.push("/auth/signin");
-        }}
-        className="hidden rounded-xl cursor-pointer space-x-2 border
-       border-gray-100 p-2 lg:flex"
-      >
-        <div className=" relative h-6 w-6 ">
-          <LoginIcon className="text-gray-400 pt-[1px]" />
-        </div>
-        <p className="text-gray-400 ">Sign in</p>
-      </div>
-    );
-  };
 
   return (
     <div
       className={`sticky top-0 z-50 ${
         isAuthPage ? "hidden" : "flex"
-      } justify-center items-center pl-16 py-5 h-[82px] bg-main shadow-sm sm:px-3 sm:pl-24 pr-3 `}
+      } justify-center items-center pl-16 pr-2 lg:pr-7 sm:pl-24 py-5 h-20 bg-main shadow-sm `}
     >
       <SiteLogo />
       {pages()}
       <SearchBar />
       {notification()}
+      <UserProfile />
       {menuDrawer()}
-      {authentication()}
     </div>
   );
 }

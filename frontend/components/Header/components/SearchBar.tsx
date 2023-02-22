@@ -5,7 +5,7 @@ const SearchBar = () => {
   return (
     <form
       className="flex flex-1 h-10 items-center space-x-2 rounded-xl border
-  bg-second px-3 py-1 min-w-[165px]  xl:max-w-6xl"
+  bg-second px-3 py-1 min-w-[165px] xl:max-w-6xl"
     >
       <SearchIcon className="w-5 h-5 text-text-third" />
       <input

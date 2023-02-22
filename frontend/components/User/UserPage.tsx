@@ -306,10 +306,10 @@ function UserPage({
 
   const editName = () => {
     return (
-      <div className=" flex text-xl sm:text-5xl gap-4 h-12">
+      <div className=" flex text-xl sm:text-5xl gap-4 lg:h-12">
         {editField !== "name" ? (
           <>
-            <h1 className=" font-semibold capitalize">
+            <h1 className=" font-semibold capitalize ">
               {userData.firstName} {userData.lastName}
             </h1>
             {allowToEdit && (

@@ -1,171 +1,191 @@
-import React, { useState } from "react";
-import { Drawer, Box, Typography, IconButton } from "@mui/material";
-import {
-  MenuIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-} from "@heroicons/react/outline";
+import React, { useContext, useState } from "react";
+import { Drawer, Box, IconButton } from "@mui/material";
+import { MenuIcon } from "@heroicons/react/outline";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Divider from "@mui/material/Divider";
+import { AuthContext } from "../../../context/AuthContext";
+import { useRouter } from "next/router";
+import { BiExit, BiUser } from "react-icons/bi";
+import { TbHome, TbShirt, TbShoe } from "react-icons/tb";
+import { RiShoppingBagLine } from "react-icons/ri";
+import { toast } from "react-hot-toast";
+import { apiService } from "../../../utills/apiService";
 
 function MenuDrawer() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isHomeOpen, setIsHomeOpen] = useState(false);
-  const session = {
-    user: {
-      email: "eilonshamir123@gmail.com",
-      name: "eilon",
-      image: "/../public/EmptyProfile.png",
+  const router = useRouter();
+  const {
+    dispatch,
+    state: { loggedIn, userName, userImage, email },
+  } = useContext(AuthContext);
+  const { asPath } = useRouter();
+  const currentPage =
+    asPath === "/community/bags"
+      ? "bags"
+      : asPath === "/community/shoes"
+      ? "shoes"
+      : asPath === "/community/clothes"
+      ? "clothes"
+      : asPath === "/"
+      ? "home"
+      : asPath === `/user/${userName}`
+      ? "profile"
+      : null;
+  const pagesArr = [
+    {
+      page: "profile",
+      icon: <BiUser className="text-xl text-gray-500" />,
+      route: `/user/${userName}`,
     },
+    {
+      page: "home",
+      icon: <TbHome className="text-xl text-gray-500" />,
+      route: "/",
+    },
+    {
+      page: "shoes",
+      icon: <TbShoe className="text-xl text-gray-500" />,
+      route: "/community/shoes",
+    },
+    {
+      page: "clothes",
+      icon: <TbShirt className="text-xl text-gray-500" />,
+      route: "/community/clothes",
+    },
+    {
+      page: "bags",
+      icon: <RiShoppingBagLine className="text-xl text-gray-500" />,
+      route: "/community/bags",
+    },
+  ];
+  const logOut = () => {
+    dispatch({ type: "LOGOUT" });
+    apiService.get
+      .LOGOUT()
+      .then(() => {
+        toast.success("Logout successfully");
+      })
+      .catch((error) => {
+        toast.error(error);
+      });
   };
-  const userImage = session?.user?.image!;
-  const userName = session?.user?.name;
-  const userEmail = session?.user?.email;
-  const communityArr = ["Home", "Shoes", "Bags", "Clothes"];
+  const signOut = () => {
+    return (
+      <ListItem disablePadding>
+        <ListItemButton
+          className="px-1"
+          onClick={() => {
+            logOut();
+          }}
+        >
+          <ListItemText
+            primary={
+              <div className="flex gap-2 items-center">
+                <BiExit className="text-xl text-gray-500" />
+                <p className=" font-semibold">Sign out</p>
+              </div>
+            }
+          />
+        </ListItemButton>
+      </ListItem>
+    );
+  };
+  const loggedInUser = () => {
+    return (
+      <div>
+        <ListItem disablePadding>
+          <ListItemText
+            primary={
+              <div>
+                <div className="relative h-16 w-16 my-2">
+                  <Image
+                    className=" rounded-full "
+                    objectFit="cover"
+                    src={userImage || "/../public/EmptyProfile.png"}
+                    layout="fill"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <h1 className="font-bold text-xl ">{userName}</h1>
+                  <h2 className="truncate text-xs mb-1">{email}</h2>
+                </div>
+              </div>
+            }
+          />
+        </ListItem>
+        <Divider />
+        {pagesArr.map(({ page, icon, route }) => {
+          return (
+            <ListItem disablePadding key={page}>
+              <ListItemButton
+                className={`px-1 ${
+                  currentPage === page ? "cursor-auto bg-gray-200" : ""
+                }`}
+                onClick={() => {
+                  setIsDrawerOpen(false);
+                  router.push(route);
+                }}
+              >
+                <ListItemText
+                  primary={
+                    <div className="flex gap-2">
+                      {icon}
+                      <p className=" font-semibold capitalize">{page}</p>
+                    </div>
+                  }
+                />
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
+
+        <Divider />
+        {signOut()}
+      </div>
+    );
+  };
+
+  const logOutUser = () => {
+    return (
+      <div>
+        <ListItem disablePadding>
+          <ListItemButton
+            onClick={() => {
+              router.push("/auth/signin");
+              setIsDrawerOpen(false);
+            }}
+          >
+            <ListItemText primary={"Sign in"} />
+          </ListItemButton>
+        </ListItem>
+        <Divider />
+      </div>
+    );
+  };
 
   return (
     <>
       <IconButton
-        sx={{ padding: "2px", ml: "0px" }}
+        sx={{ padding: "3px", ml: "0px" }}
         size="small"
         edge="start"
         color="inherit"
         aria-label="logo"
-        className="hover:bg-transparent"
         onClick={() => setIsDrawerOpen(true)}
       >
-        <MenuIcon className="h-9"/>
+        <MenuIcon className="h-9" />
       </IconButton>
       <Drawer
         anchor="right"
         open={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
       >
-        <Box p={2} width="250px" textAlign="center" role="presentation">
-          <Typography variant="h6" component="div">
-            <List>
-              {session?.user ? (
-                <ListItem disablePadding>
-                  <ListItemText
-                    primary={
-                      <div>
-                        <div className="relative h-11 w-11 my-2">
-                          <Image
-                            className=" rounded-full "
-                            objectFit="contain"
-                            src={userImage || "/../public/EmptyProfile.png"}
-                            layout="fill"
-                          />
-                        </div>
-                        <div className="flex flex-col">
-                          <h1 className="font-bold text-xl ">{userName}</h1>
-                          <h2 className="truncate text-xs mb-1">{userEmail}</h2>
-                        </div>
-                      </div>
-                    }
-                  />
-                </ListItem>
-              ) : (
-                <div>
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={() => signIn()}>
-                      <ListItemText primary={"Sign in"} />
-                    </ListItemButton>
-                  </ListItem>
-                  <Divider />
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={() => setIsHomeOpen(!isHomeOpen)}>
-                      <ListItemText
-                        primary={
-                          <div className="flex items-center space-x-32">
-                            <div className="">Pages</div>
-                            {isHomeOpen ? (
-                              <ChevronUpIcon className="h-4 w-4 " />
-                            ) : (
-                              <ChevronDownIcon className="h-4 w-4 " />
-                            )}
-                          </div>
-                        }
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                  {isHomeOpen &&
-                    communityArr.map((item) => {
-                      return (
-                        <ListItem disablePadding>
-                          <ListItemButton>
-                            <ListItemText
-                              primary={<p className="text-xs ml-3">{item}</p>}
-                            />
-                          </ListItemButton>
-                        </ListItem>
-                      );
-                    })}
-                </div>
-              )}
-
-              {session?.user && (
-                <div className=" mt-3 ">
-                  <Divider />
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={() => setIsHomeOpen(!isHomeOpen)}>
-                      <ListItemText
-                        primary={
-                          <div className="flex items-center space-x-32">
-                            <div className="">Pages</div>
-                            {isHomeOpen ? (
-                              <ChevronUpIcon className="h-4 w-4 " />
-                            ) : (
-                              <ChevronDownIcon className="h-4 w-4 " />
-                            )}
-                          </div>
-                        }
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                  {isHomeOpen &&
-                    communityArr.map((item, i) => {
-                      return (
-                        <ListItem disablePadding key={i}>
-                          <ListItemButton>
-                            <ListItemText
-                              primary={<p className="text-xs ml-3">{item}</p>}
-                            />
-                          </ListItemButton>
-                        </ListItem>
-                      );
-                    })}
-
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemText primary={<p className="">Messages</p>} />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton>
-                      <ListItemText
-                        primary={<p className="">Notifications</p>}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                  <ListItem disablePadding>
-                    <ListItemButton onClick={() => signOut()}>
-                      <ListItemText
-                        primary={
-                          <p className="font-semibold text-red-500">Sign out</p>
-                        }
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </div>
-              )}
-            </List>
-          </Typography>
+        <Box p={1.5} width="230px" textAlign="center" role="presentation">
+          <List>{loggedIn ? loggedInUser() : logOutUser()}</List>
         </Box>
       </Drawer>
     </>

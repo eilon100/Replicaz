@@ -19,7 +19,6 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 function index({ data, error }: any) {
   const router = useRouter();
   const { page } = router.query;
-  console.log(data);
 
   if (error) {
     return <div>error loading this page</div>;
