@@ -11,14 +11,21 @@ import {
 
 export const getAllPosts: RequestHandler = (req, res, next) => {
   const { p: page }: any = req.query || 0;
-  const { currentPage } = req.query;
+  const { currentPage, search } = req.query;
   const postsPerPage = 5;
   const isMainPage = currentPage === "main";
-  const filter = {
-    ...(isMainPage && {}),
-    ...(!isMainPage && { community: currentPage }),
+  const searchedLength = search?.length! >= 3 ? "" : "^";
+  const searchFilter = {
+    ...(search && {
+      $or: [{ title: { $regex: `${searchedLength}${search}`, $options: "i" } }],
+    }),
   };
 
+  const filter = {
+    ...(isMainPage && { ...searchFilter }),
+    ...(!isMainPage && { ...searchFilter, community: currentPage }),
+  };
+  console.log(filter);
   Post.find(filter)
     .populate({ path: "postedBy", select: ["userName", "image"] })
     .sort({ _id: -1 })
@@ -59,6 +66,17 @@ export const getPost: RequestHandler = async (req, res, next) => {
   } catch (error) {
     return res.status(500).json({ message: "Fetching post failed " });
   }
+};
+export const searchPost: RequestHandler = async (req, res, next) => {
+  const { searchValue } = req.body;
+  const searchedLength = searchValue.length >= 3 ? "" : "^";
+  const posts = await Post.find({
+    $or: [
+      { title: { $regex: `${searchedLength}${searchValue}`, $options: "i" } },
+    ],
+  });
+  console.log(posts);
+  return res.status(200).json({ message: "New post created!" });
 };
 
 export const createPost: RequestHandler = async (req, res, next) => {

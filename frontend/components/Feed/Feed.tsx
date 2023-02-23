@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useEffect } from "react";
 
 import { CircularProgress } from "@mui/material";
 import Post from "./Post/Post";
@@ -9,12 +9,17 @@ import { post } from "../../types/post";
 import { scrollIntoPostPosition } from "../../utills/scrollIntoPostPosition";
 import { useInfiniteQuery } from "react-query";
 import useIntersectionObserver from "../../utills/useIntersectionObserver";
+import { useRouter } from "next/dist/client/router";
 
 type FeedProps = {
   currentPage: currentPage;
   options?: any;
 };
 function Feed({ currentPage, options }: FeedProps) {
+  const {
+    query: { search },
+  } = useRouter();
+
   const fetchPosts = async ({ pageParam = 0 }: any) => {
     const isUserPage = currentPage === "user";
     const isSavedPosts = options?.type === "saved";
@@ -34,23 +39,24 @@ function Feed({ currentPage, options }: FeedProps) {
       return res;
     }
 
-    const res = await apiService.get.GET_ALL_POSTS({ pageParam, currentPage });
+    const res = await apiService.get.GET_ALL_POSTS({
+      pageParam,
+      currentPage,
+      search,
+    });
     return res;
   };
 
   const {
     data: { pages } = {},
-    error,
     fetchNextPage,
     hasNextPage,
-    isFetching,
     isLoading,
     isError,
     isFetchingNextPage,
     status,
-    refetch,
   } = useInfiniteQuery(
-    ["posts", { currentPage, options }],
+    ["posts", { currentPage, options, search }],
     (queryFunctionContext) => fetchPosts(queryFunctionContext),
     {
       getNextPageParam: (_lastPage, currentPage) => {
@@ -119,7 +125,11 @@ function Feed({ currentPage, options }: FeedProps) {
       <div>
         {!hasNextPage && (
           <div className="w-full flex justify-center my-4 ">
-            <p>No posts..</p>
+            {search && pages && pages[0].data.length === 0 ? (
+              <p>No results for {search}</p>
+            ) : (
+              <p>No posts..</p>
+            )}
           </div>
         )}
       </div>

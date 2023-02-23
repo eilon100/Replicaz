@@ -23,12 +23,12 @@ function PostBox({ currentPage }: PostBoxProps) {
   const { loggedIn, userImage } = state;
   const [imageBoxOpen, setImageBoxOpen] = useState<boolean>(false);
   const [community, setCommunity] = useState("");
-  const [disableButton, setDisableButton] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const queryClient = useQueryClient();
 
   const {
     handleChange,
+    isSubmitting,
     handleBlur,
     values: { body: valuesBody, title: valuesTitle },
     touched: { body: touchedBody, title: touchedTitle },
@@ -51,7 +51,6 @@ function PostBox({ currentPage }: PostBoxProps) {
 
   const onSubmit = () => {
     const notification = toast.loading("uploading post...");
-    setDisableButton(true);
 
     const data = {
       postTitle: valuesTitle,
@@ -70,13 +69,11 @@ function PostBox({ currentPage }: PostBoxProps) {
         resetForm();
         setCommunity("");
         setImageBoxOpen(false);
-        setDisableButton(false);
       })
       .catch(({ response: { data } }) => {
         toast.error(data.error, {
           id: notification,
         });
-        setDisableButton(false);
       });
   };
 
@@ -153,7 +150,7 @@ function PostBox({ currentPage }: PostBoxProps) {
     return (
       <div className="flex justify-center mt-2 gap-3 xs:justify-end mx-2">
         <Button
-          disabled={disableButton}
+          disabled={isSubmitting}
           style={{
             color: "rgb(33, 150, 243, 0.8)",
             backgroundColor: "transparent",
@@ -169,7 +166,7 @@ function PostBox({ currentPage }: PostBoxProps) {
           Cancel
         </Button>
         <Button
-          disabled={disableButton}
+          disabled={isSubmitting}
           style={{
             backgroundColor: "rgb(33, 150, 243,0.8)",
           }}

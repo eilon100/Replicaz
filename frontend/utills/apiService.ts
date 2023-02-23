@@ -24,6 +24,9 @@ export const apiService = {
     CREATE_POST(data: postType.CREATE_POST) {
       return axiosInstance.post("/post/newpost", data);
     },
+    SEARCH_POST(data: any) {
+      return axiosInstance.post("/post/search", data);
+    },
     LIKE_POST(data: postType.LIKE_POST) {
       return axiosInstance.post("/post/likepost", data);
     },
@@ -58,10 +61,11 @@ export const apiService = {
     },
   },
   get: {
-    GET_ALL_POSTS({ pageParam, currentPage }: getType.GET_ALL_POSTS) {
+    GET_ALL_POSTS({ pageParam, currentPage, search }: getType.GET_ALL_POSTS) {
       return axiosInstance.get(`/post/allposts?p=${pageParam}`, {
         params: {
           currentPage,
+          search,
         },
       });
     },
