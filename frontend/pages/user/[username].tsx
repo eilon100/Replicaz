@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import UserPage from "../../components/User/UserPage";
 import { GetServerSideProps } from "next";
 import { apiService } from "../../utills/apiService";
+import PageNotFound from "../../UI/pages/PageNotFound";
+import PageHead from "../../UI/pages/pageHead";
+import { AuthContext } from "../../context/AuthContext";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   try {
@@ -14,12 +17,18 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 };
 
 function username({ data, error }: any) {
+  const {
+    state: { userId },
+  } = useContext(AuthContext);
+  const myProfile = data._id === userId;
+
   if (error) {
-    return <div>Could not find this user</div>;
+    return <PageNotFound />;
   }
 
   return (
     <div>
+      <PageHead title={`${myProfile ? "" : data.userName} Profile`} />
       <UserPage userData={data} />
     </div>
   );

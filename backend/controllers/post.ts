@@ -67,17 +67,6 @@ export const getPost: RequestHandler = async (req, res, next) => {
     return res.status(500).json({ message: "Fetching post failed " });
   }
 };
-export const searchPost: RequestHandler = async (req, res, next) => {
-  const { searchValue } = req.body;
-  const searchedLength = searchValue.length >= 3 ? "" : "^";
-  const posts = await Post.find({
-    $or: [
-      { title: { $regex: `${searchedLength}${searchValue}`, $options: "i" } },
-    ],
-  });
-  console.log(posts);
-  return res.status(200).json({ message: "New post created!" });
-};
 
 export const createPost: RequestHandler = async (req, res, next) => {
   const mongoosePostId = new mongoose.Types.ObjectId();

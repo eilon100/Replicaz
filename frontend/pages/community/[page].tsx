@@ -2,6 +2,8 @@ import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import CommunityPage from "../../components/community-page/CommunityPage";
+import PageHead from "../../UI/pages/pageHead";
+import PageNotFound from "../../UI/pages/PageNotFound";
 import { apiService } from "../../utills/apiService";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -24,9 +26,14 @@ function index({ data, error }: any) {
     return <div>error loading this page</div>;
   }
   if (page === "shoes" || page === "bags" || page === "clothes") {
-    return <CommunityPage page={page} itemsData={data} />;
+    return (
+      <div>
+        <PageHead title={` ${page.charAt(0).toUpperCase() + page.slice(1)}`} />
+        <CommunityPage page={page} itemsData={data} />
+      </div>
+    );
   }
 
-  return <div>page not found</div>;
+  return <PageNotFound />;
 }
 export default index;

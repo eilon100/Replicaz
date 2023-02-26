@@ -9,7 +9,6 @@ import {
   likePost,
   reportPost,
   savePost,
-  searchPost,
 } from "../controllers/post";
 import { isAuth } from "../middleware/isAuth";
 
@@ -18,8 +17,6 @@ const postRouter = express.Router();
 postRouter.get("/allposts", getAllPosts);
 
 postRouter.get("/getpost/:id", getPost);
-
-postRouter.post("/search", searchPost);
 
 postRouter.use(isAuth);
 

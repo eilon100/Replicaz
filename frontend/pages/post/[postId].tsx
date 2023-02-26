@@ -8,6 +8,8 @@ import SinglePostLoading from "../../UI/loadings/SinglePostLoading";
 import { apiService } from "../../utills/apiService";
 import Comment from "../../components/Feed/Post/components/Comment";
 import { GetServerSideProps } from "next";
+import PageNotFound from "../../UI/pages/PageNotFound";
+import PageHead from "../../UI/pages/pageHead";
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { postId } = ctx.query;
   return { props: { postId } };
@@ -35,12 +37,13 @@ function PostPage({ postId }: postPage) {
     return <SinglePostLoading />;
   }
   if (error) {
-    return <div>Post not found</div>;
+    return <PageNotFound />;
   }
 
   if (postData) {
     return (
       <div className="my-6 px-3 max-w-4xl mx-auto">
+        <PageHead title="Post" />
         <Post post={postData} page="singlePost" />
         <div
           className="-mt-1 rounded-b-md bg-main px-6 py-5 text-xs font-semibold 

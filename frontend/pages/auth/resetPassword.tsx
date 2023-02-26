@@ -7,6 +7,7 @@ import AuthHeader from "../../components/Auth/AuthHeader";
 import AuthFooter from "../../components/Auth/AuthFooter";
 import AuthButton from "../../components/Auth/AuthButton";
 import { authValidationSchema } from "../../validation/auth";
+import PageHead from "../../UI/pages/pageHead";
 
 function ForgetPassword() {
   const {
@@ -61,6 +62,7 @@ function ForgetPassword() {
 
   return (
     <div className="flex flex-col items-center">
+      <PageHead title="Reset Password" />
       <div className="flex flex-col">
         <AuthHeader page="resetPassword" />
         <form

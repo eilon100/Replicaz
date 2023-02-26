@@ -12,6 +12,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { IconButton } from "@mui/joy";
+import PageHead from "../../UI/pages/pageHead";
 
 function newPassword() {
   const router = useRouter();
@@ -110,6 +111,7 @@ function newPassword() {
 
   return (
     <div className="flex flex-col items-center">
+      <PageHead title="New Password" />
       <div className="flex flex-col">
         <AuthHeader page="newPassword" />
         <form

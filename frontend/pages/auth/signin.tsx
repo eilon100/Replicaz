@@ -14,6 +14,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { IconButton } from "@mui/joy";
+import PageHead from "../../UI/pages/pageHead";
 
 const SignIn = () => {
   useEffect(() => {
@@ -144,6 +145,7 @@ const SignIn = () => {
 
   return (
     <div className="flex flex-col items-center ">
+      <PageHead title="Sign in" />
       <div className="flex flex-col">
         <AuthHeader page="signIn" />
         <form
