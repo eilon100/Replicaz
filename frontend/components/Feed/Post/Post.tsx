@@ -150,9 +150,14 @@ function Post({ post, page }: PostProps) {
       <>
         {!editPost ? (
           <div>
-            <div className=" font-semibold text-text-main text-2xl " dir="auto">
-              <h1>{post?.title}</h1>
-            </div>
+            <Link href={`/post/${post._id}`}>
+              <div
+                className="w-fit font-semibold text-text-main text-2xl hover:underline cursor-pointer "
+                dir="auto"
+              >
+                <h1>{post?.title}</h1>
+              </div>
+            </Link>
             <div className="text-text-main font-[400]" dir="auto">
               <p>{post?.body}</p>
             </div>

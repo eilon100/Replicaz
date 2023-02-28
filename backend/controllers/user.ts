@@ -1,9 +1,8 @@
 import User from "../modal/user";
 import { RequestHandler } from "express";
 import { singleImageUpload } from "../utills/cloudinaryActions";
-import Post from "../modal/post";
 import Report from "../modal/report";
-
+import { ObjectId } from "mongodb";
 export const getUserData: RequestHandler = async (req, res, next) => {
   const { username } = req.params;
 
@@ -127,7 +126,9 @@ export const reportUser: RequestHandler = async (req, res, next) => {
     }
     const reportedUser = await User.findById(userId);
     if (!reportedUser) {
-      return res.status(404).json({ error: "Could not find the reported user" });
+      return res
+        .status(404)
+        .json({ error: "Could not find the reported user" });
     }
 
     const reportedPost = await Report.findById(userId);
@@ -155,5 +156,86 @@ export const reportUser: RequestHandler = async (req, res, next) => {
     return res
       .status(500)
       .json({ error: "Error on '/user/reportuser': " + error });
+  }
+};
+
+export const getUserNotifications: RequestHandler = async (req, res, next) => {
+  const { p: page }: any = req.query || 0;
+  const postsPerPage = 5;
+  const { seen }: any = req.query;
+  const notificationFilter = seen === "true" ? true : false;
+  const filter = [
+    {
+      path: "notifications",
+      populate: {
+        path: "sentUserId",
+        select: "-_id userName image",
+      },
+    },
+    {
+      path: "notifications",
+      populate: {
+        path: "postId",
+        select: "title",
+      },
+    },
+  ];
+
+  try {
+    User.find(
+      {
+        _id: req.userData.userId,
+      },
+      {
+        notifications: 1,
+      }
+    )
+      .populate(filter)
+      .exec((err, notificationsArr) => {
+        if (err) {
+          return res
+            .status(500)
+            .json({ message: "Could not fetch the notifications" });
+        } else {
+          if (notificationsArr[0]) {
+            const filteredObjects: [] =
+              notificationsArr[0].notifications.filter((obj: any) =>
+                notificationFilter ? obj : obj.seen === false
+              );
+            const reversedDocs = filteredObjects.reverse();
+            const skippedAndLimitedDocs = reversedDocs.slice(
+              page * postsPerPage,
+              page * postsPerPage + postsPerPage
+            );
+            return res.status(200).send(skippedAndLimitedDocs);
+          } else {
+            return res.status(200).send([]);
+          }
+        }
+      });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ message: "Could not fetch the notifications" });
+  }
+};
+
+export const makeNotificationSeen: RequestHandler = async (req, res, next) => {
+  const { notificationId } = req.body;
+  try {
+    User.updateOne(
+      {
+        _id: req.userData.userId,
+        notifications: { $elemMatch: { _id: notificationId } },
+      },
+      { $set: { "notifications.$.seen": true } }
+    ).then(() => {
+      return res.status(200).json({ message: "notification marked as seen" });
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Could not make notifications seen" });
   }
 };

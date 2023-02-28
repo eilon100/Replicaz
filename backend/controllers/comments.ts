@@ -4,6 +4,7 @@ import Comment from "../modal/comment";
 import Post from "../modal/post";
 import Report from "../modal/report";
 import User from "../modal/user";
+import { Notifications } from "../utills/notifications";
 
 export const createComment: RequestHandler = async (req, res, next) => {
   const { comment, postId } = req.body;
@@ -30,6 +31,16 @@ export const createComment: RequestHandler = async (req, res, next) => {
     await newComment.save({ session: commentCreatingSession });
     commentedPost.comments.push(newComment);
     await commentedPost.save({ session: commentCreatingSession });
+    await Notifications(
+      {
+        userId: commentedPost.postedBy,
+        postId,
+        sentUserId: req.userData.userId,
+        type: "comment",
+      },
+      commentCreatingSession,
+      true
+    );
     await commentCreatingSession.commitTransaction();
     res.status(201).json({ message: "New comment created!" });
   } catch (err) {
@@ -41,29 +52,43 @@ export const createComment: RequestHandler = async (req, res, next) => {
 
 export const likeComment: RequestHandler = async (req, res, next) => {
   const { commentId } = req.body;
+  let like = null;
   try {
     const comment = await Comment.findById(commentId);
+
+    const post = await Post.findById(comment.post);
+
     if (!comment) {
       return res.status(404).json({ error: "Could not find the comment" });
     }
 
+    const likeCommentSession = await mongoose.startSession();
+    likeCommentSession.startTransaction();
+
     if (comment.likes.includes(req.userData.userId)) {
+      like = false;
       comment.likes.pull(req.userData.userId);
-      await comment.save();
-      return res.status(200).json({
-        message: "Comment unliked successfully!",
-        like: false,
-        likesLength: comment.likes.length,
-      });
     } else {
+      like = true;
       comment.likes.push(req.userData.userId);
-      await comment.save();
-      return res.status(200).json({
-        message: "Comment liked successfully!",
-        like: true,
-        likesLength: comment.likes.length,
-      });
     }
+    await Notifications(
+      {
+        userId: comment.postedBy,
+        postId: post._id,
+        sentUserId: req.userData.userId,
+        type: "commentLike",
+      },
+      likeCommentSession,
+      like
+    );
+    await comment.save({ session: likeCommentSession });
+    await likeCommentSession.commitTransaction();
+    return res.status(200).json({
+      message: `Comment ${like ? "liked" : "unliked"} successfully!`,
+      like,
+      likesLength: comment.likes.length,
+    });
   } catch (err) {
     return res
       .status(500)
@@ -135,10 +160,23 @@ export const deleteComment: RequestHandler = async (req, res, next) => {
     //delete the comment from the post
     post.comments.pull(commentId);
     await post.save({ session: commentDeletionSession });
-    //delete teh comment reports
+
+    //delete the comment reports
     await Report.findByIdAndDelete(commentId, {
       session: commentDeletionSession,
     });
+
+    //delete the notification about the comment
+    await Notifications(
+      {
+        userId: post.postedBy,
+        postId: post._id,
+        sentUserId: req.userData.userId,
+        type: "comment",
+      },
+      commentDeletionSession,
+      false
+    );
     await commentDeletionSession.commitTransaction();
 
     res.status(200).json({ message: "Your comment deleted!" });
@@ -149,6 +187,7 @@ export const deleteComment: RequestHandler = async (req, res, next) => {
       .json({ error: "Error on '/post/deleteComment': " + error });
   }
 };
+
 export const reportComment: RequestHandler = async (req, res, next) => {
   const { commentId, body } = req.body;
   try {

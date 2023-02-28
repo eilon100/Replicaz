@@ -2,6 +2,25 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
+const notificationsSchema = new Schema({
+  sentUserId: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    require: true,
+  },
+  postId: {
+    type: Schema.Types.ObjectId,
+    ref: "Post",
+    required: true,
+  },
+  type: {
+    type: String,
+    enum: ["like", "comment", "commentLike"],
+    required: true,
+  },
+  seen: { type: Boolean, default: false },
+});
+
 const userSchema = new Schema(
   {
     userName: {
@@ -18,6 +37,7 @@ const userSchema = new Schema(
     },
     phone: { type: String, required: true },
     birthDate: { type: String, required: true },
+    role: { type: String, default: "user" },
     email: {
       type: String,
       required: true,
@@ -28,6 +48,7 @@ const userSchema = new Schema(
       required: true,
       minlength: 5,
     },
+    notifications: [{ type: notificationsSchema }],
     image: {
       type: String,
       default:

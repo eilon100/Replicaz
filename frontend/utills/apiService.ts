@@ -104,6 +104,13 @@ export const apiService = {
     GET_USER_SAVED_POSTS({ pageParam }: any) {
       return axiosInstance.get(`/user/savedposts?p=${pageParam}`);
     },
+    GET_ALL_NOTIFICATIONS({ pageParam, seen }: any) {
+      return axiosInstance.get(`/user/notifications?p=${pageParam}`, {
+        params: {
+          seen,
+        },
+      });
+    },
     LOGOUT() {
       return axiosInstance.get("/auth/logout");
     },
@@ -117,6 +124,9 @@ export const apiService = {
     },
     EDIT_USER_DATA(data: patchType.EDIT_USER_DATA) {
       return axiosInstance.patch("/user/edit", data);
+    },
+    MAKE_NOTIFICATION_SEEN(data: any) {
+      return axiosInstance.patch("/user/notificationseen", data);
     },
   },
 };

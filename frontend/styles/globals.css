@@ -10,6 +10,9 @@
     @apply flex items-center justify-center w-full py-1 space-x-1 text-[12px] lg:text-sm lg:py-2 font-semibold text-text-second
      hover:bg-second cursor-pointer rounded-md;
   }
+  .header_icons {
+    @apply text-4xl p-1 cursor-pointer rounded-xl hover:bg-gray-200;
+  }
 }
 
 .css-1v2n3o3-JoyTextarea-root.Joy-focused:before {

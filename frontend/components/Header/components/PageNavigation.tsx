@@ -1,19 +1,9 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { RiShoppingBagLine } from "react-icons/ri";
-import { TbBell, TbHome, TbShirt, TbShoe } from "react-icons/tb";
+import {  TbHome, TbShirt, TbShoe } from "react-icons/tb";
 
-const iconStyle = "text-4xl p-1 cursor-pointer rounded-xl hover:bg-gray-200";
-
-export function Notification() {
-  return (
-    <div className=" text-gray-500 ml-2 mr-1 lg:mx-4 ">
-      <TbBell className={`${iconStyle}`} />
-    </div>
-  );
-}
-
-export function PageNavigation() {
+function PageNavigation() {
   const router = useRouter();
   const { asPath } = useRouter();
   const routeIncludesQuery = asPath.includes("?");
@@ -31,13 +21,13 @@ export function PageNavigation() {
       : currentRoute === "/"
       ? "home"
       : null;
-      
+
   const pagesArr = [
     {
       page: "shoes",
       icon: (
         <TbShoe
-          className={`${iconStyle} ${
+          className={`header_icons ${
             currentPage === "shoes" ? "cursor-auto  bg-gray-200" : ""
           }`}
         />
@@ -48,7 +38,7 @@ export function PageNavigation() {
       page: "clothes",
       icon: (
         <TbShirt
-          className={`${iconStyle} ${
+          className={`header_icons ${
             currentPage === "clothes" ? "cursor-auto bg-gray-200" : ""
           }`}
         />
@@ -59,7 +49,7 @@ export function PageNavigation() {
       page: "bags",
       icon: (
         <RiShoppingBagLine
-          className={`${iconStyle} ${
+          className={`header_icons ${
             currentPage === "bags" ? "cursor-auto bg-gray-200" : ""
           }`}
         />
@@ -70,7 +60,7 @@ export function PageNavigation() {
       page: "home",
       icon: (
         <TbHome
-          className={`${iconStyle} ${
+          className={`header_icons ${
             currentPage === "home" ? "cursor-auto bg-gray-200" : ""
           }`}
         />
@@ -97,3 +87,5 @@ export function PageNavigation() {
   };
   return <div>{pages()}</div>;
 }
+
+export default PageNavigation;

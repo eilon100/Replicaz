@@ -12,7 +12,7 @@ import PageNotFound from "../../UI/pages/PageNotFound";
 import PageHead from "../../UI/pages/pageHead";
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const { postId } = ctx.query;
-  return { props: { postId } };
+  return { props: { key: postId, postId } };
 };
 
 type postPage = {
