@@ -51,7 +51,7 @@ function AllNotifications({ seen }: AllNotificationsProps) {
   if (isLoading) {
     return (
       <>
-        {Array(4)
+        {Array(3)
           .fill(0)
           .map((_, i) => {
             return <NotificationsLoading key={i} />;
