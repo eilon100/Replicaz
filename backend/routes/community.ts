@@ -4,14 +4,14 @@ import {
   getAllItems,
   getItemsData,
 } from "../controllers/community";
-import { isAuth } from "../middleware/isAuth";
+import { isAdmin } from "../middleware/isAdmin";
 
 const communityRouter = express.Router();
 communityRouter.get("/getallitems", getAllItems);
 
 communityRouter.get("/itemsdata/:page", getItemsData);
 
-communityRouter.use(isAuth);
+communityRouter.use(isAdmin);
 
 communityRouter.post("/addnewitem", addNewItem);
 

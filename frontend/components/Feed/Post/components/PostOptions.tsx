@@ -57,8 +57,9 @@ function PostOptions({
   saves,
   setEditPost,
 }: PostOptionsProps) {
-  const { state } = useContext(AuthContext);
-  const { userId } = state;
+  const {
+    state: { userId, role },
+  } = useContext(AuthContext);
   const [savedPost, setSavedPost] = useState(saves.includes(userId));
   const [closeOptions, setCloseOptions] = useState<null | HTMLElement>(null);
   const [reportModal, setReportModal] = useState(false);
@@ -66,7 +67,7 @@ function PostOptions({
   const queryClient = useQueryClient();
   const open = Boolean(closeOptions);
   const router = useRouter();
-
+  const isAdmin = role === "admin";
   useEffect(() => {
     setSavedPost(saves.includes(userId));
   }, [saves]);
@@ -155,23 +156,25 @@ function PostOptions({
           )}
           Save
         </MenuItem>
+        {userPost || isAdmin ? (
+          <MenuItem
+            onClick={() => {
+              setDeleteModal(true);
+            }}
+          >
+            <BsTrash className="mr-5" /> Delete
+          </MenuItem>
+        ) : (
+          ""
+        )}
         {userPost ? (
-          <div>
-            <MenuItem
-              onClick={() => {
-                setDeleteModal(true);
-              }}
-            >
-              <BsTrash className="mr-5" /> Delete
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                editPostHandler();
-              }}
-            >
-              <BsPencil className="mr-5" /> Edit
-            </MenuItem>
-          </div>
+          <MenuItem
+            onClick={() => {
+              editPostHandler();
+            }}
+          >
+            <BsPencil className="mr-5" /> Edit
+          </MenuItem>
         ) : (
           <MenuItem
             onClick={() => {

@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import AllItems from "./componnents/AllItems";
 import Feed from "../../components/Feed/Feed";
 import PostBox from "../../components/PostBox/PostBox";
 import UploadItemModal from "../../UI/modals/UploadItemModal";
 import { communityPages } from "../../types/currentPage";
+import { AuthContext } from "../../context/AuthContext";
 const communityData = {
   shoes: {
     backgroundImage:
@@ -36,7 +37,10 @@ function CommunityPage({ page, itemsData }: communityPageProps) {
   const {
     [page]: { backgroundImage, mainImage },
   } = communityData;
-
+  const {
+    state: { role },
+  } = useContext(AuthContext);
+  const isAdmin = role === "admin";
   const header = () => {
     return (
       <div className=" bg-white">
@@ -104,12 +108,14 @@ function CommunityPage({ page, itemsData }: communityPageProps) {
           </div>
         ) : (
           <div className="mx-3">
-            <p
-              className="mx-auto cursor-pointer w-full flex justify-center"
-              onClick={() => setModal(true)}
-            >
-              upload item
-            </p>
+            {isAdmin && (
+              <p
+                className="mx-auto cursor-pointer w-full flex justify-center"
+                onClick={() => setModal(true)}
+              >
+                upload item
+              </p>
+            )}
             <div className="max-w-[90rem] mx-auto flex flex-wrap bg-white pt-5 rounded-md">
               <AllItems currentPage={page} itemsData={itemsData} />
             </div>

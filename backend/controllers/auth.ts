@@ -143,6 +143,7 @@ export const login = async (
       userName: loadedUser.userName,
       email: loadedUser.email,
       userImage: loadedUser.image,
+      role: loadedUser.role,
     };
 
     res.cookie("token", token, {

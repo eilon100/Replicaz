@@ -38,7 +38,7 @@ function MenuItemContainer({
       className={`${!seen ? " bg-sky-50" : ""} h-20`}
     >
       <div className="flex items-center gap-4 w-full">
-        <div className=" relative h-14 w-14 ">
+        <div className="relative h-14 w-14">
           <Image
             className="rounded-full "
             objectFit="cover"
@@ -46,7 +46,10 @@ function MenuItemContainer({
             layout="fill"
           />
         </div>
-        <h1 className={`max-w-[calc(100%-${seen ? "76px" : "110px"})] w-full`}>
+        <h1
+          className={`max-w-[calc(100%-110px)] 
+        w-full`}
+        >
           {userName} {notificationText}
           <span className=" font-semibold"> {title} </span>
           post

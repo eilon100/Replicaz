@@ -206,7 +206,10 @@ export const deletePost: RequestHandler = async (req, res, next) => {
       return res.status(404).json({ error: "Could not find the post" });
     }
 
-    if (post.postedBy.toString() !== req.userData.userId) {
+    if (
+      post.postedBy.toString() !== req.userData.userId &&
+      user.role !== "admin"
+    ) {
       return res
         .status(500)
         .json({ error: "You are not allowed to delete this post!" });
