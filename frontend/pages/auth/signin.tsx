@@ -68,8 +68,8 @@ const SignIn = () => {
     apiService.post
       .LOGIN_USER(data)
       .then(({ data: { token, userData } }) => {
-        setCookie("token", token);
-        setCookie("userData", userData);
+        setCookie("token", token, { maxAge: 60 * 60 * 24 * 7 });
+        setCookie("userData", userData, { maxAge: 60 * 60 * 24 * 7 });
         dispatch({ type: "LOGIN", payload: userData });
         toast.success("Login successfully");
         Router.push("/");
