@@ -3,17 +3,17 @@ import dotenv from "dotenv";
 import { RequestHandler } from "express";
 import { decodedToken } from "../types/decodedToken";
 
-export const isAuth: RequestHandler = (req, res, next) => {
+export const isAuth: RequestHandler = (req: any, res, next) => {
   dotenv.config();
   try {
-    const cookie = req.cookies.token;
+    const token = req.authorization;
     console.log(req);
 
-    if (!cookie) {
+    if (!token) {
       return res.status(400).json({ error: "token is invalid" });
     }
     const decodedToken = jwt.verify(
-      cookie,
+      token,
       process.env.JWT_SECRET!
     ) as decodedToken;
 
