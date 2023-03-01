@@ -74,7 +74,6 @@ export const activateAccount = async (
 ) => {
   const token = req.body.token;
   console.log(token);
-  console.log(req);
   console.log(req.body);
   const pendingUser = await pendingUsers.findOne({
     emailToken: token,
