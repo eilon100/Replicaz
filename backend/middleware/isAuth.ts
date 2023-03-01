@@ -7,6 +7,7 @@ export const isAuth: RequestHandler = (req, res, next) => {
   dotenv.config();
   try {
     const cookie = req.cookies.token;
+    console.log(req);
     if (!cookie) {
       return res.status(400).json({ error: "token is invalid" });
     }
