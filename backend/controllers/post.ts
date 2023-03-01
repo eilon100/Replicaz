@@ -207,7 +207,7 @@ export const deletePost: RequestHandler = async (req, res, next) => {
     }
 
     if (
-      post.postedBy.toString() !== req.userData.userId &&
+      post.postedBy.toString() !== req.userData.userId ||
       user.role !== "admin"
     ) {
       return res
