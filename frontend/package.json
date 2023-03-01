@@ -22,7 +22,7 @@
     "cookies-next": "^2.1.1",
     "formik": "^2.2.9",
     "jose": "^4.11.0",
-    "next": "latest",
+    "next": "13.2.3",
     "next-auth": "^4.12.2",
     "react": "18.1.0",
     "react-copy-to-clipboard": "^5.1.0",
