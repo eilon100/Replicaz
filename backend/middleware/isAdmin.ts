@@ -7,7 +7,7 @@ import { decodedToken } from "../types/decodedToken";
 export const isAdmin: RequestHandler = async (req, res, next) => {
   dotenv.config();
   try {
-    const token = req.headers.authorization;
+    const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
       return res.status(400).json({ error: "token is invalid" });
     }

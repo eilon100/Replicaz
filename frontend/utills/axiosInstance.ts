@@ -4,7 +4,7 @@ import { getCookie } from "cookies-next";
 const token = getCookie("token");
 export const axiosInstance = axios.create({
   headers: {
-    Authorization: `${token}`,
+    Authorization: `Bearer ${token}`,
     Accept: "application/json",
     "Content-Type": "application/json",
   },
