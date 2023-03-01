@@ -93,7 +93,6 @@ function PostBox({ currentPage }: PostBoxProps) {
           />
         </div>
         <TextField
-          noSsr
           className="flex-1 min-w-[80px] "
           type="text"
           name="title"
@@ -112,7 +111,6 @@ function PostBox({ currentPage }: PostBoxProps) {
           value={valuesTitle}
           error={!!errorsTitle}
           helperText={errorsTitle}
-          {...(TextFieldProps as any)}
         />
         <PhotographIcon
           onClick={() => isPostActive && setImageBoxOpen(!imageBoxOpen)}

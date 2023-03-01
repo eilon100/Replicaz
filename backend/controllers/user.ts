@@ -2,7 +2,7 @@ import User from "../modal/user";
 import { RequestHandler } from "express";
 import { singleImageUpload } from "../utills/cloudinaryActions";
 import Report from "../modal/report";
-import { ObjectId } from "mongodb";
+
 export const getUserData: RequestHandler = async (req, res, next) => {
   const { username } = req.params;
 

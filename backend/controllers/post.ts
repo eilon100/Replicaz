@@ -239,7 +239,9 @@ export const deletePost: RequestHandler = async (req, res, next) => {
     await Report.findByIdAndDelete(postId, { session: postDeletionSession });
 
     //images Deletion
-    await imagesFolderDeletion(`posts/${user.userName}/${postId}`);
+    if (user.images[0]) {
+      await imagesFolderDeletion(`posts/${user.userName}/${postId}`);
+    }
 
     await postDeletionSession.commitTransaction();
     res.status(200).json({ message: "Your post deleted!" });
