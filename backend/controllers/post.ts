@@ -239,7 +239,7 @@ export const deletePost: RequestHandler = async (req, res, next) => {
     await Report.findByIdAndDelete(postId, { session: postDeletionSession });
 
     //images Deletion
-    if (user.images.length > 0) {
+    if (user.images) {
       await imagesFolderDeletion(`posts/${user.userName}/${postId}`);
     }
 
