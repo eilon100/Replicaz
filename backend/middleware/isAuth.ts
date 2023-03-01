@@ -7,7 +7,6 @@ export const isAuth: RequestHandler = (req, res, next) => {
   dotenv.config();
   try {
     const token = req.headers.authorization;
-    console.log(token);
 
     if (!token) {
       return res.status(400).json({ error: "token is invalid" });

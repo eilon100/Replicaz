@@ -7,12 +7,12 @@ import { decodedToken } from "../types/decodedToken";
 export const isAdmin: RequestHandler = async (req, res, next) => {
   dotenv.config();
   try {
-    const cookie = req.cookies.token;
-    if (!cookie) {
+    const token = req.headers.authorization;
+    if (!token) {
       return res.status(400).json({ error: "token is invalid" });
     }
     const decodedToken = jwt.verify(
-      cookie,
+      token,
       process.env.JWT_SECRET!
     ) as decodedToken;
 
