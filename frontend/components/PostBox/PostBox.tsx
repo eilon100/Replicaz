@@ -101,7 +101,11 @@ function PostBox({ currentPage }: PostBoxProps) {
             "& fieldset": { border: "none" },
           }}
           inputProps={{
-            className: "h-2 bg-second rounded-md",
+            style: {
+              height: "0.5rem",
+              backgroundColor: "rgb(249 250 251)",
+              borderRadius: " 0.375rem",
+            },
             maxLength: 50,
             dir: "auto",
           }}
@@ -115,7 +119,7 @@ function PostBox({ currentPage }: PostBoxProps) {
         <PhotographIcon
           onClick={() => isPostActive && setImageBoxOpen(!imageBoxOpen)}
           className={`h-7 text-text-third ${isPostActive && "cursor-pointer"} ${
-            imageBoxOpen && "text-blue-300 "
+            imageBoxOpen && "text-blue-300"
           } mt-[6px] `}
         />
       </div>

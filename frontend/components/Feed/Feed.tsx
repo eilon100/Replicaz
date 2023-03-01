@@ -106,7 +106,7 @@ function Feed({ currentPage, options }: FeedProps) {
     <>
       {pages?.map((page, pageNumber) => (
         <React.Fragment key={pageNumber}>
-          {page?.data.map((post: post) => (
+          {page?.data?.map((post: post) => (
             <div ref={persistedId === post._id ? postRef : null} key={post._id}>
               <Post post={post} page={currentPage} />
             </div>
