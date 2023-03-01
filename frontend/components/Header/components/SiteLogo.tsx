@@ -12,11 +12,12 @@ const SiteLogo = () => {
         className="hidden sm:flex absolute left-[10px] h-10 w-20 cursor-pointer mr-3 mt-[1px] "
         onClick={() => router.push("/")}
       >
-        <Image
+        {/* <Image
           objectFit="contain"
           src="https://upload.wikimedia.org/wikipedia/he/b/b2/Reddit_logo.svg.png"
           layout="fill"
-        />
+        /> */}
+        Replicaz
       </div>
       <div
         className="flex absolute left-[10px] h-10 w-10 cursor-pointer mr-3 mt-[1px] sm:hidden"
