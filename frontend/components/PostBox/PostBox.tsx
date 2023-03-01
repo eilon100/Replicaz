@@ -162,8 +162,14 @@ function PostBox({ currentPage }: PostBoxProps) {
             color: "rgb(33, 150, 243, 0.8)",
             backgroundColor: "transparent",
             border: "1px solid rgb(33, 150, 243, 0.8)",
+            borderRadius: "0.375rem",
+            fontSize: "0.75rem",
+            lineHeight: "1rem",
+            textTransform: "none",
+            marginBottom: "0.5rem",
+            paddingLeft: "1rem",
+            paddingRight: "1rem",
           }}
-          className=" rounded-md bg-button text-xs normal-case px-3 mb-2"
           type="reset"
           onClick={() => {
             resetForm();
@@ -176,8 +182,15 @@ function PostBox({ currentPage }: PostBoxProps) {
           disabled={isSubmitting}
           style={{
             backgroundColor: "rgb(33, 150, 243,0.8)",
+            borderRadius: "0.375rem",
+            color: "white",
+            fontSize: "0.75rem",
+            lineHeight: "1rem",
+            textTransform: "none",
+            marginBottom: "0.5rem",
+            paddingLeft: "1rem",
+            paddingRight: "1rem",
           }}
-          className="rounded-md bg-button text-white text-xs normal-case mb-2 px-4"
           type="submit"
         >
           Create Post
