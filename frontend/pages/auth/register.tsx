@@ -32,6 +32,7 @@ const register = () => {
     handleChange,
     handleBlur,
     setFieldValue,
+    isSubmitting,
     values: {
       userName: valuesUserName,
       firstName: valuesFirstName,
@@ -251,7 +252,7 @@ const register = () => {
         >
           <h1 className="font-bold text-5xl">Replicaz</h1>
           {textField()}
-          <AuthButton page="register" />
+          <AuthButton page="register" disableButton={isSubmitting} />
           <AuthFooter page="register" />
         </form>
       </div>

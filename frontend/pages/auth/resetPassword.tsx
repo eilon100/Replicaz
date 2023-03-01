@@ -12,6 +12,7 @@ import PageHead from "../../UI/pages/pageHead";
 function ForgetPassword() {
   const {
     handleChange,
+    isSubmitting,
     handleBlur,
     values: { email: valuesEmail },
     touched: { email: touchedEmail },
@@ -73,7 +74,7 @@ function ForgetPassword() {
         >
           <h1 className="font-bold text-5xl">Replicaz</h1>
           {textField()}
-          <AuthButton page="resetPassword" />
+          <AuthButton page="resetPassword" disableButton={isSubmitting} />
           <AuthFooter page="resetPassword" />
         </form>
       </div>

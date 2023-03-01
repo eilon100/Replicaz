@@ -27,6 +27,7 @@ function newPassword() {
   };
   const {
     handleChange,
+    isSubmitting,
     handleBlur,
     values: { password: valuesPassword, confirm: valuesConfirm },
     touched: { password: touchedPassword, confirm: touchedConfirm },
@@ -122,7 +123,7 @@ function newPassword() {
         >
           <h1 className="font-bold text-5xl">Replicaz</h1>
           {textField()}
-          <AuthButton page="newPassword" />
+          <AuthButton page="newPassword" disableButton={isSubmitting} />
           <AuthFooter page="newPassword" />
         </form>
       </div>
