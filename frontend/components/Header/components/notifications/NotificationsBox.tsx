@@ -1,7 +1,8 @@
-import { Divider, Menu} from "@mui/material";
+import { Divider, Menu } from "@mui/material";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { TbBell } from "react-icons/tb";
+import { AuthContext } from "../../../../context/AuthContext";
 import AllNotifications from "./components/AllNotifications";
 const style = {
   overflow: "visible",
@@ -34,6 +35,9 @@ const style = {
 const styleNotificationFilter = "font-semibold border-gray-500 border-b-4";
 function Notifications() {
   const router = useRouter();
+  const {
+    state: { loggedIn },
+  } = useContext(AuthContext);
   useEffect(() => {
     setCloseOptions(null);
   }, [router.asPath]);
@@ -100,7 +104,7 @@ function Notifications() {
       <div
         className=" text-gray-500 ml-2 mr-1 lg:mx-4 "
         onClick={(event) => {
-          setCloseOptions(event.currentTarget);
+          loggedIn ? setCloseOptions(event.currentTarget) : "";
         }}
       >
         <TbBell className="header_icons" />
