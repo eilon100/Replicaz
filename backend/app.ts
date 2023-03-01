@@ -11,7 +11,7 @@ app.use(express.json({ limit: "50mb" })); // application/json
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://replicaz.vercel.app/"],
+    origin: ["http://localhost:3000", "https://replicaz.vercel.app"],
     methods: ["OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
     allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
