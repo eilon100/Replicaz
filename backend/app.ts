@@ -11,10 +11,18 @@ app.use(express.json({ limit: "50mb" })); // application/json
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(
   cors({
-    origin: 'https://replicaz.vercel.app',
+    origin: "https://replicaz.vercel.app",
     methods: ["OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
-    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
+    allowedHeaders: [
+      "Origin",
+      "X-Requested-With",
+      "Content-Type",
+      "Accept",
+      "Access-Control-Request-Headers",
+      "Access-Control-Request-Method",
+      "Access-Control-Allow-Headers",
+    ],
   })
 );
 app.use(cookieParser());
