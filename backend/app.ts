@@ -19,6 +19,7 @@ app.use(
       "X-Requested-With",
       "Content-Type",
       "Accept",
+      "Authorization",
       "Access-Control-Request-Headers",
       "Access-Control-Request-Method",
       "Access-Control-Allow-Headers",
