@@ -8,7 +8,7 @@ export default function activateUser(
 ) {
   const data = { token: req.query.token };
 
-  if (!data.token) {
+  if (!data) {
     setCookie("active", "failed", { req, res });
     return res.redirect(307, "/auth/signin");
   }
@@ -19,7 +19,8 @@ export default function activateUser(
       setCookie("active", "Succeeded", { req, res });
       return res.redirect(307, "/auth/signin");
     })
-    .catch(() => {
+    .catch(({ response: { data } }) => {
+      console.log(data.error);
       setCookie("active", "failed", { req, res });
       return res.redirect(307, "/auth/signin");
     });
