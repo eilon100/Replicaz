@@ -14,6 +14,7 @@ import { TbHome, TbShirt, TbShoe } from "react-icons/tb";
 import { RiShoppingBagLine } from "react-icons/ri";
 import { toast } from "react-hot-toast";
 import { apiService } from "../../../utills/apiService";
+import { deleteCookie } from "cookies-next";
 
 function MenuDrawer() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -64,14 +65,8 @@ function MenuDrawer() {
   ];
   const logOut = () => {
     dispatch({ type: "LOGOUT" });
-    apiService.get
-      .LOGOUT()
-      .then(() => {
-        toast.success("Logout successfully");
-      })
-      .catch((error) => {
-        toast.error(error);
-      });
+    deleteCookie("userData");
+    deleteCookie("token");
   };
   const signOut = () => {
     return (
