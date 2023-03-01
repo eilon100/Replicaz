@@ -4,10 +4,10 @@ import { getCookie } from "cookies-next";
 const token = getCookie("token");
 export const axiosInstance = axios.create({
   headers: {
-    authorization: `Bearer ${token}`,
+    cookies: `${token}`,
     Accept: "application/json",
     "Content-Type": "application/json",
   },
-  baseURL: "https://replicaz-backend.vercel.app/",
+  baseURL: "http://localhost:3000/",
   withCredentials: true,
 });
