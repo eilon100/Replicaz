@@ -3,6 +3,7 @@ import React from "react";
 
 interface page {
   page: keyof buttonObj;
+  disableButton: boolean;
 }
 
 type buttonObj = {
@@ -19,9 +20,10 @@ const buttonObj: buttonObj = {
   newPassword: "CONFIRM",
 };
 
-function AuthButton({ page }: page) {
+function AuthButton({ page, disableButton }: page) {
   return (
     <Button
+      disabled={disableButton}
       variant="contained"
       type="submit"
       className="w-[80vw] max-w-xl rounded-lg h-11 bg-slate-600 hover:bg-slate-600"

@@ -107,7 +107,10 @@ function Post({ post, page }: PostProps) {
             <Image
               className=" rounded-full "
               objectFit="cover"
-              src={post?.postedBy.image || "/../public/EmptyProfile.png"}
+              src={
+                post?.postedBy?.image ||
+                "https://res.cloudinary.com/dcpuvkirc/image/upload/v1667998882/defualt%20images/blank-profile-picture-gf01729628_1280_pdfkow.png"
+              }
               layout="fill"
             />
           </div>

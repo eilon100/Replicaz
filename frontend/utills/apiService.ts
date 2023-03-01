@@ -111,9 +111,6 @@ export const apiService = {
         },
       });
     },
-    LOGOUT() {
-      return axiosInstance.get("/auth/logout");
-    },
   },
   patch: {
     EDIT_POST(data: patchType.EDIT_POST) {

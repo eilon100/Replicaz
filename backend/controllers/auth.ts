@@ -73,12 +73,10 @@ export const activateAccount = async (
   next: NextFunction
 ) => {
   const token = req.body.token;
-  console.log(token);
-  console.log(req.body);
   const pendingUser = await pendingUsers.findOne({
     emailToken: token,
   });
-  console.log(pendingUser);
+
   if (!pendingUser) {
     return res
       .status(400)
@@ -147,41 +145,12 @@ export const login = async (
       role: loadedUser.role,
     };
 
-    res.cookie("token", token, {
-      httpOnly: true,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-    res.cookie("userData", JSON.stringify(userData), {
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-
     return res.status(200).json({
       message: "Logged in successfully",
+      userData,
+      token,
     });
   } catch (error) {
     return res.status(401).json({ message: "Logged in failed" });
-  }
-};
-
-export const logout = (req: Request, res: Response, next: NextFunction) => {
-  const cookies = req.cookies;
-
-  try {
-    if (!cookies.token) {
-      return res.status(401).json({ message: "unauthorize" });
-    }
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: true,
-    });
-    res.clearCookie("userData", {
-      // httpOnly: true,
-      secure: true,
-    });
-    res.status(200).json({ message: "Logged out successfully" });
-  } catch (err) {
-    return res
-      .status(424)
-      .json({ message: "Something went wrong, please try again" });
   }
 };

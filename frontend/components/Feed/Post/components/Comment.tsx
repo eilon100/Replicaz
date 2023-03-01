@@ -121,7 +121,10 @@ function Comment({ comment }: CommentProps) {
             <Image
               className=" rounded-full "
               objectFit="cover"
-              src={comment.postedBy.image || "/../public/EmptyProfile.png"}
+              src={
+                comment.postedBy.image ||
+                "https://res.cloudinary.com/dcpuvkirc/image/upload/v1667998882/defualt%20images/blank-profile-picture-gf01729628_1280_pdfkow.png"
+              }
               layout="fill"
             />
           </div>

@@ -8,6 +8,7 @@ import { toast } from "react-hot-toast";
 import { AuthContext } from "../../../context/AuthContext";
 import { apiService } from "../../../utills/apiService";
 import { BiExit, BiUser } from "react-icons/bi";
+import { deleteCookie } from "cookies-next";
 const style = {
   overflow: "visible",
   filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.15))",
@@ -43,14 +44,8 @@ function UserProfile() {
 
   const logOut = () => {
     dispatch({ type: "LOGOUT" });
-    apiService.get
-      .LOGOUT()
-      .then(() => {
-        toast.success("Logout successfully");
-      })
-      .catch((error) => {
-        toast.error(error);
-      });
+    deleteCookie("userData");
+    deleteCookie("token");
   };
 
   const dropDown = () => {
@@ -114,7 +109,10 @@ function UserProfile() {
             <Image
               className=" rounded-full "
               objectFit="cover"
-              src={userImage || "/../public/EmptyProfile.png"}
+              src={
+                userImage ||
+                "https://res.cloudinary.com/dcpuvkirc/image/upload/v1667998882/defualt%20images/blank-profile-picture-gf01729628_1280_pdfkow.png"
+              }
               layout="fill"
             />
           </div>

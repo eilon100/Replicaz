@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { useFormik } from "formik";
 import Router from "next/router";
 import toast from "react-hot-toast";
-import { getCookie, deleteCookie } from "cookies-next";
+import { getCookie, deleteCookie, setCookie } from "cookies-next";
 import AuthHeader from "../../components/Auth/AuthHeader";
 import AuthFooter from "../../components/Auth/AuthFooter";
 import AuthButton from "../../components/Auth/AuthButton";
@@ -41,6 +41,7 @@ const SignIn = () => {
   };
   const {
     handleChange,
+    isSubmitting,
     handleBlur,
     values: { email: valuesEmail, password: valuesPassword },
     touched: { email: touchedEmail, password: touchedPassword },
@@ -66,13 +67,9 @@ const SignIn = () => {
 
     apiService.post
       .LOGIN_USER(data)
-      .then(() => {
-        const cookie = getCookie("userData");
-        if (!cookie) {
-          toast.error("Error fetching userData");
-          return;
-        }
-        const userData = JSON.parse(cookie as string);
+      .then(({ data: { token, userData } }) => {
+        setCookie("token", token);
+        setCookie("userData", userData);
         dispatch({ type: "LOGIN", payload: userData });
         toast.success("Login successfully");
         Router.push("/");
@@ -159,7 +156,7 @@ const SignIn = () => {
           <h1 className="font-bold text-5xl">Replicaz</h1>
           {textField()}
           {forgetPassword()}
-          <AuthButton page="signIn" />
+          <AuthButton page="signIn" disableButton={isSubmitting} />
           <AuthFooter page="signIn" />
         </form>
       </div>

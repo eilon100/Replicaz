@@ -85,7 +85,10 @@ function PostBox({ currentPage }: PostBoxProps) {
           <Image
             className=" rounded-full "
             objectFit="cover"
-            src={userImage || "/../public/EmptyProfile.png"}
+            src={
+              userImage ||
+              "https://res.cloudinary.com/dcpuvkirc/image/upload/v1667998882/defualt%20images/blank-profile-picture-gf01729628_1280_pdfkow.png"
+            }
             layout="fill"
           />
         </div>
