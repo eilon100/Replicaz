@@ -75,7 +75,7 @@ function NewComment() {
           }
           variant="soft"
           className="h-20 xs:h-28 rounded-md border border-gray-200 pl-4 
-           text-xs xs:text-base"
+           text-xs xs:text-base before:shadow-none"
           endDecorator={
             <Typography className=" text-[0.5rem] ml-auto text-text-third xs:text-xs">
               {300 - valuesComment.length} character(s)

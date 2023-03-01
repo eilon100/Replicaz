@@ -193,7 +193,7 @@ function Comment({ comment }: CommentProps) {
               value={valuesBody}
               placeholder="Edit comment.."
               variant="soft"
-              className=" h-20 xs:h-28 font-normal rounded-md border border-gray-200 pl-4 text-xs xs:text-base"
+              className=" h-20 xs:h-28 font-normal rounded-md border border-gray-200 pl-4 text-xs xs:text-base before:shadow-none"
               endDecorator={
                 <Typography className=" text-[0.5rem] ml-auto  text-text-third xs:text-xs">
                   {300 - valuesBody.length} character(s)

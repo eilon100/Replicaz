@@ -144,7 +144,7 @@ function PostBox({ currentPage }: PostBoxProps) {
         placeholder="Text (optional)"
         variant="soft"
         disabled={!loggedIn}
-        className=" flex-1 m-2 bg-second rounded-md shadow-none"
+        className=" flex-1 m-2 bg-second rounded-md before:shadow-none"
         endDecorator={
           <Typography className="text-[0.5rem] xs:text-xs ml-auto text-text-third">
             {300 - valuesBody.length} character(s)

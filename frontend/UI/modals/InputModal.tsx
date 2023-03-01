@@ -98,7 +98,7 @@ function InputModal({
           value={valuesBody}
           placeholder="Text"
           variant="soft"
-          className=" flex-1 w-full m-2 p-2 bg-second rounded-md border "
+          className=" flex-1 w-full m-2 p-2 bg-second rounded-md border before:shadow-none"
           endDecorator={
             <Typography className="text-xs ml-auto text-gray-500">
               {300 - valuesBody.length} character(s)
