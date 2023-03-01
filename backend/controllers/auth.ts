@@ -1,13 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import { validationResult } from "express-validator";
 import crypto from "crypto";
-import bcrypt from "bcrypt";
 import pendingUsers from "../modal/pendingUsers";
 import sgMail from "@sendgrid/mail";
 import User from "../modal/user";
 import jwt from "jsonwebtoken";
 import { signUpEmail } from "../utills/SG-mails";
-import axios from "axios";
+const bcrypt = require("bcryptjs");
 
 export const signup = async (
   req: Request,

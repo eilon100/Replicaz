@@ -2,8 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import User from "../modal/user";
 import sgMail from "@sendgrid/mail";
 import jwt from "jsonwebtoken";
-import { compare } from "bcrypt";
-import bcrypt from "bcrypt";
+const bcrypt = require("bcryptjs");
 import { decodedToken } from "../types/decodedToken";
 import { resetPasswordEmail } from "../utills/SG-mails";
 import { RequestHandler } from "express";
@@ -59,7 +58,7 @@ export const newPassword: RequestHandler = async (req, res, next) => {
         .json({ error: "Reset password link is not valid" });
     }
 
-    const isPasswordSame = await compare(password, mainUser.hashedPassword);
+    const isPasswordSame = await bcrypt.compare(password, mainUser.hashedPassword);
 
     if (isPasswordSame) {
       return res
