@@ -22,7 +22,7 @@ export const imagesUpload = async (images: any[], path: string) => {
   }
 };
 
-export const imagesFolderDeletion = async (path: string) => {
+
 export const imagesFolderDeletion = async (path: string) => {
   try {
     await cloudinary.api.delete_resources_by_prefix(path).then(() => {
