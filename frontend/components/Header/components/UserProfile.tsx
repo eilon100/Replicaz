@@ -44,8 +44,6 @@ function UserProfile() {
 
   const logOut = () => {
     dispatch({ type: "LOGOUT" });
-    deleteCookie("userData");
-    deleteCookie("token");
   };
 
   const dropDown = () => {

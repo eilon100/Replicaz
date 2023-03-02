@@ -15,6 +15,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { IconButton } from "@mui/joy";
 import PageHead from "../../UI/pages/pageHead";
+import { setAuthToken } from "../../utills/axiosInstance";
 
 const SignIn = () => {
   useEffect(() => {
@@ -68,9 +69,7 @@ const SignIn = () => {
     apiService.post
       .LOGIN_USER(data)
       .then(({ data: { token, userData } }) => {
-        setCookie("token", token, { maxAge: 60 * 60 * 24 * 7 });
-        setCookie("userData", userData, { maxAge: 60 * 60 * 24 * 7 });
-        dispatch({ type: "LOGIN", payload: userData });
+        dispatch({ type: "LOGIN", payload: { userData, token } });
         toast.success("Login successfully");
         Router.push("/");
       })

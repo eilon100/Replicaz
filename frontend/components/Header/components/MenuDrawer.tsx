@@ -65,8 +65,6 @@ function MenuDrawer() {
   ];
   const logOut = () => {
     dispatch({ type: "LOGOUT" });
-    deleteCookie("userData");
-    deleteCookie("token");
   };
   const signOut = () => {
     return (

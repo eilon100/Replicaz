@@ -1,6 +1,7 @@
 import { createContext, useEffect, useReducer } from "react";
 
-import { getCookie } from "cookies-next";
+import { deleteCookie, getCookie, setCookie } from "cookies-next";
+import { setAuthToken } from "../utills/axiosInstance";
 
 interface AuthProps {
   children: React.ReactNode;
@@ -19,16 +20,23 @@ export const AuthContext = createContext(initialState);
 export const authReducer = (state: any, action: any) => {
   switch (action.type) {
     case "LOGIN":
+      setAuthToken(action.payload.token);
+      setCookie("userData", action.payload.userData, {
+        maxAge: 60 * 60 * 24 * 7,
+      });
       return {
         loggedIn: true,
-        userId: action.payload.userId,
-        userName: action.payload.userName,
-        email: action.payload.email,
-        userImage: action.payload.userImage,
-        role: action.payload.role,
+        userId: action.payload.userData.userId,
+        userName: action.payload.userData.userName,
+        email: action.payload.userData.email,
+        userImage: action.payload.userData.userImage,
+        role: action.payload.userData.role,
       };
-    case "LOGOUT":
+    case "LOGOUT": {
+      deleteCookie("userData");
+      setAuthToken("");
       return initialState;
+    }
     default:
       return state;
   }
