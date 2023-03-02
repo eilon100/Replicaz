@@ -161,6 +161,31 @@ function MenuDrawer() {
           </ListItemButton>
         </ListItem>
         <Divider />
+        {pagesArr.map(({ page, icon, route }) => {
+          if (page === "profile") return;
+          return (
+            <ListItem disablePadding key={page}>
+              <ListItemButton
+                className={`px-1 ${
+                  currentPage === page ? "cursor-auto bg-gray-200" : ""
+                }`}
+                onClick={() => {
+                  setIsDrawerOpen(false);
+                  router.push(route);
+                }}
+              >
+                <ListItemText
+                  primary={
+                    <div className="flex gap-2">
+                      {icon}
+                      <p className=" font-semibold capitalize">{page}</p>
+                    </div>
+                  }
+                />
+              </ListItemButton>
+            </ListItem>
+          );
+        })}
       </div>
     );
   };
