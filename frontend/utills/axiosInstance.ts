@@ -11,6 +11,7 @@ export const axiosInstance = axios.create({
   baseURL: "https://replicaz-backend.vercel.app/",
   withCredentials: true,
 });
+
 export function setAuthToken(token: string) {
   axios.defaults.headers.common["Authorization"] = "";
   delete axios.defaults.headers.common["Authorization"];
