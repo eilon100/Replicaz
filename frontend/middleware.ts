@@ -10,7 +10,7 @@ export default function middleware(req: NextRequest) {
   const url = req.url;
   const token = req.cookies.get("token");
   const urlToken = req.nextUrl.searchParams.get("token")!;
-
+  console.log(token);
   if (url.includes("/auth/newPassword")) {
     // try {
     //   verify(token, secret);
