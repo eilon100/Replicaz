@@ -272,7 +272,7 @@ function Post({ post, page }: PostProps) {
         </Link>
 
         <CopyToClipboard
-          text={`http://localhost:3000/post/${post._id}`}
+          text={`https://replicaz.vercel.app/post/${post._id}`}
           onCopy={() => toast.success("Copied to clipboard")}
         >
           <div className="postButtons">
