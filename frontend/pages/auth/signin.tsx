@@ -70,6 +70,7 @@ const SignIn = () => {
       .LOGIN_USER(data)
       .then(({ data: { token, userData } }) => {
         dispatch({ type: "LOGIN", payload: { userData, token } });
+        setAuthToken(token);
         toast.success("Login successfully");
         Router.push("/");
       })

@@ -26,7 +26,6 @@ export const authReducer = (state: any, action: any) => {
       setCookie("token", action.payload.token, {
         maxAge: 60 * 60 * 24 * 7,
       });
-      // setAuthToken(action.payload.token);
       return {
         loggedIn: true,
         userId: action.payload.userData.userId,
