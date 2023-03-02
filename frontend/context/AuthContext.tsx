@@ -20,13 +20,13 @@ export const AuthContext = createContext(initialState);
 export const authReducer = (state: any, action: any) => {
   switch (action.type) {
     case "LOGIN":
-      setAuthToken(action.payload.token);
       setCookie("userData", action.payload.userData, {
         maxAge: 60 * 60 * 24 * 7,
       });
       setCookie("token", action.payload.token, {
         maxAge: 60 * 60 * 24 * 7,
       });
+      setAuthToken(action.payload.token);
       return {
         loggedIn: true,
         userId: action.payload.userData.userId,
