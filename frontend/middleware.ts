@@ -20,12 +20,12 @@ export default function middleware(req: NextRequest) {
     // }
   }
 
-  if (url.includes("/auth")) {
-    if (token === undefined) {
-      return NextResponse.next();
-    }
-    if (token) {
-      return NextResponse.redirect(`http://localhost:3000/`);
-    }
-  }
+  // if (url.includes("/auth")) {
+  //   if (token === undefined) {
+  //     return NextResponse.next();
+  //   }
+  //   if (token) {
+  //     return NextResponse.redirect(`http://localhost:3000/`);
+  //   }
+  // }
 }
