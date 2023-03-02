@@ -107,7 +107,11 @@ function Notifications() {
           loggedIn ? setCloseOptions(event.currentTarget) : "";
         }}
       >
-        <TbBell className="header_icons !cursor-auto hover:!bg-white" />
+        <TbBell
+          className={`header_icons ${
+            !loggedIn ? "!cursor-auto hover:!bg-white" : ""
+          }`}
+        />
       </div>
       {dropDown()}
     </div>
