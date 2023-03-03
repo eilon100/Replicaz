@@ -1,10 +1,9 @@
 import axios from "axios";
 import { getCookie } from "cookies-next";
 
-const token = getCookie("token");
 export const axiosInstance = axios.create({
   headers: {
-    Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${getCookie("token")}`,
     Accept: "application/json",
     "Content-Type": "application/json",
   },
@@ -13,12 +12,10 @@ export const axiosInstance = axios.create({
 });
 
 export function setAuthToken(token: string) {
-  console.log("start token ");
   axios.defaults.headers.common["Authorization"] = "";
   delete axios.defaults.headers.common["Authorization"];
 
   if (token) {
-    axios.defaults.headers.common["Authorization"] = `gg ${token}`;
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   }
-  console.log(axios.defaults.headers, token);
 }
