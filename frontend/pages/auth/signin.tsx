@@ -75,6 +75,8 @@ const SignIn = () => {
         setCookie("token", token, {
           maxAge: 60 * 60 * 24 * 7,
         });
+        console.log("joining");
+
         setAuthToken(token);
         dispatch({ type: "LOGIN", payload: userData });
         toast.success("Login successfully");

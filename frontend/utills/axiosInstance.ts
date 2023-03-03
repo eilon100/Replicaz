@@ -13,6 +13,7 @@ export const axiosInstance = axios.create({
 });
 
 export function setAuthToken(token: string) {
+  console.log("start token ");
   axios.defaults.headers.common["Authorization"] = "";
   delete axios.defaults.headers.common["Authorization"];
 
