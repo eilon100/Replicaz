@@ -15,7 +15,6 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { IconButton } from "@mui/joy";
 import PageHead from "../../UI/pages/pageHead";
-import { setAuthToken } from "../../utills/axiosInstance";
 import ReplicazLogo from "../../public/ReplicazAuthLogo.png";
 const SignIn = () => {
   useEffect(() => {
@@ -76,10 +75,9 @@ const SignIn = () => {
           maxAge: 60 * 60 * 24 * 7,
         });
 
-        setAuthToken(token);
         dispatch({ type: "LOGIN", payload: userData });
         toast.success("Login successfully");
-        Router.push("/");
+        Router.push("/", undefined, { shallow: false });
       })
       .catch(({ response: { data } }) => {
         toast.error(data.error);

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getCookie } from "cookies-next";
-import { useState } from "react";
-const [token, setToken] = useState(getCookie("token"));
+
+const token = getCookie("token");
 export const axiosInstance = axios.create({
   headers: {
     Authorization: `Bearer ${token}`,
@@ -11,12 +11,3 @@ export const axiosInstance = axios.create({
   baseURL: "https://replicaz-backend.vercel.app/",
   withCredentials: true,
 });
-
-export function setAuthToken(token: string) {
-  axios.defaults.headers.common["Authorization"] = "";
-  delete axios.defaults.headers.common["Authorization"];
-
-  if (token) {
-    setToken(token);
-  }
-}

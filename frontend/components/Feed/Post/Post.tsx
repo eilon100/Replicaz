@@ -60,7 +60,6 @@ function Post({ post, page }: PostProps) {
 
   const likePostHandler = () => {
     const data = { postId: post._id };
-    console.log(axios.defaults.headers);
 
     apiService.post
       .LIKE_POST(data)
