@@ -76,7 +76,7 @@ const SignIn = () => {
           maxAge: 60 * 60 * 24 * 7,
         });
         axios.defaults.headers.common.Authorization = `Bearer ${token}`;
-        axios.interceptors.request.use();
+
         dispatch({ type: "LOGIN", payload: userData });
         toast.success("Login successfully");
         Router.push("/");
