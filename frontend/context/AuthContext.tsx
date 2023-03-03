@@ -1,7 +1,5 @@
 import { createContext, useEffect, useReducer } from "react";
-
 import { deleteCookie, getCookie, setCookie } from "cookies-next";
-import { setAuthToken } from "../utills/axiosInstance";
 
 interface AuthProps {
   children: React.ReactNode;
@@ -31,7 +29,7 @@ export const authReducer = (state: any, action: any) => {
     case "LOGOUT": {
       deleteCookie("userData");
       deleteCookie("token");
-      setAuthToken("");
+
       return initialState;
     }
     default:
