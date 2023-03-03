@@ -1,9 +1,10 @@
 import axios from "axios";
 import { getCookie } from "cookies-next";
-
+import { useState } from "react";
+const [token, setToken] = useState(getCookie("token"));
 export const axiosInstance = axios.create({
   headers: {
-    Authorization: `Bearer ${getCookie("token")}`,
+    Authorization: `Bearer ${token}`,
     Accept: "application/json",
     "Content-Type": "application/json",
   },
@@ -16,6 +17,6 @@ export function setAuthToken(token: string) {
   delete axios.defaults.headers.common["Authorization"];
 
   if (token) {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    setToken(token);
   }
 }
