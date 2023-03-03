@@ -25,15 +25,14 @@ function ItemCard({ item }: itemCardProps) {
           className="flex flex-col justify-center cursor-pointer"
           onClick={() => setModal(true)}
         >
-          <img src={mainImage} className="object-contain max-h-32 " />
-          <p className="text-xs md:text-[sm] mb-3 mt-5 flex justify-center uppercase font-semibold text-center">
+          <img src={mainImage} className="object-contain max-h-32 h-20 md:h-28 lg:h-32" />
+          <p className="text-sm md:text-[sm] mb-1 mt-2 md:mt-5 flex justify-center uppercase font-semibold text-center">
             {company}
           </p>
-          <p className="text-base md:text-xl text-center">
-            {brand} {name}
-          </p>
+
+          <p className="text-xs md:text-xl text-center">{brand}</p>
         </div>
-        <div className="w-full flex justify-center">
+        <div className="w-full flex justify-center mt-1">
           <p className="text-xs md:text-base font-bold">
             {cheapestBatchPrice ? `${cheapestBatchPrice}¥ - ` : " "}
             {bestBatchPrice}¥

@@ -134,8 +134,9 @@ const SignIn = () => {
   };
   const forgetPassword = () => {
     return (
-      <div className="text-xs ml-auto cursor-pointer hover:underline">
+      <div className="flex justify-end w-[80vw] max-w-xl">
         <p
+          className="text-xs cursor-pointer hover:underline"
           onClick={() => {
             Router.push("/auth/resetPassword");
           }}
