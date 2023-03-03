@@ -8,7 +8,7 @@ export const axiosInstance = axios.create({
     Accept: "application/json",
     "Content-Type": "application/json",
   },
-  baseURL: "http://localhost:8000/",
+  baseURL: "https://replicaz-backend.vercel.app/",
   withCredentials: true,
 });
 
