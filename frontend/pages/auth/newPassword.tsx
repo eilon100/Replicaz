@@ -13,6 +13,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { IconButton } from "@mui/joy";
 import PageHead from "../../UI/pages/pageHead";
+import ReplicazLogo from "../../public/ReplicazAuthLogo.png";
 
 function newPassword() {
   const router = useRouter();
@@ -121,7 +122,7 @@ function newPassword() {
             handleSubmit(e);
           }}
         >
-          <h1 className="font-bold text-5xl">Replicaz</h1>
+          <img src={ReplicazLogo.src} className="w-[50%] mb-5" />
           {textField()}
           <AuthButton page="newPassword" disableButton={isSubmitting} />
           <AuthFooter page="newPassword" />

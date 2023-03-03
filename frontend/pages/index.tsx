@@ -7,7 +7,7 @@ import PageHead from "../UI/pages/pageHead";
 const Home: NextPage = () => {
   return (
     <>
-      <PageHead/>
+      <PageHead />
       <div className="my-6 px-3 max-w-4xl mx-auto ">
         <PostBox currentPage="main" />
         <Feed currentPage="main" />

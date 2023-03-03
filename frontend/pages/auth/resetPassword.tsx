@@ -8,7 +8,7 @@ import AuthFooter from "../../components/Auth/AuthFooter";
 import AuthButton from "../../components/Auth/AuthButton";
 import { authValidationSchema } from "../../validation/auth";
 import PageHead from "../../UI/pages/pageHead";
-
+import ReplicazLogo from "../../public/ReplicazAuthLogo.png";
 function ForgetPassword() {
   const {
     handleChange,
@@ -72,7 +72,7 @@ function ForgetPassword() {
             handleSubmit(e);
           }}
         >
-          <h1 className="font-bold text-5xl">Replicaz</h1>
+          <img src={ReplicazLogo.src} className="w-[50%] mb-5" />
           {textField()}
           <AuthButton page="resetPassword" disableButton={isSubmitting} />
           <AuthFooter page="resetPassword" />

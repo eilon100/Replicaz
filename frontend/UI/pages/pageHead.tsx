@@ -5,7 +5,7 @@ function PageHead({ title }: pageHeadProps) {
   return (
     <Head>
       {title ? <title>Replicaz | {title}</title> : <title>Replicaz</title>}
-      <link rel="icon" href="/sneaker.png" />
+      <link rel="icon" href="/SiteLogo.svg" />
     </Head>
   );
 }
