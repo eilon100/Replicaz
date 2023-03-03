@@ -77,7 +77,7 @@ const SignIn = () => {
 
         dispatch({ type: "LOGIN", payload: userData });
         toast.success("Login successfully");
-        Router.push("/", undefined, { shallow: false });
+        Router.replace("/");
       })
       .catch(({ response: { data } }) => {
         toast.error(data.error);
