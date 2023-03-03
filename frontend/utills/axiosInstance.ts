@@ -19,4 +19,5 @@ export function setAuthToken(token: string) {
   if (token) {
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   }
+  console.log(axios.defaults.headers, token);
 }
