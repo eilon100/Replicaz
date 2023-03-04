@@ -6,6 +6,7 @@ import sgMail from "@sendgrid/mail";
 import User from "../modal/user";
 import jwt from "jsonwebtoken";
 import { signUpEmail } from "../utills/SG-mails";
+import mongoose from "mongoose";
 const bcrypt = require("bcryptjs");
 
 export const signup = async (
@@ -44,18 +45,23 @@ export const signup = async (
     emailVerified: false,
   });
   const message = signUpEmail(newUser.email, newUser.emailToken);
-
+  const signUpUser = await mongoose.startSession();
+  signUpUser.startTransaction();
   newUser
-    .save()
-    .then(() => {
+    .save({ session: signUpUser })
+    .then(async () => {
       try {
         sgMail.send(message);
+        await signUpUser.commitTransaction();
         return res.status(200).json({ msg: "please check your email " });
       } catch (error) {
-        return res.status(400).json({ error: "Error on verify email " });
+        console.log(error);
+        await signUpUser.abortTransaction();
+        return res.status(400).json({ error: "Error on sending email " });
       }
     })
-    .catch((err: any) => {
+    .catch(async (err: any) => {
+      await signUpUser.abortTransaction();
       if (err.code == 11000) {
         return res.status(400).json({
           error: "Already registered please check your email for verification",
