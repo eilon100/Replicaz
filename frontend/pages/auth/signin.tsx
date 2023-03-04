@@ -16,7 +16,6 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { IconButton } from "@mui/joy";
 import PageHead from "../../UI/pages/pageHead";
 import ReplicazLogo from "../../public/ReplicazAuthLogo.png";
-import  instance  from "axios";
 
 const SignIn = () => {
   useEffect(() => {
@@ -76,9 +75,9 @@ const SignIn = () => {
         setCookie("token", token, {
           maxAge: 60 * 60 * 24 * 7,
         });
-        instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
         dispatch({ type: "LOGIN", payload: userData });
+        Router.reload();
         toast.success("Login successfully");
         Router.push("/");
       })

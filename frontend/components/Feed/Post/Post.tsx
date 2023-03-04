@@ -18,6 +18,7 @@ import { post } from "../../../types/post";
 import { postValidationSchema } from "../../../validation/post";
 import { TextField } from "@mui/material";
 import { currentPage } from "../../../types/currentPage";
+import { axiosInstance } from "../../../utills/axiosInstance";
 
 interface PostProps {
   post: post;
