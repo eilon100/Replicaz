@@ -197,15 +197,16 @@ export const deletePost: RequestHandler = async (req, res, next) => {
   const postDeletionSession = await mongoose.startSession();
 
   try {
-    const user = await User.findById(req.userData.userId);
-    if (!user) {
-      return res.status(404).json({ error: "Could not find the user" });
-    }
-    const post = await Post.findById(postId);
+    const post = await Post.findById(postId).populate({
+      path: "postedBy",
+      select: "userName",
+    });
     if (!post) {
       return res.status(404).json({ error: "Could not find the post" });
     }
-    if (user.role !== "admin") {
+    const postedByUser = await User.findById(post.postedBy);
+
+    if (req.userData.role !== "admin") {
       if (post.postedBy.toString() !== req.userData.userId) {
         return res
           .status(500)
@@ -216,8 +217,8 @@ export const deletePost: RequestHandler = async (req, res, next) => {
     postDeletionSession.startTransaction();
 
     //delete the post from the user array
-    user.posts.pull(postId);
-    await user.save({ session: postDeletionSession });
+    postedByUser.posts.pull(postId);
+    await postedByUser.save({ session: postDeletionSession });
 
     //delete the post comments
     await Comment.deleteMany(
@@ -239,8 +240,8 @@ export const deletePost: RequestHandler = async (req, res, next) => {
     await Report.findByIdAndDelete(postId, { session: postDeletionSession });
 
     //images Deletion
-    if (user.images) {
-      await imagesFolderDeletion(`posts/${user.userName}/${postId}`);
+    if (post.images) {
+      await imagesFolderDeletion(`posts/${post.postedBy.userName}/${postId}`);
     }
 
     await postDeletionSession.commitTransaction();

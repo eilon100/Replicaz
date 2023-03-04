@@ -20,7 +20,7 @@ export const isAdmin: RequestHandler = async (req, res, next) => {
     if (role !== "admin") {
       return res.status(403).json({ error: "Not an admin" });
     }
-    req.userData = { userId: decodedToken.userId };
+    req.userData = { userId: decodedToken.userId, role };
     next();
   } catch (error: any) {
     return res.status(403).json({ error: error.message || "Not admin" });

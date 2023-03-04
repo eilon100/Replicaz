@@ -5,7 +5,7 @@ export {};
 declare global {
   namespace Express {
     export interface Request {
-      userData: { userId: string | JwtPayload };
+      userData: { userId: string | JwtPayload; role: "admin" | "user" };
     }
   }
 }
