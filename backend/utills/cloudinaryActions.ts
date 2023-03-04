@@ -1,12 +1,5 @@
-import { Types } from "mongoose";
 import cloudinary from "./cloudinary";
-cloudinary.api.update_transformation("max_file_size_1mb", {
-  if: "greater_than_1mb",
-  crop: "limit",
-  quality: "auto",
-  fetch_format: "auto",
-  effect: "progressive_jpeg:steep",
-});
+
 export const imagesUpload = async (images: any[], path: string) => {
   if (!images || images.length < 0) return [];
   try {
@@ -17,8 +10,7 @@ export const imagesUpload = async (images: any[], path: string) => {
         .upload(img, {
           folder: path,
           quality: "auto",
-          transformation: "max_file_size_1mb",
-          fetch_format: "auto",
+          fetch_format: 'auto'
         })
         .then((res: any) => (imagesUrl[i] = res.secure_url));
       return upload;
