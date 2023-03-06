@@ -69,6 +69,7 @@ function PostBox({ currentPage }: PostBoxProps) {
         resetForm();
         setCommunity("");
         setImageBoxOpen(false);
+        setImages([]);
       })
       .catch(({ response: { data } }) => {
         toast.error(data.error, {
