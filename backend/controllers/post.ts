@@ -245,7 +245,8 @@ export const deletePost: RequestHandler = async (req, res, next) => {
     }
 
     await postDeletionSession.commitTransaction();
-    res.status(200).json({ message: "Your post deleted!" });
+
+    return res.status(200).json({ message: "Your post deleted!" });
   } catch (err) {
     await postDeletionSession.abortTransaction();
     return res
