@@ -12,9 +12,7 @@ import { useRouter } from "next/router";
 import { BiExit, BiUser } from "react-icons/bi";
 import { TbHome, TbShirt, TbShoe } from "react-icons/tb";
 import { RiShoppingBagLine } from "react-icons/ri";
-import { toast } from "react-hot-toast";
-import { apiService } from "../../../utills/apiService";
-import { deleteCookie } from "cookies-next";
+import { IoMdInformationCircleOutline } from "react-icons/io";
 
 function MenuDrawer() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -61,6 +59,11 @@ function MenuDrawer() {
       page: "bags",
       icon: <RiShoppingBagLine className="text-xl text-gray-500" />,
       route: "/community/bags",
+    },
+    {
+      page: "about",
+      icon: <IoMdInformationCircleOutline className="text-xl text-gray-500" />,
+      route: "/about",
     },
   ];
   const logOut = () => {

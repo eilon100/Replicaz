@@ -8,6 +8,7 @@ import { toast } from "react-hot-toast";
 import { AuthContext } from "../../../context/AuthContext";
 import { apiService } from "../../../utills/apiService";
 import { BiExit, BiUser } from "react-icons/bi";
+import { IoMdInformationCircleOutline } from "react-icons/io";
 import { deleteCookie } from "cookies-next";
 const style = {
   overflow: "visible",
@@ -78,6 +79,16 @@ function UserProfile() {
         >
           <BiUser className="text-xl" />
           <p className="truncate ">Profile</p>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            setCloseOptions(null);
+            router.push(`/about`);
+          }}
+          className="flex gap-2 items-center"
+        >
+          <IoMdInformationCircleOutline className="text-xl" />
+          <p className="truncate ">About</p>
         </MenuItem>
         <Divider />
         <MenuItem
