@@ -10,7 +10,7 @@ export const imagesUpload = async (images: any[], path: string) => {
         .upload(img, {
           folder: path,
           quality: "auto",
-          fetch_format: 'auto'
+          fetch_format: "auto",
         })
         .then((res: any) => (imagesUrl[i] = res.secure_url));
       return upload;
@@ -30,6 +30,7 @@ export const imagesFolderDeletion = async (path: string) => {
     });
   } catch (err) {
     console.log(err);
+    throw new Error("failed delete images");
   }
 };
 
