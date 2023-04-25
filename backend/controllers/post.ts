@@ -217,6 +217,11 @@ export const deletePost: RequestHandler = async (req, res, next) => {
 
     //delete the post from the user array
     postedByUser.posts.pull(postId);
+    // delete Notifications
+    const updatedNotifications = postedByUser.notifications.filter(
+      (notification: any) => notification.postId.toString() !== postId
+    );
+    postedByUser.notifications = updatedNotifications;
     await postedByUser.save({ session: postDeletionSession });
 
     //delete the post comments
@@ -224,6 +229,7 @@ export const deletePost: RequestHandler = async (req, res, next) => {
       { post: postId },
       { session: postDeletionSession }
     );
+    // delete Notifications
 
     // delete the save post from every user saves
     const deleteSaves = post.saves.map(async (save: string) => {

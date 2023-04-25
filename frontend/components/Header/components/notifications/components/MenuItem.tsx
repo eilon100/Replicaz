@@ -1,14 +1,14 @@
-import React from "react";
-import { MenuItem } from "@mui/material";
-import { useRouter } from "next/router";
-import Image from "next/image";
-import { apiService } from "../../../../../utills/apiService";
-import { GoPrimitiveDot } from "react-icons/go";
+import React from 'react';
+import { MenuItem } from '@mui/material';
+import { useRouter } from 'next/router';
+import Image from 'next/image';
+import { apiService } from '../../../../../utills/apiService';
+import { GoPrimitiveDot } from 'react-icons/go';
 function MenuItemContainer({
   notifications: {
     sentUserId: { userName, image },
     seen,
-    postId: { title, _id: postId },
+    postId: { title = '', _id: postId = '' },
     type,
     _id: notificationId,
   },
@@ -16,13 +16,13 @@ function MenuItemContainer({
   const router = useRouter();
 
   const notificationText =
-    type === "like"
-      ? "liked your"
-      : type === "comment"
-      ? "commented on your "
-      : type === "commentLike"
-      ? "like your comment on"
-      : "";
+    type === 'like'
+      ? 'liked your'
+      : type === 'comment'
+      ? 'commented on your '
+      : type === 'commentLike'
+      ? 'like your comment on'
+      : '';
 
   const notificationHandler = () => {
     router.push(`/post/${postId}`);
@@ -33,9 +33,9 @@ function MenuItemContainer({
 
   return (
     <MenuItem
-      style={{ whiteSpace: "normal" }}
+      style={{ whiteSpace: 'normal' }}
       onClick={() => notificationHandler()}
-      className={`${!seen ? " bg-sky-50" : ""} h-20`}
+      className={`${!seen ? ' bg-sky-50' : ''} h-20`}
     >
       <div className="flex items-center gap-4 w-full">
         <div className="relative h-14 w-14">

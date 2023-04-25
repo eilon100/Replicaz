@@ -1,10 +1,10 @@
-import React, { useRef, useState, useEffect } from "react";
-import { CircularProgress } from "@mui/joy";
-import { useInfiniteQuery } from "react-query";
-import { apiService } from "../../../../../utills/apiService";
-import useIntersectionObserver from "../../../../../utills/useIntersectionObserver";
-import MenuItemContainer from "./MenuItem";
-import NotificationsLoading from "../../../../../UI/loadings/NotificationsLoading";
+import React, { useRef, useState, useEffect } from 'react';
+import { CircularProgress } from '@mui/joy';
+import { useInfiniteQuery } from 'react-query';
+import { apiService } from '../../../../../utills/apiService';
+import useIntersectionObserver from '../../../../../utills/useIntersectionObserver';
+import MenuItemContainer from './MenuItem';
+import NotificationsLoading from '../../../../../UI/loadings/NotificationsLoading';
 
 type AllNotificationsProps = {
   seen: boolean;
@@ -26,7 +26,7 @@ function AllNotifications({ seen }: AllNotificationsProps) {
     isFetchingNextPage,
     status,
   } = useInfiniteQuery(
-    ["notifications", { seen }],
+    ['notifications', { seen }],
     (queryFunctionContext) => fetchItems(queryFunctionContext),
     {
       getNextPageParam: (_lastPage, currentPage) => {
@@ -69,6 +69,8 @@ function AllNotifications({ seen }: AllNotificationsProps) {
       {pages?.map((page, pageNumber) => (
         <React.Fragment key={pageNumber}>
           {page.data?.map((notifications: any) => {
+            console.log(notifications);
+
             return (
               <div key={notifications._id}>
                 <MenuItemContainer notifications={notifications} />
@@ -77,18 +79,18 @@ function AllNotifications({ seen }: AllNotificationsProps) {
           })}
         </React.Fragment>
       ))}
-      <div ref={loadMoreRef} className={`${!hasNextPage ? "hidden" : ""}`}>
-        {isFetchingNextPage ? <NotificationsLoading /> : ""}
+      <div ref={loadMoreRef} className={`${!hasNextPage ? 'hidden' : ''}`}>
+        {isFetchingNextPage ? <NotificationsLoading /> : ''}
       </div>
       <div>
         {!hasNextPage && (
           <div>
             {pages && pages[0].data.length === 0 ? (
               <div className=" flex justify-center my-8 ">
-                <p>You have no {!seen ? "new" : ""} notifications</p>
+                <p>You have no {!seen ? 'new' : ''} notifications</p>
               </div>
             ) : (
-              ""
+              ''
             )}
           </div>
         )}

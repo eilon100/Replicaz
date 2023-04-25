@@ -1,17 +1,17 @@
-import { Textarea, Typography } from "@mui/joy";
-import { useFormik } from "formik";
-import Image from "next/image";
-import React, { useContext, FC, useState } from "react";
-import toast from "react-hot-toast";
-import { AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import { useQueryClient } from "react-query";
-import ReactTimeago from "react-timeago";
-import { AuthContext } from "../../../../context/AuthContext";
-import { comment } from "../../../../types/comment";
-import ConfirmModal from "../../../../UI/modals/ConfirmModal";
-import InputModal from "../../../../UI/modals/InputModal";
-import { apiService } from "../../../../utills/apiService";
-import { postValidationSchema } from "../../../../validation/post";
+import { Textarea, Typography } from '@mui/joy';
+import { useFormik } from 'formik';
+import Image from 'next/image';
+import React, { useContext, FC, useState } from 'react';
+import toast from 'react-hot-toast';
+import { AiOutlineHeart, AiFillHeart } from 'react-icons/ai';
+import { useQueryClient } from 'react-query';
+import ReactTimeago from 'react-timeago';
+import { AuthContext } from '../../../../context/AuthContext';
+import { comment } from '../../../../types/comment';
+import ConfirmModal from '../../../../UI/modals/ConfirmModal';
+import InputModal from '../../../../UI/modals/InputModal';
+import { apiService } from '../../../../utills/apiService';
+import { postValidationSchema } from '../../../../validation/post';
 
 interface CommentProps {
   comment: comment;
@@ -38,7 +38,7 @@ function Comment({ comment }: CommentProps) {
     initialValues: {
       body: comment?.body,
     },
-    validationSchema: postValidationSchema("comment"),
+    validationSchema: postValidationSchema('comment'),
     onSubmit: () => {
       commentEditHandler();
     },
@@ -54,7 +54,7 @@ function Comment({ comment }: CommentProps) {
       .then(({ data: { message } }) => {
         toast.success(message);
         setEditComment(false);
-        queryClient.fetchQuery("fetchPost");
+        queryClient.fetchQuery('fetchPost');
         resetForm();
       })
       .catch(({ response: { data } }) => {
@@ -82,7 +82,7 @@ function Comment({ comment }: CommentProps) {
   };
 
   const commentDeleteHandler = () => {
-    const notification = toast.loading("Deleting comment...");
+    const notification = toast.loading('Deleting comment...');
     const data = { commentId: comment._id };
 
     apiService.post
@@ -91,7 +91,7 @@ function Comment({ comment }: CommentProps) {
         toast.success(message, {
           id: notification,
         });
-        queryClient.fetchQuery("fetchPost");
+        queryClient.fetchQuery('fetchPost');
       })
       .catch(({ response: { data } }) => {
         toast.error(data.error, {
@@ -123,7 +123,7 @@ function Comment({ comment }: CommentProps) {
               objectFit="cover"
               src={
                 comment.postedBy.image ||
-                "https://res.cloudinary.com/dcpuvkirc/image/upload/v1667998882/defualt%20images/blank-profile-picture-gf01729628_1280_pdfkow.png"
+                'https://res.cloudinary.com/dcpuvkirc/image/upload/v1667998882/defualt%20images/blank-profile-picture-gf01729628_1280_pdfkow.png'
               }
               layout="fill"
             />
@@ -156,16 +156,16 @@ function Comment({ comment }: CommentProps) {
             </p>
             <div
               className="flex items-center gap-1"
-              onClick={() => (loggedIn ? commentLikeHandler() : "")}
+              onClick={() => (loggedIn ? commentLikeHandler() : '')}
             >
               <span className=" text-xs">{commentLength}</span>
               {commentLiked ? (
                 <AiFillHeart
-                  className={`text-sm ${loggedIn ? "cursor-pointer" : ""}`}
+                  className={`text-sm ${loggedIn ? 'cursor-pointer' : ''}`}
                 />
               ) : (
                 <AiOutlineHeart
-                  className={`text-sm ${loggedIn ? "cursor-pointer" : ""}`}
+                  className={`text-sm ${loggedIn ? 'cursor-pointer' : ''}`}
                 />
               )}
             </div>
@@ -184,7 +184,7 @@ function Comment({ comment }: CommentProps) {
               componentsProps={{
                 textarea: {
                   maxLength: 300,
-                  dir: "auto",
+                  dir: 'auto',
                 },
               }}
               name="body"
@@ -266,7 +266,7 @@ function Comment({ comment }: CommentProps) {
       {header()}
       <div className="border-l-2 px-6 flex flex-col xs:gap-2 ">
         {body()}
-        {loggedIn ? footer() : ""}
+        {loggedIn ? footer() : ''}
       </div>
     </div>
   );
