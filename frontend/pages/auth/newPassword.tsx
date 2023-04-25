@@ -1,19 +1,19 @@
-import React, { useState } from "react";
-import TextField from "@mui/material/TextField";
-import { useFormik } from "formik";
-import { toast } from "react-hot-toast";
-import { useRouter } from "next/router";
-import { apiService } from "../../utills/apiService";
-import AuthHeader from "../../components/Auth/AuthHeader";
-import AuthFooter from "../../components/Auth/AuthFooter";
-import AuthButton from "../../components/Auth/AuthButton";
-import { authValidationSchema } from "../../validation/auth";
-import InputAdornment from "@mui/material/InputAdornment";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { IconButton } from "@mui/joy";
-import PageHead from "../../UI/pages/pageHead";
-import ReplicazLogo from "../../public/ReplicazAuthLogo.png";
+import React, { useState } from 'react';
+import TextField from '@mui/material/TextField';
+import { useFormik } from 'formik';
+import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/router';
+import { apiService } from '../../utills/apiService';
+import AuthHeader from '../../components/Auth/AuthHeader';
+import AuthFooter from '../../components/Auth/AuthFooter';
+import AuthButton from '../../components/Auth/AuthButton';
+import { authValidationSchema } from '../../validation/auth';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { IconButton } from '@mui/joy';
+import PageHead from '../../UI/pages/pageHead';
+import ReplicazLogo from '../../public/ReplicazAuthLogo.png';
 
 function newPassword() {
   const router = useRouter();
@@ -36,10 +36,10 @@ function newPassword() {
     handleSubmit,
   } = useFormik({
     initialValues: {
-      password: "",
-      confirm: "",
+      password: '',
+      confirm: '',
     },
-    validationSchema: authValidationSchema("newPassword"),
+    validationSchema: authValidationSchema('newPassword'),
     onSubmit: () => {
       handleFormSubmit();
     },
@@ -55,8 +55,8 @@ function newPassword() {
     apiService.post
       .CREATE_NEW_PASSWORD(data)
       .then(() => {
-        toast.success("password changed");
-        router.push("/auth/signin");
+        toast.success('password changed');
+        router.push('/auth/signin');
       })
       .catch((error) => {
         toast.error(error.response?.data?.error);
@@ -73,7 +73,7 @@ function newPassword() {
           id="password"
           label=" New password"
           name="password"
-          type={showPassword ? "text" : "password"}
+          type={showPassword ? 'text' : 'password'}
           variant="outlined"
           InputProps={{
             endAdornment: (

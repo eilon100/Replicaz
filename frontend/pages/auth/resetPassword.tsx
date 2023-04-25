@@ -13,6 +13,7 @@ function ForgetPassword() {
   const {
     handleChange,
     isSubmitting,
+    setSubmitting,
     handleBlur,
     values: { email: valuesEmail },
     touched: { email: touchedEmail },
@@ -23,12 +24,12 @@ function ForgetPassword() {
       email: '',
     },
     validationSchema: authValidationSchema('resetPassword'),
-    onSubmit: (actions) => {
-      handleFormSubmit(actions);
+    onSubmit: () => {
+      handleFormSubmit();
     },
   });
 
-  const handleFormSubmit = (actions: any) => {
+  const handleFormSubmit = () => {
     const data = { email: valuesEmail };
 
     apiService.post
@@ -38,7 +39,7 @@ function ForgetPassword() {
       })
       .catch(({ response: { data } }) => {
         toast.error(data.error);
-        actions.setSubmitting(false);
+        setSubmitting(false);
       });
   };
 

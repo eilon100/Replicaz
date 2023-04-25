@@ -1,22 +1,22 @@
-import TextField from "@mui/material/TextField";
-import { useState } from "react";
-import { useFormik } from "formik";
-import Router from "next/router";
-import toast from "react-hot-toast";
-import { apiService } from "../../utills/apiService";
-import AuthHeader from "../../components/Auth/AuthHeader";
-import AuthFooter from "../../components/Auth/AuthFooter";
-import AuthButton from "../../components/Auth/AuthButton";
-import { authValidationSchema } from "../../validation/auth";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import InputAdornment from "@mui/material/InputAdornment";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { IconButton } from "@mui/joy";
-import PageHead from "../../UI/pages/pageHead";
-import ReplicazLogo from "../../public/ReplicazAuthLogo.png";
+import TextField from '@mui/material/TextField';
+import { useState } from 'react';
+import { useFormik } from 'formik';
+import Router from 'next/router';
+import toast from 'react-hot-toast';
+import { apiService } from '../../utills/apiService';
+import AuthHeader from '../../components/Auth/AuthHeader';
+import AuthFooter from '../../components/Auth/AuthFooter';
+import AuthButton from '../../components/Auth/AuthButton';
+import { authValidationSchema } from '../../validation/auth';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { IconButton } from '@mui/joy';
+import PageHead from '../../UI/pages/pageHead';
+import ReplicazLogo from '../../public/ReplicazAuthLogo.png';
 const register = () => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -33,6 +33,7 @@ const register = () => {
     handleBlur,
     setFieldValue,
     isSubmitting,
+    setSubmitting,
     values: {
       userName: valuesUserName,
       firstName: valuesFirstName,
@@ -66,16 +67,16 @@ const register = () => {
     handleSubmit,
   } = useFormik({
     initialValues: {
-      userName: "",
-      firstName: "",
-      lastName: "",
-      birthDate: "",
-      phone: "",
-      email: "",
-      password: "",
-      confirm: "",
+      userName: '',
+      firstName: '',
+      lastName: '',
+      birthDate: '',
+      phone: '',
+      email: '',
+      password: '',
+      confirm: '',
     },
-    validationSchema: authValidationSchema("register"),
+    validationSchema: authValidationSchema('register'),
     onSubmit: () => {
       registerUser();
     },
@@ -97,11 +98,12 @@ const register = () => {
     apiService.post
       .REGISTER_USER(data)
       .then(() => {
-        toast.success("Verification has been sent to your email");
-        Router.push("/auth/signin");
+        toast.success('Verification has been sent to your email');
+        Router.push('/auth/signin');
       })
       .catch(({ response: { data } }) => {
         toast.error(data.error);
+        setSubmitting(false);
       });
   };
 
@@ -153,7 +155,7 @@ const register = () => {
               label="Birth date"
               value={valuesBirthDate}
               onChange={(newValue) => {
-                setFieldValue("birthDate", newValue);
+                setFieldValue('birthDate', newValue);
               }}
               renderInput={(params) => (
                 <TextField
@@ -174,8 +176,8 @@ const register = () => {
           variant="outlined"
           onChange={(e) => {
             const regex = /^[0-9\b]+$/;
-            if (e.target.value === "" || regex.test(e.target.value)) {
-              setFieldValue("phone", e.target.value);
+            if (e.target.value === '' || regex.test(e.target.value)) {
+              setFieldValue('phone', e.target.value);
             }
           }}
           onBlur={handleBlur}
@@ -200,7 +202,7 @@ const register = () => {
           className="auth_textfield"
           id="password"
           label="Password"
-          type={showPassword ? "text" : "password"}
+          type={showPassword ? 'text' : 'password'}
           variant="outlined"
           InputProps={{
             endAdornment: (

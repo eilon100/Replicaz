@@ -1,33 +1,33 @@
-import TextField from "@mui/material/TextField";
-import { useContext, useEffect, useState } from "react";
-import { useFormik } from "formik";
-import Router from "next/router";
-import toast from "react-hot-toast";
-import { getCookie, deleteCookie, setCookie } from "cookies-next";
-import AuthHeader from "../../components/Auth/AuthHeader";
-import AuthFooter from "../../components/Auth/AuthFooter";
-import AuthButton from "../../components/Auth/AuthButton";
-import { apiService } from "../../utills/apiService";
-import { AuthContext } from "../../context/AuthContext";
-import { authValidationSchema } from "../../validation/auth";
-import InputAdornment from "@mui/material/InputAdornment";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { IconButton } from "@mui/joy";
-import PageHead from "../../UI/pages/pageHead";
-import ReplicazLogo from "../../public/ReplicazAuthLogo.png";
+import TextField from '@mui/material/TextField';
+import { useContext, useEffect, useState } from 'react';
+import { useFormik } from 'formik';
+import Router from 'next/router';
+import toast from 'react-hot-toast';
+import { getCookie, deleteCookie, setCookie } from 'cookies-next';
+import AuthHeader from '../../components/Auth/AuthHeader';
+import AuthFooter from '../../components/Auth/AuthFooter';
+import AuthButton from '../../components/Auth/AuthButton';
+import { apiService } from '../../utills/apiService';
+import { AuthContext } from '../../context/AuthContext';
+import { authValidationSchema } from '../../validation/auth';
+import InputAdornment from '@mui/material/InputAdornment';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { IconButton } from '@mui/joy';
+import PageHead from '../../UI/pages/pageHead';
+import ReplicazLogo from '../../public/ReplicazAuthLogo.png';
 
 const SignIn = () => {
   useEffect(() => {
-    let cookie = getCookie("active");
+    let cookie = getCookie('active');
 
-    if (cookie === "Succeeded") {
-      toast.success("Verification was successful");
+    if (cookie === 'Succeeded') {
+      toast.success('Verification was successful');
     }
-    if (cookie === "failed") {
-      toast.error("Verification failed");
+    if (cookie === 'failed') {
+      toast.error('Verification failed');
     }
-    deleteCookie("active");
+    deleteCookie('active');
   }, []);
 
   const { state, dispatch } = useContext(AuthContext);
@@ -43,6 +43,7 @@ const SignIn = () => {
   const {
     handleChange,
     isSubmitting,
+    setSubmitting,
     handleBlur,
     values: { email: valuesEmail, password: valuesPassword },
     touched: { email: touchedEmail, password: touchedPassword },
@@ -50,10 +51,10 @@ const SignIn = () => {
     handleSubmit,
   } = useFormik({
     initialValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     },
-    validationSchema: authValidationSchema("signin"),
+    validationSchema: authValidationSchema('signin'),
 
     onSubmit: () => {
       loginUser();
@@ -69,20 +70,21 @@ const SignIn = () => {
     apiService.post
       .LOGIN_USER(data)
       .then(({ data: { token, userData } }) => {
-        setCookie("userData", userData, {
+        setCookie('userData', userData, {
           maxAge: 60 * 60 * 24 * 7,
         });
-        setCookie("token", token, {
+        setCookie('token', token, {
           maxAge: 60 * 60 * 24 * 7,
         });
 
-        dispatch({ type: "LOGIN", payload: userData });
+        dispatch({ type: 'LOGIN', payload: userData });
         Router.reload();
-        toast.success("Login successfully");
-        Router.push("/");
+        toast.success('Login successfully');
+        Router.push('/');
       })
       .catch(({ response: { data } }) => {
         toast.error(data.error);
+        setSubmitting(false);
       });
   };
 
@@ -109,7 +111,7 @@ const SignIn = () => {
           id="password"
           label="Password"
           name="password"
-          type={showPassword ? "text" : "password"}
+          type={showPassword ? 'text' : 'password'}
           variant="outlined"
           InputProps={{
             endAdornment: (
@@ -139,7 +141,7 @@ const SignIn = () => {
         <p
           className="text-xs cursor-pointer hover:underline"
           onClick={() => {
-            Router.push("/auth/resetPassword");
+            Router.push('/auth/resetPassword');
           }}
         >
           Forget Password ?

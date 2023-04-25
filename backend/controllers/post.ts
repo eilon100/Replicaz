@@ -1,24 +1,24 @@
-import { RequestHandler } from "express";
-import mongoose from "mongoose";
-import Comment from "../modal/comment";
-import Post from "../modal/post";
-import Report from "../modal/report";
-import User from "../modal/user";
+import { RequestHandler } from 'express';
+import mongoose from 'mongoose';
+import Comment from '../modal/comment';
+import Post from '../modal/post';
+import Report from '../modal/report';
+import User from '../modal/user';
 import {
   imagesFolderDeletion,
   imagesUpload,
-} from "../utills/cloudinaryActions";
-import { Notifications } from "../utills/notifications";
+} from '../utills/cloudinaryActions';
+import { Notifications } from '../utills/notifications';
 
 export const getAllPosts: RequestHandler = (req, res, next) => {
   const { p: page }: any = req.query || 0;
   const { currentPage, search } = req.query;
   const postsPerPage = 5;
-  const isMainPage = currentPage === "main";
-  const searchedLength = search?.length! >= 3 ? "" : "^";
+  const isMainPage = currentPage === 'main';
+  const searchedLength = search?.length! >= 3 ? '' : '^';
   const searchFilter = {
     ...(search && {
-      $or: [{ title: { $regex: `${searchedLength}${search}`, $options: "i" } }],
+      $or: [{ title: { $regex: `${searchedLength}${search}`, $options: 'i' } }],
     }),
   };
 
@@ -28,7 +28,7 @@ export const getAllPosts: RequestHandler = (req, res, next) => {
   };
 
   Post.find(filter)
-    .populate({ path: "postedBy", select: ["userName", "image"] })
+    .populate({ path: 'postedBy', select: ['userName', 'image'] })
     .sort({ _id: -1 })
     .skip(page * postsPerPage)
     .limit(postsPerPage)
@@ -36,7 +36,7 @@ export const getAllPosts: RequestHandler = (req, res, next) => {
       return res.status(200).send(fetchedPosts);
     })
     .catch((err) => {
-      return res.status(500).json({ message: "Could not fetch the posts" });
+      return res.status(500).json({ message: 'Could not fetch the posts' });
     });
 };
 
@@ -44,20 +44,20 @@ export const getPost: RequestHandler = async (req, res, next) => {
   const postId = req.params.id;
   try {
     const post = await Post.findById(postId).populate({
-      path: "postedBy",
-      select: ["userName", "image"],
+      path: 'postedBy',
+      select: ['userName', 'image'],
     });
 
     if (!post) {
-      return res.status(404).json({ message: "Could not find the post" });
+      return res.status(404).json({ message: 'Could not find the post' });
     }
     if (post.comments && post.comments.length > 0) {
       await post.populate({
-        path: "comments",
-        select: "-post -seen -updatedAt",
+        path: 'comments',
+        select: '-post -seen -updatedAt',
         populate: {
-          path: "postedBy",
-          select: ["userName", "image"],
+          path: 'postedBy',
+          select: ['userName', 'image'],
         },
       });
     }
@@ -65,7 +65,7 @@ export const getPost: RequestHandler = async (req, res, next) => {
 
     return res.status(200).send(post);
   } catch (error) {
-    return res.status(500).json({ message: "Fetching post failed " });
+    return res.status(500).json({ message: 'Fetching post failed ' });
   }
 };
 
@@ -76,7 +76,7 @@ export const createPost: RequestHandler = async (req, res, next) => {
   const postedBy = await User.findById(req.userData.userId);
   try {
     if (!postedBy) {
-      return res.status(400).json({ error: "Could not find user" });
+      return res.status(400).json({ error: 'Could not find user' });
     }
 
     const imageArr = await imagesUpload(
@@ -100,7 +100,7 @@ export const createPost: RequestHandler = async (req, res, next) => {
     await postedBy.save({ session: postCreatingSession });
     await postCreatingSession.commitTransaction();
 
-    res.status(201).json({ message: "New post created!" });
+    res.status(201).json({ message: 'New post created!' });
   } catch (err) {
     await imagesFolderDeletion(`posts/${postedBy.userName}/${mongoosePostId}`);
     return res
@@ -116,7 +116,7 @@ export const likePost: RequestHandler = async (req, res, next) => {
   try {
     const post = await Post.findById(postId);
     if (!post) {
-      return res.status(404).json({ error: "Could not find the post" });
+      return res.status(404).json({ error: 'Could not find the post' });
     }
     const likePostSession = await mongoose.startSession();
     likePostSession.startTransaction();
@@ -134,7 +134,7 @@ export const likePost: RequestHandler = async (req, res, next) => {
         userId: post.postedBy,
         postId,
         sentUserId: req.userData.userId,
-        type: "like",
+        type: 'like',
       },
       likePostSession,
       like
@@ -143,7 +143,7 @@ export const likePost: RequestHandler = async (req, res, next) => {
     await likePostSession.commitTransaction();
 
     return res.status(200).json({
-      message: `Post ${like ? "liked" : "unliked"} successfully!`,
+      message: `Post ${like ? 'liked' : 'unliked'} successfully!`,
       like,
       likesLength: post.likes.length,
     });
@@ -157,11 +157,11 @@ export const savePost: RequestHandler = async (req, res, next) => {
   try {
     const user = await User.findById(req.userData.userId);
     if (!user) {
-      return res.status(404).json({ error: "Could not find the user" });
+      return res.status(404).json({ error: 'Could not find the user' });
     }
     const post = await Post.findById(postId);
     if (!post) {
-      return res.status(404).json({ error: "Could not find the post" });
+      return res.status(404).json({ error: 'Could not find the post' });
     }
     const savePostSession = await mongoose.startSession();
     savePostSession.startTransaction();
@@ -173,7 +173,7 @@ export const savePost: RequestHandler = async (req, res, next) => {
       await user.save({ session: savePostSession });
       await savePostSession.commitTransaction();
       return res.status(200).json({
-        message: "Post unsaved!",
+        message: 'Post unsaved!',
         saved: false,
       });
     } else {
@@ -183,7 +183,7 @@ export const savePost: RequestHandler = async (req, res, next) => {
       await user.save({ session: savePostSession });
       await savePostSession.commitTransaction();
       return res.status(200).json({
-        message: "Post saved!",
+        message: 'Post saved!',
         saved: true,
       });
     }
@@ -198,22 +198,21 @@ export const deletePost: RequestHandler = async (req, res, next) => {
 
   try {
     const post = await Post.findById(postId).populate({
-      path: "postedBy",
-      select: "userName",
+      path: 'postedBy',
+      select: 'userName',
     });
     if (!post) {
-      return res.status(404).json({ error: "Could not find the post" });
+      return res.status(404).json({ error: 'Could not find the post' });
     }
     const postedByUser = await User.findById(post.postedBy);
 
-    if (req.userData.role !== "admin") {
-      if (post.postedBy.toString() !== req.userData.userId) {
+    if (req.userData.role !== 'admin') {
+      if (post.postedBy._id.toString() !== req.userData.userId) {
         return res
           .status(500)
-          .json({ error: "You are not allowed to delete this post!" });
+          .json({ error: 'You are not allowed to delete this post!' });
       }
     }
-
     postDeletionSession.startTransaction();
 
     //delete the post from the user array
@@ -246,7 +245,7 @@ export const deletePost: RequestHandler = async (req, res, next) => {
 
     await postDeletionSession.commitTransaction();
 
-    return res.status(200).json({ message: "Your post deleted!" });
+    return res.status(200).json({ message: 'Your post deleted!' });
   } catch (err) {
     await postDeletionSession.abortTransaction();
     return res
@@ -261,23 +260,23 @@ export const editPost: RequestHandler = async (req, res, next) => {
   try {
     const user = await User.findById(req.userData.userId);
     if (!user) {
-      return res.status(404).json({ error: "Could not find the user" });
+      return res.status(404).json({ error: 'Could not find the user' });
     }
     const post = await Post.findById(postId);
     if (!post) {
-      return res.status(404).json({ error: "Could not find the post" });
+      return res.status(404).json({ error: 'Could not find the post' });
     }
 
     if (post.postedBy.toString() !== req.userData.userId) {
       return res
         .status(500)
-        .json({ error: "You are not allowed to delete this post!" });
+        .json({ error: 'You are not allowed to delete this post!' });
     }
     post.title = title;
     post.body = body;
     await post.save();
     return res.status(200).json({
-      message: "Post edited successfully!",
+      message: 'Post edited successfully!',
     });
   } catch (error) {
     return res
@@ -292,11 +291,11 @@ export const reportPost: RequestHandler = async (req, res, next) => {
   try {
     const user = await User.findById(req.userData.userId);
     if (!user) {
-      return res.status(404).json({ error: "Could not find the user" });
+      return res.status(404).json({ error: 'Could not find the user' });
     }
     const post = await Post.findById(postId);
     if (!post) {
-      return res.status(404).json({ error: "Could not find the post" });
+      return res.status(404).json({ error: 'Could not find the post' });
     }
 
     const reportedPost = await Report.findById(postId);
@@ -304,12 +303,12 @@ export const reportPost: RequestHandler = async (req, res, next) => {
     if (!reportedPost) {
       const newReport = new Report({
         _id: postId,
-        type: "Post",
+        type: 'Post',
         reports: [{ reportedBy: req.userData.userId, body: [reportedBody] }],
       });
 
       await newReport.save();
-      res.status(201).json({ message: "Thank you for your report" });
+      res.status(201).json({ message: 'Thank you for your report' });
     } else {
       const reported = reportedPost.reports.find(
         (report: { reportedBy: string; body: string[] }) =>
@@ -318,7 +317,7 @@ export const reportPost: RequestHandler = async (req, res, next) => {
 
       reported.body.push(reportedBody);
       await reportedPost.save();
-      res.status(201).json({ message: "Thank you for your report" });
+      res.status(201).json({ message: 'Thank you for your report' });
     }
   } catch (error) {
     return res
