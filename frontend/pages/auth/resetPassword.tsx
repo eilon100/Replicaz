@@ -1,14 +1,14 @@
-import React from "react";
-import TextField from "@mui/material/TextField";
-import { useFormik } from "formik";
-import { toast } from "react-hot-toast";
-import { apiService } from "../../utills/apiService";
-import AuthHeader from "../../components/Auth/AuthHeader";
-import AuthFooter from "../../components/Auth/AuthFooter";
-import AuthButton from "../../components/Auth/AuthButton";
-import { authValidationSchema } from "../../validation/auth";
-import PageHead from "../../UI/pages/pageHead";
-import ReplicazLogo from "../../public/ReplicazAuthLogo.png";
+import React from 'react';
+import TextField from '@mui/material/TextField';
+import { useFormik } from 'formik';
+import { toast } from 'react-hot-toast';
+import { apiService } from '../../utills/apiService';
+import AuthHeader from '../../components/Auth/AuthHeader';
+import AuthFooter from '../../components/Auth/AuthFooter';
+import AuthButton from '../../components/Auth/AuthButton';
+import { authValidationSchema } from '../../validation/auth';
+import PageHead from '../../UI/pages/pageHead';
+import ReplicazLogo from '../../public/ReplicazAuthLogo.png';
 function ForgetPassword() {
   const {
     handleChange,
@@ -20,24 +20,25 @@ function ForgetPassword() {
     handleSubmit,
   } = useFormik({
     initialValues: {
-      email: "",
+      email: '',
     },
-    validationSchema: authValidationSchema("resetPassword"),
-    onSubmit: () => {
-      handleFormSubmit();
+    validationSchema: authValidationSchema('resetPassword'),
+    onSubmit: (actions) => {
+      handleFormSubmit(actions);
     },
   });
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = (actions: any) => {
     const data = { email: valuesEmail };
 
     apiService.post
       .RESET_PASSWORD(data)
       .then(() => {
-        toast.success("Reset password has been sent to your email");
+        toast.success('Reset password has been sent to your email');
       })
       .catch(({ response: { data } }) => {
         toast.error(data.error);
+        actions.setSubmitting(false);
       });
   };
 
