@@ -1,4 +1,4 @@
-import User from "../modal/user";
+import User from '../db/modal/user';
 
 export const Notifications = async (
   { userId, postId, sentUserId, type }: any,
@@ -7,7 +7,7 @@ export const Notifications = async (
 ) => {
   if (userId.toString() === sentUserId) return;
 
-  const pushORpull = action ? "$push" : "$pull";
+  const pushORpull = action ? '$push' : '$pull';
   await User.findOneAndUpdate(
     userId,
     {

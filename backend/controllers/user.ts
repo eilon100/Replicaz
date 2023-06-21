@@ -1,7 +1,7 @@
-import User from "../modal/user";
-import { RequestHandler } from "express";
-import { singleImageUpload } from "../utills/cloudinaryActions";
-import Report from "../modal/report";
+import User from '../db/modal/user';
+import { RequestHandler } from 'express';
+import { singleImageUpload } from '../utills/cloudinaryActions';
+import Report from '../db/modal/report';
 
 export const getUserData: RequestHandler = async (req, res, next) => {
   const { username } = req.params;
@@ -12,7 +12,7 @@ export const getUserData: RequestHandler = async (req, res, next) => {
       { hashedPassword: 0, emailVerified: 0, savedPosts: 0, updatedAt: 0 }
     );
     if (!user) {
-      return res.status(404).json({ error: "Could not find the user" });
+      return res.status(404).json({ error: 'Could not find the user' });
     }
     return res.status(200).json(user);
   } catch (error) {
@@ -39,7 +39,7 @@ export const editUserData: RequestHandler = async (req, res, next) => {
     });
 
     return res.status(200).json({
-      message: "Profile updated!",
+      message: 'Profile updated!',
       userImage: user.image,
     });
   } catch (error) {
@@ -53,18 +53,18 @@ export const getSavedPosts: RequestHandler = async (req, res, next) => {
   const { p: page }: any = req.query || 0;
   const postsPerPage = 5;
   const filter = {
-    path: "savedPosts",
+    path: 'savedPosts',
     populate: {
-      path: "postedBy",
-      select: ["userName", "image"],
+      path: 'postedBy',
+      select: ['userName', 'image'],
     },
   };
   User.findById(req.userData.userId)
-    .select("savedPosts")
+    .select('savedPosts')
     .populate(filter)
     .exec((err, { savedPosts }) => {
       if (err) {
-        return res.status(500).json({ message: "Could not fetch the posts" });
+        return res.status(500).json({ message: 'Could not fetch the posts' });
       } else {
         if (savedPosts) {
           const reversedDocs = savedPosts?.reverse();
@@ -86,18 +86,18 @@ export const getUserPosts: RequestHandler = async (req, res, next) => {
   const { options }: any = req.query;
   const { userName } = JSON.parse(options);
   const filter = {
-    path: "posts",
+    path: 'posts',
     populate: {
-      path: "postedBy",
-      select: ["userName", "image"],
+      path: 'postedBy',
+      select: ['userName', 'image'],
     },
   };
   User.findOne({ userName })
-    .select("posts")
+    .select('posts')
     .populate(filter)
     .exec((err, { posts }) => {
       if (err) {
-        return res.status(500).json({ message: "Could not fetch the posts" });
+        return res.status(500).json({ message: 'Could not fetch the posts' });
       } else {
         if (posts) {
           const reversedDocs = posts?.reverse();
@@ -118,17 +118,17 @@ export const reportUser: RequestHandler = async (req, res, next) => {
 
   try {
     if (userId === req.userData.userId) {
-      return res.status(404).json({ error: "You can not report yourself" });
+      return res.status(404).json({ error: 'You can not report yourself' });
     }
     const user = await User.findById(req.userData.userId);
     if (!user) {
-      return res.status(404).json({ error: "Could not find the user" });
+      return res.status(404).json({ error: 'Could not find the user' });
     }
     const reportedUser = await User.findById(userId);
     if (!reportedUser) {
       return res
         .status(404)
-        .json({ error: "Could not find the reported user" });
+        .json({ error: 'Could not find the reported user' });
     }
 
     const reportedPost = await Report.findById(userId);
@@ -136,12 +136,12 @@ export const reportUser: RequestHandler = async (req, res, next) => {
     if (!reportedPost) {
       const newReport = new Report({
         _id: userId,
-        type: "User",
+        type: 'User',
         reports: [{ reportedBy: req.userData.userId, body: [reportedBody] }],
       });
 
       await newReport.save();
-      res.status(201).json({ message: "Thank you for your report" });
+      res.status(201).json({ message: 'Thank you for your report' });
     } else {
       const reported = reportedPost.reports.find(
         (report: { reportedBy: string; body: string[] }) =>
@@ -150,7 +150,7 @@ export const reportUser: RequestHandler = async (req, res, next) => {
 
       reported.body.push(reportedBody);
       await reportedPost.save();
-      res.status(201).json({ message: "Thank you for your report" });
+      res.status(201).json({ message: 'Thank you for your report' });
     }
   } catch (error) {
     return res
@@ -163,20 +163,20 @@ export const getUserNotifications: RequestHandler = async (req, res, next) => {
   const { p: page }: any = req.query || 0;
   const postsPerPage = 5;
   const { seen }: any = req.query;
-  const notificationFilter = seen === "true" ? true : false;
+  const notificationFilter = seen === 'true' ? true : false;
   const filter = [
     {
-      path: "notifications",
+      path: 'notifications',
       populate: {
-        path: "sentUserId",
-        select: "-_id userName image",
+        path: 'sentUserId',
+        select: '-_id userName image',
       },
     },
     {
-      path: "notifications",
+      path: 'notifications',
       populate: {
-        path: "postId",
-        select: "title",
+        path: 'postId',
+        select: 'title',
       },
     },
   ];
@@ -195,7 +195,7 @@ export const getUserNotifications: RequestHandler = async (req, res, next) => {
         if (err) {
           return res
             .status(500)
-            .json({ message: "Could not fetch the notifications" });
+            .json({ message: 'Could not fetch the notifications' });
         } else {
           if (notificationsArr[0]) {
             const filteredObjects: [] =
@@ -217,7 +217,7 @@ export const getUserNotifications: RequestHandler = async (req, res, next) => {
     console.log(error);
     return res
       .status(500)
-      .json({ message: "Could not fetch the notifications" });
+      .json({ message: 'Could not fetch the notifications' });
   }
 };
 
@@ -229,13 +229,13 @@ export const makeNotificationSeen: RequestHandler = async (req, res, next) => {
         _id: req.userData.userId,
         notifications: { $elemMatch: { _id: notificationId } },
       },
-      { $set: { "notifications.$.seen": true } }
+      { $set: { 'notifications.$.seen': true } }
     ).then(() => {
-      return res.status(200).json({ message: "notification marked as seen" });
+      return res.status(200).json({ message: 'notification marked as seen' });
     });
   } catch (error) {
     return res
       .status(500)
-      .json({ message: "Could not make notifications seen" });
+      .json({ message: 'Could not make notifications seen' });
   }
 };

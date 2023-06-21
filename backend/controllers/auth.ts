@@ -1,13 +1,13 @@
-import { Request, Response, NextFunction } from "express";
-import { validationResult } from "express-validator";
-import crypto from "crypto";
-import pendingUsers from "../modal/pendingUsers";
-import sgMail from "@sendgrid/mail";
-import User from "../modal/user";
-import jwt from "jsonwebtoken";
-import { signUpEmail } from "../utills/SG-mails";
-import mongoose from "mongoose";
-const bcrypt = require("bcryptjs");
+import { Request, Response, NextFunction } from 'express';
+import { validationResult } from 'express-validator';
+import crypto from 'crypto';
+import pendingUsers from '../db/modal/pendingUsers';
+import sgMail from '@sendgrid/mail';
+import User from '../db/modal/user';
+import jwt from 'jsonwebtoken';
+import { signUpEmail } from '../utills/SG-mails';
+import mongoose from 'mongoose';
+const bcrypt = require('bcryptjs');
 
 export const signup = async (
   req: Request,
@@ -40,7 +40,7 @@ export const signup = async (
     lastName,
     phone,
     birthDate,
-    emailToken: crypto.randomBytes(64).toString("hex"),
+    emailToken: crypto.randomBytes(64).toString('hex'),
     hashedPassword,
     emailVerified: false,
   });
@@ -53,18 +53,18 @@ export const signup = async (
       try {
         sgMail.send(message);
         await signUpUser.commitTransaction();
-        return res.status(200).json({ msg: "please check your email " });
+        return res.status(200).json({ msg: 'please check your email ' });
       } catch (error) {
         console.log(error);
         await signUpUser.abortTransaction();
-        return res.status(400).json({ error: "Error on sending email " });
+        return res.status(400).json({ error: 'Error on sending email ' });
       }
     })
     .catch(async (err: any) => {
       await signUpUser.abortTransaction();
       if (err.code == 11000) {
         return res.status(400).json({
-          error: "Already registered please check your email for verification",
+          error: 'Already registered please check your email for verification',
         });
       } else
         return res
@@ -86,7 +86,7 @@ export const activateAccount = async (
   if (!pendingUser) {
     return res
       .status(400)
-      .json({ error: "Verification link times up please register again" });
+      .json({ error: 'Verification link times up please register again' });
   }
 
   const newUser = new User({
@@ -105,7 +105,7 @@ export const activateAccount = async (
   await newUser
     .save()
     .then(() => {
-      return res.status(200).json({ message: "Verification completed" });
+      return res.status(200).json({ message: 'Verification completed' });
     })
     .catch((err: any) => {
       return res
@@ -124,7 +124,7 @@ export const login = async (
     const loadedUser = await User.findOne({ email: email });
 
     if (!loadedUser) {
-      return res.status(401).json({ error: "Email is not registered" });
+      return res.status(401).json({ error: 'Email is not registered' });
     }
     const isPasswordCorrect = await bcrypt.compare(
       password,
@@ -132,7 +132,7 @@ export const login = async (
     );
 
     if (!isPasswordCorrect) {
-      return res.status(401).json({ error: "Password is incorrect" });
+      return res.status(401).json({ error: 'Password is incorrect' });
     }
     const token = jwt.sign(
       {
@@ -140,7 +140,7 @@ export const login = async (
         userId: loadedUser._id.toString(),
       },
       process.env.JWT_SECRET!,
-      { expiresIn: "7d" }
+      { expiresIn: '7d' }
     );
 
     const userData = {
@@ -152,11 +152,11 @@ export const login = async (
     };
 
     return res.status(200).json({
-      message: "Logged in successfully",
+      message: 'Logged in successfully',
       userData,
       token,
     });
   } catch (error) {
-    return res.status(401).json({ message: "Logged in failed" });
+    return res.status(401).json({ message: 'Logged in failed' });
   }
 };

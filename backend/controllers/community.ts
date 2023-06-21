@@ -1,10 +1,10 @@
-import { RequestHandler } from "express";
-import mongoose from "mongoose";
-import CommunityItem from "../modal/communityItems";
+import { RequestHandler } from 'express';
+import mongoose from 'mongoose';
+import CommunityItem from '../db/modal/communityItems';
 import {
   imagesFolderDeletion,
   imagesUpload,
-} from "../utills/cloudinaryActions";
+} from '../utills/cloudinaryActions';
 
 export const addNewItem: RequestHandler = async (req, res, next) => {
   const {
@@ -24,7 +24,7 @@ export const addNewItem: RequestHandler = async (req, res, next) => {
     const [existsItem] = await CommunityItem.find({ name, brand });
 
     if (existsItem) {
-      return res.status(300).json({ error: "This item name already exists" });
+      return res.status(300).json({ error: 'This item name already exists' });
     }
 
     const imageArr = await imagesUpload(
@@ -39,7 +39,7 @@ export const addNewItem: RequestHandler = async (req, res, next) => {
       name,
       sizeType,
       color,
-      mainImage: imageArr![0] || "",
+      mainImage: imageArr![0] || '',
       images: imageArr,
       bestBatch,
       cheapestBatch,
@@ -47,7 +47,7 @@ export const addNewItem: RequestHandler = async (req, res, next) => {
     });
 
     await currentItem.save();
-    return res.status(201).json({ message: "New item added!" });
+    return res.status(201).json({ message: 'New item added!' });
   } catch (err) {
     await imagesFolderDeletion(`/items/${company}/${brand}/${name}`);
     return res
@@ -62,14 +62,14 @@ export const getAllItems: RequestHandler = async (req, res, next) => {
 
   const filterObj = {
     community: currentPage,
-    color: colorSelect === "all" ? { $exists: true } : colorSelect,
-    company: companySelect === "all" ? { $exists: true } : companySelect,
+    color: colorSelect === 'all' ? { $exists: true } : colorSelect,
+    company: companySelect === 'all' ? { $exists: true } : companySelect,
   };
   const itemsNumber = await CommunityItem.countDocuments(filterObj);
   const itemsBrands = await CommunityItem.find({
     community: currentPage,
-    company: companySelect === "all" ? { $exists: true } : companySelect,
-  }).distinct("brand");
+    company: companySelect === 'all' ? { $exists: true } : companySelect,
+  }).distinct('brand');
 
   const itemsPerPAge = 12;
   try {
@@ -80,16 +80,16 @@ export const getAllItems: RequestHandler = async (req, res, next) => {
 
     return res.status(200).send({ items, itemsNumber });
   } catch (error) {
-    return res.status(500).json({ message: "Could not fetch the items" });
+    return res.status(500).json({ message: 'Could not fetch the items' });
   }
 };
 export const getItemsData: RequestHandler = async (req, res, next) => {
   const { page } = req.params;
   try {
-    const itemsColors = await CommunityItem.distinct("color", {
+    const itemsColors = await CommunityItem.distinct('color', {
       community: page,
     });
-    const itemsCompanies = await CommunityItem.distinct("company", {
+    const itemsCompanies = await CommunityItem.distinct('company', {
       community: page,
     });
 

@@ -1,9 +1,9 @@
 import { RequestHandler } from 'express';
 import mongoose from 'mongoose';
-import Comment from '../modal/comment';
-import Post from '../modal/post';
-import Report from '../modal/report';
-import User from '../modal/user';
+import Comment from '../db/modal/comment';
+import Post from '../db/modal/post';
+import Report from '../db/modal/report';
+import User from '../db/modal/user';
 import {
   imagesFolderDeletion,
   imagesUpload,

@@ -1,65 +1,65 @@
-import { body } from "express-validator";
-import User from "../modal/user";
+import { body } from 'express-validator';
+import User from '../db/modal/user';
 
 export function UserSignUpValidation() {
   return [
-    body("email")
+    body('email')
       .isEmail()
       .trim()
-      .withMessage("Please enter a valid email")
+      .withMessage('Please enter a valid email')
       .custom((value, { req }) => {
         return User.findOne({ email: value }).then((userDoc) => {
           if (userDoc) {
-            return Promise.reject("Email already exists!");
+            return Promise.reject('Email already exists!');
           }
         });
       })
       .normalizeEmail(),
-    body("firstName")
+    body('firstName')
       .trim()
       .matches(/^[a-zA-Z]+$/)
       .toLowerCase()
-      .withMessage("First name can only contain Latin letters")
+      .withMessage('First name can only contain Latin letters')
       .isLength({ min: 3 })
-      .withMessage("First name must be 3 or more characters")
+      .withMessage('First name must be 3 or more characters')
       .isLength({ max: 15 })
-      .withMessage("First name must be 12 characters long"),
-    body("phone")
+      .withMessage('First name must be 12 characters long'),
+    body('phone')
       .matches(/^[0-9]+$/)
-      .withMessage("Phone can only contain numbers")
+      .withMessage('Phone can only contain numbers')
       .isLength({ max: 10, min: 10 })
-      .withMessage("Phone must be 10 characters long"),
-    body("lastName")
+      .withMessage('Phone must be 10 characters long'),
+    body('lastName')
       .trim()
       .matches(/^[a-zA-Z]+$/)
       .toLowerCase()
-      .withMessage("Last name can only contain Latin letters")
+      .withMessage('Last name can only contain Latin letters')
       .isLength({ min: 3 })
-      .withMessage("Last name must be 3 or more characters")
+      .withMessage('Last name must be 3 or more characters')
       .isLength({ max: 15 })
-      .withMessage("Last name must be 12 characters long"),
-    body("password")
+      .withMessage('Last name must be 12 characters long'),
+    body('password')
       .trim()
       .not()
       .isEmpty()
       .matches(/[0-9]/)
-      .withMessage("Password requires a number")
+      .withMessage('Password requires a number')
       .matches(/[a-z]/)
-      .withMessage("Password requires a lowercase letter")
+      .withMessage('Password requires a lowercase letter')
       .matches(/[A-Z]/)
-      .withMessage("Password requires an uppercase letter"),
-    body("userName")
+      .withMessage('Password requires an uppercase letter'),
+    body('userName')
       .trim()
       .isLength({ min: 3 })
-      .withMessage("User name must be 3 or more characters")
+      .withMessage('User name must be 3 or more characters')
       .isLength({ max: 12 })
-      .withMessage("User name must be 12 characters long")
+      .withMessage('User name must be 12 characters long')
       .matches(/^[a-z0-9A-Z]+$/)
-      .withMessage("User name can only contain Latin letters and number")
+      .withMessage('User name can only contain Latin letters and number')
       .custom((value, { req }) => {
         return User.findOne({ userName: value }).then((userDoc) => {
           if (userDoc) {
-            return Promise.reject("User name already taken");
+            return Promise.reject('User name already taken');
           }
         });
       }),

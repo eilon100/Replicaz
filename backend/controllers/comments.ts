@@ -1,10 +1,10 @@
-import { NextFunction, Request, RequestHandler, Response } from "express";
-import mongoose from "mongoose";
-import Comment from "../modal/comment";
-import Post from "../modal/post";
-import Report from "../modal/report";
-import User from "../modal/user";
-import { Notifications } from "../utills/notifications";
+import { NextFunction, Request, RequestHandler, Response } from 'express';
+import mongoose from 'mongoose';
+import Comment from '../db/modal/comment';
+import Post from '../db/modal/post';
+import Report from '../db/modal/report';
+import User from '../db/modal/user';
+import { Notifications } from '../utills/notifications';
 
 export const createComment: RequestHandler = async (req, res, next) => {
   const { comment, postId } = req.body;
@@ -13,11 +13,11 @@ export const createComment: RequestHandler = async (req, res, next) => {
   try {
     const commentedPost = await Post.findById(postId);
     if (!commentedPost) {
-      return res.status(500).json({ error: "could not find post" });
+      return res.status(500).json({ error: 'could not find post' });
     }
     const commentedUser = await User.findById(req.userData.userId);
     if (!commentedUser) {
-      return res.status(500).json({ error: "You are not allowed to comment" });
+      return res.status(500).json({ error: 'You are not allowed to comment' });
     }
     const newComment = new Comment({
       _id: mongooseCommentId,
@@ -36,17 +36,17 @@ export const createComment: RequestHandler = async (req, res, next) => {
         userId: commentedPost.postedBy,
         postId,
         sentUserId: req.userData.userId,
-        type: "comment",
+        type: 'comment',
       },
       commentCreatingSession,
       true
     );
     await commentCreatingSession.commitTransaction();
-    res.status(201).json({ message: "New comment created!" });
+    res.status(201).json({ message: 'New comment created!' });
   } catch (err) {
     return res
       .status(500)
-      .json({ error: "Create comment failed pleas try again " + err });
+      .json({ error: 'Create comment failed pleas try again ' + err });
   }
 };
 
@@ -59,7 +59,7 @@ export const likeComment: RequestHandler = async (req, res, next) => {
     const post = await Post.findById(comment.post);
 
     if (!comment) {
-      return res.status(404).json({ error: "Could not find the comment" });
+      return res.status(404).json({ error: 'Could not find the comment' });
     }
 
     const likeCommentSession = await mongoose.startSession();
@@ -77,7 +77,7 @@ export const likeComment: RequestHandler = async (req, res, next) => {
         userId: comment.postedBy,
         postId: post._id,
         sentUserId: req.userData.userId,
-        type: "commentLike",
+        type: 'commentLike',
       },
       likeCommentSession,
       like
@@ -85,7 +85,7 @@ export const likeComment: RequestHandler = async (req, res, next) => {
     await comment.save({ session: likeCommentSession });
     await likeCommentSession.commitTransaction();
     return res.status(200).json({
-      message: `Comment ${like ? "liked" : "unliked"} successfully!`,
+      message: `Comment ${like ? 'liked' : 'unliked'} successfully!`,
       like,
       likesLength: comment.likes.length,
     });
@@ -101,23 +101,23 @@ export const editComment: RequestHandler = async (req, res, next) => {
   try {
     const user = await User.findById(req.userData.userId);
     if (!user) {
-      return res.status(404).json({ error: "Could not find the user" });
+      return res.status(404).json({ error: 'Could not find the user' });
     }
     const comment = await Comment.findById(commentId);
     if (!comment) {
-      return res.status(404).json({ error: "Could not find the comment" });
+      return res.status(404).json({ error: 'Could not find the comment' });
     }
 
     if (comment.postedBy.toString() !== req.userData.userId) {
       return res
         .status(500)
-        .json({ error: "You are not allowed to edit this comment!" });
+        .json({ error: 'You are not allowed to edit this comment!' });
     }
 
     comment.body = body;
     await comment.save();
     return res.status(200).json({
-      message: "Comment edited successfully!",
+      message: 'Comment edited successfully!',
     });
   } catch (error) {
     return res
@@ -133,21 +133,21 @@ export const deleteComment: RequestHandler = async (req, res, next) => {
   try {
     const user = await User.findById(req.userData.userId);
     if (!user) {
-      return res.status(404).json({ error: "Could not find the user" });
+      return res.status(404).json({ error: 'Could not find the user' });
     }
     const comment = await Comment.findById(commentId);
     if (!comment) {
-      return res.status(404).json({ error: "Could not find the comment" });
+      return res.status(404).json({ error: 'Could not find the comment' });
     }
     const post = await Post.findById(comment.post);
     if (!post) {
-      return res.status(404).json({ error: "Could not find the post" });
+      return res.status(404).json({ error: 'Could not find the post' });
     }
 
     if (comment.postedBy.toString() !== req.userData.userId) {
       return res
         .status(500)
-        .json({ error: "You are not allowed to delete this comment!" });
+        .json({ error: 'You are not allowed to delete this comment!' });
     }
 
     commentDeletionSession.startTransaction();
@@ -172,14 +172,14 @@ export const deleteComment: RequestHandler = async (req, res, next) => {
         userId: post.postedBy,
         postId: post._id,
         sentUserId: req.userData.userId,
-        type: "comment",
+        type: 'comment',
       },
       commentDeletionSession,
       false
     );
     await commentDeletionSession.commitTransaction();
 
-    res.status(200).json({ message: "Your comment deleted!" });
+    res.status(200).json({ message: 'Your comment deleted!' });
   } catch (error) {
     await commentDeletionSession.abortTransaction();
     return res
@@ -193,11 +193,11 @@ export const reportComment: RequestHandler = async (req, res, next) => {
   try {
     const user = await User.findById(req.userData.userId);
     if (!user) {
-      return res.status(404).json({ error: "Could not find the user" });
+      return res.status(404).json({ error: 'Could not find the user' });
     }
     const comment = await Comment.findById(commentId);
     if (!comment) {
-      return res.status(404).json({ error: "Could not find the comment" });
+      return res.status(404).json({ error: 'Could not find the comment' });
     }
 
     const reportedComment = await Report.findById(commentId);
@@ -205,11 +205,11 @@ export const reportComment: RequestHandler = async (req, res, next) => {
     if (!reportedComment) {
       const newReport = new Report({
         _id: commentId,
-        type: "Comment",
+        type: 'Comment',
         reports: [{ reportedBy: req.userData.userId, body: [body] }],
       });
       await newReport.save();
-      res.status(201).json({ message: "Thank you for your report" });
+      res.status(201).json({ message: 'Thank you for your report' });
     } else {
       const reported = reportedComment.reports.find(
         (report: { reportedBy: string; body: string[] }) =>
@@ -218,7 +218,7 @@ export const reportComment: RequestHandler = async (req, res, next) => {
 
       reported.body.push(body);
       await reportedComment.save();
-      res.status(201).json({ message: "Thank you for your report" });
+      res.status(201).json({ message: 'Thank you for your report' });
     }
   } catch (error) {
     return res

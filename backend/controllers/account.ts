@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from "express";
-import User from "../modal/user";
-import sgMail from "@sendgrid/mail";
-import jwt from "jsonwebtoken";
-const bcrypt = require("bcryptjs");
-import { decodedToken } from "../types/decodedToken";
-import { resetPasswordEmail } from "../utills/SG-mails";
-import { RequestHandler } from "express";
+import { Request, Response, NextFunction } from 'express';
+import User from '../db/modal/user';
+import sgMail from '@sendgrid/mail';
+import jwt from 'jsonwebtoken';
+const bcrypt = require('bcryptjs');
+import { decodedToken } from '../types/decodedToken';
+import { resetPasswordEmail } from '../utills/SG-mails';
+import { RequestHandler } from 'express';
 
 export const resetPassword: RequestHandler = async (req, res, next) => {
   const API_KEY: string = process.env.SG_API!;
@@ -16,14 +16,14 @@ export const resetPassword: RequestHandler = async (req, res, next) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    return res.status(422).json({ error: "Email is not registered" });
+    return res.status(422).json({ error: 'Email is not registered' });
   }
 
   const resetToken = jwt.sign(
     { userId: user._id, hashedPassword: user.hashedPassword },
     process.env.JWT_SECRET!,
     {
-      expiresIn: "5m",
+      expiresIn: '5m',
     }
   );
 
@@ -31,9 +31,9 @@ export const resetPassword: RequestHandler = async (req, res, next) => {
 
   try {
     sgMail.send(message);
-    return res.status(200).json({ msg: "please check your email " });
+    return res.status(200).json({ msg: 'please check your email ' });
   } catch (error) {
-    return res.status(400).json({ error: "Error on verify email " });
+    return res.status(400).json({ error: 'Error on verify email ' });
   }
 };
 export const newPassword: RequestHandler = async (req, res, next) => {
@@ -47,7 +47,7 @@ export const newPassword: RequestHandler = async (req, res, next) => {
     const mainUser = await User.findById(decodedToken?.userId);
 
     if (!mainUser) {
-      return res.status(404).json({ error: "Could not find user.." });
+      return res.status(404).json({ error: 'Could not find user..' });
     }
 
     const tokenValid = decodedToken?.hashedPassword === mainUser.hashedPassword;
@@ -55,15 +55,18 @@ export const newPassword: RequestHandler = async (req, res, next) => {
     if (!tokenValid) {
       return res
         .status(404)
-        .json({ error: "Reset password link is not valid" });
+        .json({ error: 'Reset password link is not valid' });
     }
 
-    const isPasswordSame = await bcrypt.compare(password, mainUser.hashedPassword);
+    const isPasswordSame = await bcrypt.compare(
+      password,
+      mainUser.hashedPassword
+    );
 
     if (isPasswordSame) {
       return res
         .status(400)
-        .json({ error: "Please dont use your old password " });
+        .json({ error: 'Please dont use your old password ' });
     }
     const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -71,19 +74,19 @@ export const newPassword: RequestHandler = async (req, res, next) => {
     await mainUser.save().then(() => {
       return res
         .status(200)
-        .json({ message: "Your password has been updated!" });
+        .json({ message: 'Your password has been updated!' });
     });
   } catch (error) {
     return res
       .status(410)
-      .json({ error: "Reset password times out please try again" });
+      .json({ error: 'Reset password times out please try again' });
   }
 };
 export const getAccountData: RequestHandler = async (req, res, next) => {
   try {
     const user = await User.findById(req.userData.userId);
     if (!user) {
-      return res.status(404).json({ error: "Could not find the user" });
+      return res.status(404).json({ error: 'Could not find the user' });
     }
     return res.status(200).json(user);
   } catch (error) {
