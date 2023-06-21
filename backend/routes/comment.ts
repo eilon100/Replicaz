@@ -1,22 +1,22 @@
-import express from "express";
+import { Router } from 'express';
 import {
   deleteComment,
   editComment,
   likeComment,
   reportComment,
-} from "../controllers/comments";
-import { isAuth } from "../middleware/isAuth";
+} from '../controllers/comments';
+import { isAuth } from '../middleware/isAuth';
 
-const commentRouter = express.Router();
+const commentRouter = Router();
 
 commentRouter.use(isAuth);
 
-commentRouter.post("/likecomment", likeComment);
+commentRouter.post('/likecomment', likeComment);
 
-commentRouter.patch("/editcomment", editComment);
+commentRouter.patch('/editcomment', editComment);
 
-commentRouter.post("/deletecomment", deleteComment);
+commentRouter.post('/deletecomment', deleteComment);
 
-commentRouter.post("/reportcomment", reportComment);
+commentRouter.post('/reportcomment', reportComment);
 
 export { commentRouter };

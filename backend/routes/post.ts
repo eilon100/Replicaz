@@ -1,5 +1,5 @@
-import express from "express";
-import { createComment, likeComment } from "../controllers/comments";
+import { Router } from 'express';
+import { createComment, likeComment } from '../controllers/comments';
 import {
   createPost,
   deletePost,
@@ -9,31 +9,31 @@ import {
   likePost,
   reportPost,
   savePost,
-} from "../controllers/post";
-import { isAuth } from "../middleware/isAuth";
+} from '../controllers/post';
+import { isAuth } from '../middleware/isAuth';
 
-const postRouter = express.Router();
+const postRouter = Router();
 
-postRouter.get("/allposts", getAllPosts);
+postRouter.get('/allposts', getAllPosts);
 
-postRouter.get("/getpost/:id", getPost);
+postRouter.get('/getpost/:id', getPost);
 
 postRouter.use(isAuth);
 
-postRouter.post("/newpost", createPost);
+postRouter.post('/newpost', createPost);
 
-postRouter.post("/newcomment", createComment);
+postRouter.post('/newcomment', createComment);
 
-postRouter.post("/likecomment", likeComment);
+postRouter.post('/likecomment', likeComment);
 
-postRouter.post("/likepost", likePost);
+postRouter.post('/likepost', likePost);
 
-postRouter.post("/savepost", savePost);
+postRouter.post('/savepost', savePost);
 
-postRouter.post("/deletepost", deletePost);
+postRouter.post('/deletepost', deletePost);
 
-postRouter.patch("/editpost", editPost);
+postRouter.patch('/editpost', editPost);
 
-postRouter.post("/reportpost", reportPost);
+postRouter.post('/reportpost', reportPost);
 
 export { postRouter };

@@ -62,7 +62,7 @@ const SignIn = () => {
   });
 
   const loginUser = async () => {
-    let data = {
+    const data = {
       email: valuesEmail,
       password: valuesPassword,
     };
@@ -70,20 +70,24 @@ const SignIn = () => {
     apiService.post
       .LOGIN_USER(data)
       .then(({ data: { token, userData } }) => {
-        setCookie('userData', userData, {
-          maxAge: 60 * 60 * 24 * 7,
-        });
-        setCookie('token', token, {
-          maxAge: 60 * 60 * 24 * 7,
-        });
+        console.log(userData);
+        setSubmitting(false);
+        // setCookie('userData', userData, {
+        //   maxAge: 60 * 60 * 24 * 7,
+        // });
+        // setCookie('token', token, {
+        //   maxAge: 60 * 60 * 24 * 7,
+        // });
 
-        dispatch({ type: 'LOGIN', payload: userData });
-        Router.reload();
-        toast.success('Login successfully');
-        Router.push('/');
+        // dispatch({ type: 'LOGIN', payload: userData });
+        // Router.reload();
+        // toast.success('Login successfully');
+        // Router.push('/');
       })
-      .catch(({ response: { data } }) => {
-        toast.error(data.error);
+      .catch((res) => {
+        console.log(res);
+
+        // toast.error(data.error);
         setSubmitting(false);
       });
   };

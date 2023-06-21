@@ -1,23 +1,23 @@
-import express from "express";
-import { accountRouter } from "./account";
-import { authRouter } from "./auth";
-import { postRouter } from "./post";
-import { commentRouter } from "./comment";
-import { communityRouter } from "./community";
-import { userRouter } from "./user";
+import { Router } from 'express';
+import { accountRouter } from './account';
+import { authRouter } from './auth';
+import { postRouter } from './post';
+import { commentRouter } from './comment';
+import { communityRouter } from './community';
+import { userRouter } from './user';
 
-const router = express.Router();
+const router = Router();
 
-router.use("/auth", authRouter);
+router.use('/auth', authRouter);
 
-router.use("/account", accountRouter);
+router.use('/account', accountRouter);
 
-router.use("/user", userRouter);
+router.use('/user', userRouter);
 
-router.use("/post", postRouter);
+router.use('/post', postRouter);
 
-router.use("/comment", commentRouter);
+router.use('/comment', commentRouter);
 
-router.use("/community", communityRouter);
+router.use('/community', communityRouter);
 
 export { router };
