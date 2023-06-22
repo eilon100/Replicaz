@@ -10,22 +10,9 @@ export const login: RequestHandler = async (req, res, next) => {
   try {
     const loadedUser = await findUser(email);
 
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      loadedUser.hashedPassword
-    );
+    validatePassword(loadedUser, password);
 
-    if (!isPasswordCorrect) {
-      return res.status(401).json({ error: 'Password is incorrect' });
-    }
-    const token = jwt.sign(
-      {
-        email: loadedUser,
-        userId: loadedUser._id.toString(),
-      },
-      process.env.JWT_SECRET!,
-      { expiresIn: '7d' }
-    );
+    const token = createToken(loadedUser);
 
     const userData = {
       userId: loadedUser._id,

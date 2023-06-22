@@ -17,6 +17,8 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { IconButton } from '@mui/joy';
 import PageHead from '../../UI/pages/pageHead';
 import ReplicazLogo from '../../public/ReplicazAuthLogo.png';
+import ErrorHandler from '../../utills/ErrorHandler';
+
 const register = () => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -83,7 +85,7 @@ const register = () => {
   });
 
   const registerUser = () => {
-    let data = {
+    const data = {
       userName:
         valuesUserName.charAt(0).toUpperCase() +
         valuesUserName.slice(1).toLowerCase(),
@@ -101,8 +103,8 @@ const register = () => {
         toast.success('Verification has been sent to your email');
         Router.push('/auth/signin');
       })
-      .catch(({ response: { data } }) => {
-        toast.error(data.error);
+      .catch((error) => {
+        toast.error(ErrorHandler(error));
         setSubmitting(false);
       });
   };
