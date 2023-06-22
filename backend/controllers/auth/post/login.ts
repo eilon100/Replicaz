@@ -7,35 +7,52 @@ const errorMessage = 'סיסמה או שם משתמש שגויים';
 
 export const login: RequestHandler = async (req, res, next) => {
   const { email, password } = req.body;
+  try {
+    const loadedUser = await findUser(email);
 
-  // const user = findUser(email);
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      loadedUser.hashedPassword
+    );
+
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ error: 'Password is incorrect' });
+    }
+    const token = jwt.sign(
+      {
+        email: loadedUser,
+        userId: loadedUser._id.toString(),
+      },
+      process.env.JWT_SECRET!,
+      { expiresIn: '7d' }
+    );
+
+    const userData = {
+      userId: loadedUser._id,
+      userName: loadedUser.userName,
+      email: loadedUser.email,
+      userImage: loadedUser.image,
+      role: loadedUser.role,
+    };
+
+    return res.status(200).json({
+      message: 'Logged in successfully',
+      userData,
+      token,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+async function findUser(email: string) {
   const user = await User.findOne({ email });
 
   if (!user) {
     throw new BadRequestError(errorMessage);
   }
-  validatePassword(user, password);
-
-  const token = createToken(user);
-
-  const userData = {
-    userId: user._id,
-    userName: user.userName,
-    email: user.email,
-    userImage: user.image,
-    role: user.role,
-  };
-
-  return res.status(200).json({
-    message: 'Logged in successfully',
-    userData,
-    token,
-  });
-};
-
-// async function findUser(email: string) {
-//   return loadedUser;
-// }
+  return user;
+}
 
 async function validatePassword(user: any, password: string) {
   const isPasswordMatch = await bcrypt.compare(password, user.hashedPassword);

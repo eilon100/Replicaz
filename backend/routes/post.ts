@@ -18,22 +18,20 @@ postRouter.get('/allposts', getAllPosts);
 
 postRouter.get('/getpost/:id', getPost);
 
-postRouter.use(isAuth);
+postRouter.post('/newpost', isAuth, createPost);
 
-postRouter.post('/newpost', createPost);
+postRouter.post('/newcomment', isAuth, createComment);
 
-postRouter.post('/newcomment', createComment);
+postRouter.post('/likecomment', isAuth, likeComment);
 
-postRouter.post('/likecomment', likeComment);
+postRouter.post('/likepost', isAuth, likePost);
 
-postRouter.post('/likepost', likePost);
+postRouter.post('/savepost', isAuth, savePost);
 
-postRouter.post('/savepost', savePost);
+postRouter.post('/deletepost', isAuth, deletePost);
 
-postRouter.post('/deletepost', deletePost);
+postRouter.patch('/editpost', isAuth, editPost);
 
-postRouter.patch('/editpost', editPost);
-
-postRouter.post('/reportpost', reportPost);
+postRouter.post('/reportpost', isAuth, reportPost);
 
 export { postRouter };

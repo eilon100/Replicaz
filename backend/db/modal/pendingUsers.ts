@@ -1,6 +1,22 @@
-import mongoose from "mongoose";
+import { Document, model, Model, Schema, Types } from 'mongoose';
 
-const Schema = mongoose.Schema;
+export interface PendingUserAttrs {
+  userName: string;
+  hashedPassword: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  emailToken: string;
+  birthDate: string;
+  emailVerified: boolean;
+}
+
+export interface PendingUserDoc extends PendingUserAttrs, Document {}
+
+export interface PendingUserModal extends Model<PendingUserDoc> {
+  build(attrs: PendingUserAttrs): PendingUserDoc;
+}
 
 const pendingUserSchema = new Schema(
   {
@@ -34,7 +50,7 @@ const pendingUserSchema = new Schema(
     image: {
       type: String,
       default:
-        "https://res.cloudinary.com/dcpuvkirc/image/upload/v1667998882/defualt%20images/blank-profile-picture-gf01729628_1280_pdfkow.png",
+        'https://res.cloudinary.com/dcpuvkirc/image/upload/v1667998882/defualt%20images/blank-profile-picture-gf01729628_1280_pdfkow.png',
     },
     emailVerified: {
       type: Boolean,
@@ -42,14 +58,19 @@ const pendingUserSchema = new Schema(
     },
     expireAt: {
       type: Date,
-      expires: "300s",
+      expires: '300s',
       default: Date.now,
     },
   },
   { timestamps: true }
 );
 
-const pendingUsers =
-  mongoose.models.pendingUsers ||
-  mongoose.model("PendingUsers", pendingUserSchema);
-export default pendingUsers;
+pendingUserSchema.statics.build = (attrs: PendingUserAttrs) =>
+  new PendingUser(attrs);
+
+const PendingUser = model<PendingUserDoc, PendingUserModal>(
+  'PendingUser',
+  pendingUserSchema
+);
+
+export default PendingUser;

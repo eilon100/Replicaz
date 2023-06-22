@@ -11,8 +11,6 @@ communityRouter.get('/getallitems', getAllItems);
 
 communityRouter.get('/itemsdata/:page', getItemsData);
 
-communityRouter.use(isAdmin);
-
-communityRouter.post('/addnewitem', addNewItem);
+communityRouter.post('/addnewitem', isAdmin, addNewItem);
 
 export { communityRouter };

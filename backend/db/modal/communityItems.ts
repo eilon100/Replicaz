@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
@@ -44,5 +44,5 @@ const communityItemSchema = new Schema(
 
 const CommunityItem =
   mongoose.models.communityItem ||
-  mongoose.model("CommunityItem", communityItemSchema);
+  mongoose.model('CommunityItem', communityItemSchema);
 export default CommunityItem;

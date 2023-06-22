@@ -40,7 +40,7 @@ export const getUserNotifications: RequestHandler = async (req, res, next) => {
             .json({ message: 'Could not fetch the notifications' });
         } else {
           if (notificationsArr[0]) {
-            const filteredObjects: [] =
+            const filteredObjects =
               notificationsArr[0].notifications.filter((obj: any) =>
                 notificationFilter ? obj : obj.seen === false
               );

@@ -1,12 +1,12 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
 const reportSchema = new Schema(
   {
-    _id: { type: Schema.Types.ObjectId, ref: "Post", required: true } || {
+    _id: { type: Schema.Types.ObjectId, ref: 'Post', required: true } || {
       type: Schema.Types.ObjectId,
-      ref: "Comment",
+      ref: 'Comment',
       required: true,
     },
     type: {
@@ -15,7 +15,7 @@ const reportSchema = new Schema(
     },
     reports: [
       {
-        reportedBy: { type: Schema.Types.ObjectId, ref: "User", require: true },
+        reportedBy: { type: Schema.Types.ObjectId, ref: 'User', require: true },
         body: [
           {
             type: String,
@@ -28,5 +28,5 @@ const reportSchema = new Schema(
   { timestamps: true }
 );
 
-const Report = mongoose.models.Report || mongoose.model("Report", reportSchema);
+const Report = mongoose.models.Report || mongoose.model('Report', reportSchema);
 export default Report;

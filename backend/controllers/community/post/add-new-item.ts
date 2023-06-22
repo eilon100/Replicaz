@@ -1,6 +1,9 @@
-import { RequestHandler } from "express";
-import CommunityItem from "../../../db/modal/communityItems";
-import { imagesFolderDeletion, imagesUpload } from "../../../utills/cloudinaryActions";
+import { RequestHandler } from 'express';
+import CommunityItem from '../../../db/modal/communityItems';
+import {
+  imagesFolderDeletion,
+  imagesUpload,
+} from '../../../utills/cloudinaryActions';
 
 export const addNewItem: RequestHandler = async (req, res, next) => {
   const {

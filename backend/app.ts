@@ -1,11 +1,12 @@
 import express from 'express';
 import { router } from './routes';
 import dotenv from 'dotenv';
+require('express-async-errors');
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { Request, Response, NextFunction } from 'express';
 import { errorHandler } from './middleware/error-handler';
 import { NotFoundError } from './errors/not-found-error';
+
 dotenv.config();
 
 const app = express();

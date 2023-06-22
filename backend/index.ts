@@ -2,6 +2,7 @@ import * as dotenv from 'dotenv';
 import { app } from './app';
 import connectDb from './db/connection';
 import { requireEnvs } from './utills/requireEnvs';
+require('express-async-errors');
 
 dotenv.config({ path: `./env` });
 

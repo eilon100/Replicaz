@@ -1,5 +1,6 @@
 import cloudinary from "./cloudinary";
 
+
 export const imagesUpload = async (images: any[], path: string) => {
   if (!images || images.length < 0) return [];
   try {
@@ -9,8 +10,8 @@ export const imagesUpload = async (images: any[], path: string) => {
       const upload = cloudinary.uploader
         .upload(img, {
           folder: path,
-          quality: "auto",
-          fetch_format: "auto",
+          quality: 'auto',
+          fetch_format: 'auto',
         })
         .then((res: any) => (imagesUrl[i] = res.secure_url));
       return upload;
@@ -30,7 +31,7 @@ export const imagesFolderDeletion = async (path: string) => {
     });
   } catch (err) {
     console.log(err);
-    throw new Error("failed delete images");
+    throw new Error('failed delete images');
   }
 };
 
@@ -39,8 +40,8 @@ export const singleImageUpload = async (image: string, path: string) => {
   try {
     const uploadedImage = await cloudinary.uploader.upload(image, {
       public_id: path,
-      quality: "auto",
-      fetch_format: "auto",
+      quality: 'auto',
+      fetch_format: 'auto',
     });
     return uploadedImage.secure_url;
   } catch (err) {

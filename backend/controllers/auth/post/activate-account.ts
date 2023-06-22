@@ -1,10 +1,10 @@
 import { RequestHandler } from 'express';
-import pendingUsers from '../../../db/modal/pendingUsers';
+import PendingUser from '../../../db/modal/pendingUsers';
 import User from '../../../db/modal/user';
 
 export const activateAccount: RequestHandler = async (req, res, next) => {
   const token = req.body.token;
-  const pendingUser = await pendingUsers.findOne({
+  const pendingUser = await PendingUser.findOne({
     emailToken: token,
   });
 
@@ -14,7 +14,7 @@ export const activateAccount: RequestHandler = async (req, res, next) => {
       .json({ error: 'Verification link times up please register again' });
   }
 
-  const newUser = new User({
+  const newUser = User.build({
     userName: pendingUser.userName,
     firstName: pendingUser.firstName,
     lastName: pendingUser.lastName,

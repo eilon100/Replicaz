@@ -1,8 +1,11 @@
-import { RequestHandler } from "express";
-import mongoose from "mongoose";
-import Post from "../../../db/modal/post";
-import User from "../../../db/modal/user";
-import { imagesFolderDeletion, imagesUpload } from "../../../utills/cloudinaryActions";
+import { RequestHandler } from 'express';
+import mongoose from 'mongoose';
+import Post from '../../../db/modal/post';
+import User from '../../../db/modal/user';
+import {
+  imagesFolderDeletion,
+  imagesUpload,
+} from '../../../utills/cloudinaryActions';
 
 export const createPost: RequestHandler = async (req, res, next) => {
   const mongoosePostId = new mongoose.Types.ObjectId();
@@ -37,7 +40,7 @@ export const createPost: RequestHandler = async (req, res, next) => {
 
     res.status(201).json({ message: 'New post created!' });
   } catch (err) {
-    await imagesFolderDeletion(`posts/${postedBy.userName}/${mongoosePostId}`);
+    await imagesFolderDeletion(`posts/${postedBy?.userName}/${mongoosePostId}`);
     return res
       .status(400)
       .json({ error: "Error on '/post/createPost': " + err });

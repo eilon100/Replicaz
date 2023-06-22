@@ -1,5 +1,4 @@
 import { ErrorRequestHandler } from 'express';
-
 import { AbstractError } from '../errors/abstract-error';
 
 export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {

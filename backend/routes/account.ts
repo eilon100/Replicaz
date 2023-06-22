@@ -13,8 +13,6 @@ accountRouter.post('/resetpassword', resetPassword);
 
 accountRouter.post('/newpassword', UserNewPasswordValidation(), newPassword);
 
-accountRouter.use(isAuth);
-
-accountRouter.get('/getaccountdata', getAccountData);
+accountRouter.get('/getaccountdata', isAuth, getAccountData);
 
 export { accountRouter };

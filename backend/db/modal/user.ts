@@ -1,31 +1,34 @@
-import { Model, model, models, Schema, Types } from 'mongoose';
-import { BuyerRoles } from '../../types/buyer-roles';
+import { Document, Model, model, models, Schema, Types } from 'mongoose';
+import { UserRoles } from '../../types/user-roles';
 
-// export interface UserAttrs {
-//   userName: string;
-//   hashedPassword: string;
-//   firstName: string;
-//   lastName: string;
-//   email: string;
-//   phone: string;
-//   birthDate: string;
-//   role?: BuyerRoles;
-//   notifications: notifications;
-//   image: string;
-//   emailVerified: boolean;
-//   posts: Types.ObjectId[];
-//   savedPosts: Types.ObjectId[];
-// }
-// type notifications = {
-//   sentUserId: Types.ObjectId;
-//   postId: Types.ObjectId;
-//   type: 'like' | 'comment' | 'commentLike';
-//   seen: boolean;
-// };
+export interface UserAttrs {
+  userName: string;
+  hashedPassword: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  birthDate: string;
+  image: string;
+  emailVerified: boolean;
+}
+type notifications = {
+  sentUserId: Types.ObjectId;
+  postId: Types.ObjectId;
+  type: 'like' | 'comment' | 'commentLike';
+  seen: boolean;
+};
 
-// export interface UserModel extends Model<UserAttrs> {
-//   build(attrs: UserAttrs): UserAttrs;
-// }
+export interface UserDoc extends UserAttrs, Document {
+  notifications: notifications[];
+  role: UserRoles;
+  savedPosts: Types.DocumentArray<Types.ObjectId>;
+  posts: Types.DocumentArray<Types.ObjectId>;
+}
+
+export interface UserModel extends Model<UserDoc> {
+  build(attrs: UserAttrs): UserDoc;
+}
 
 const notificationsSchema = new Schema({
   sentUserId: {
@@ -89,8 +92,8 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-// userSchema.statics.build = (attrs: UserAttrs) => new User(attrs);
+userSchema.statics.build = (attrs: UserAttrs) => new User(attrs);
 
-// const User = model<UserAttrs, UserModel>('User', userSchema);
-const User = models.User || model('User', userSchema);
+const User = model<UserDoc, UserModel>('User', userSchema);
+
 export default User;

@@ -17,16 +17,14 @@ userRouter.get('/getuserdata/:username', getUserData);
 
 userRouter.get('/posts', getUserPosts);
 
-userRouter.use(isAuth);
+userRouter.patch('/edit', isAuth, UserPatchValidation(), editUserData);
 
-userRouter.patch('/edit', UserPatchValidation(), editUserData);
+userRouter.get('/savedposts', isAuth, getSavedPosts);
 
-userRouter.get('/savedposts', getSavedPosts);
+userRouter.get('/notifications', isAuth, getUserNotifications);
 
-userRouter.get('/notifications', getUserNotifications);
+userRouter.patch('/notificationseen', isAuth, makeNotificationSeen);
 
-userRouter.patch('/notificationseen', makeNotificationSeen);
-
-userRouter.post('/reportuser', reportUser);
+userRouter.post('/reportuser', isAuth, reportUser);
 
 export { userRouter };

@@ -9,14 +9,12 @@ import { isAuth } from '../middleware/isAuth';
 
 const commentRouter = Router();
 
-commentRouter.use(isAuth);
+commentRouter.post('/likecomment', isAuth, likeComment);
 
-commentRouter.post('/likecomment', likeComment);
+commentRouter.patch('/editcomment', isAuth, editComment);
 
-commentRouter.patch('/editcomment', editComment);
+commentRouter.post('/deletecomment', isAuth, deleteComment);
 
-commentRouter.post('/deletecomment', deleteComment);
-
-commentRouter.post('/reportcomment', reportComment);
+commentRouter.post('/reportcomment', isAuth, reportComment);
 
 export { commentRouter };

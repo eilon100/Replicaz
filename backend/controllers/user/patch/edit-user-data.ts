@@ -1,6 +1,6 @@
-import { RequestHandler } from "express";
-import User from "../../../db/modal/user";
-import { singleImageUpload } from "../../../utills/cloudinaryActions";
+import { RequestHandler } from 'express';
+import User from '../../../db/modal/user';
+import { singleImageUpload } from '../../../utills/cloudinaryActions';
 
 export const editUserData: RequestHandler = async (req, res, next) => {
   let data = req.body;
@@ -17,7 +17,7 @@ export const editUserData: RequestHandler = async (req, res, next) => {
     const user = await User.findByIdAndUpdate(req.userData.userId, data, {
       new: true,
     });
-
+    if (!user) return;
     return res.status(200).json({
       message: 'Profile updated!',
       userImage: user.image,
