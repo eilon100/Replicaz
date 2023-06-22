@@ -15,18 +15,11 @@ import { IconButton } from '@mui/joy';
 import PageHead from '../../UI/pages/pageHead';
 import ReplicazLogo from '../../public/ReplicazAuthLogo.png';
 import ErrorHandler from '../../utills/ErrorHandler';
+import usePasswordVisibility from '../../components/Auth/hooks/usePasswordVisibility';
 
 function newPassword() {
   const router = useRouter();
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
-  };
+  const { showPassword, VisibilityIcon } = usePasswordVisibility();
 
   const handleFormSubmit = (
     newValues: any,
@@ -51,7 +44,6 @@ function newPassword() {
   const {
     handleChange,
     isSubmitting,
-    setSubmitting,
     handleBlur,
     values: { password: valuesPassword, confirm: valuesConfirm },
     touched: { password: touchedPassword, confirm: touchedConfirm },
@@ -82,15 +74,7 @@ function newPassword() {
           variant="outlined"
           InputProps={{
             endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
+              <InputAdornment position="end">{VisibilityIcon}</InputAdornment>
             ),
           }}
           onChange={handleChange}

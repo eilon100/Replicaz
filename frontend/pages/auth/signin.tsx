@@ -16,10 +16,11 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { IconButton } from '@mui/joy';
 import PageHead from '../../UI/pages/pageHead';
 import ReplicazLogo from '../../public/ReplicazAuthLogo.png';
+import usePasswordVisibility from '../../components/Auth/hooks/usePasswordVisibility';
 
 const SignIn = () => {
   useEffect(() => {
-    let cookie = getCookie('active');
+    const cookie = getCookie('active');
 
     if (cookie === 'Succeeded') {
       toast.success('Verification was successful');
@@ -30,41 +31,17 @@ const SignIn = () => {
     deleteCookie('active');
   }, []);
 
-  const { state, dispatch } = useContext(AuthContext);
-  const [showPassword, setShowPassword] = useState(false);
+  const { dispatch } = useContext(AuthContext);
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const { showPassword, VisibilityIcon } = usePasswordVisibility();
 
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
+  const loginUser = async (
+    newValues: any,
+    setSubmitting: (boolean: boolean) => void
   ) => {
-    event.preventDefault();
-  };
-  const {
-    handleChange,
-    isSubmitting,
-    setSubmitting,
-    handleBlur,
-    values: { email: valuesEmail, password: valuesPassword },
-    touched: { email: touchedEmail, password: touchedPassword },
-    errors: { email: errorsEmail, password: errorsPassword },
-    handleSubmit,
-  } = useFormik({
-    initialValues: {
-      email: '',
-      password: '',
-    },
-    validationSchema: authValidationSchema('signin'),
-
-    onSubmit: () => {
-      loginUser();
-    },
-  });
-
-  const loginUser = async () => {
-    let data = {
-      email: valuesEmail,
-      password: valuesPassword,
+    const data = {
+      email: newValues.email,
+      password: newValues.password,
     };
 
     apiService.post
@@ -87,6 +64,25 @@ const SignIn = () => {
         setSubmitting(false);
       });
   };
+  const {
+    handleChange,
+    isSubmitting,
+    handleBlur,
+    values: { email: valuesEmail, password: valuesPassword },
+    touched: { email: touchedEmail, password: touchedPassword },
+    errors: { email: errorsEmail, password: errorsPassword },
+    handleSubmit,
+  } = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+    },
+    validationSchema: authValidationSchema('signin'),
+
+    onSubmit: (newValues, { setSubmitting }) => {
+      loginUser(newValues, setSubmitting);
+    },
+  });
 
   //components
 
@@ -115,15 +111,7 @@ const SignIn = () => {
           variant="outlined"
           InputProps={{
             endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
+              <InputAdornment position="end">{VisibilityIcon}</InputAdornment>
             ),
           }}
           onChange={handleChange}
@@ -135,6 +123,7 @@ const SignIn = () => {
       </>
     );
   };
+
   const forgetPassword = () => {
     return (
       <div className="flex justify-end w-[80vw] max-w-xl">

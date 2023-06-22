@@ -18,24 +18,43 @@ import { IconButton } from '@mui/joy';
 import PageHead from '../../UI/pages/pageHead';
 import ReplicazLogo from '../../public/ReplicazAuthLogo.png';
 import ErrorHandler from '../../utills/ErrorHandler';
+import usePasswordVisibility from '../../components/Auth/hooks/usePasswordVisibility';
 
 const register = () => {
-  const [showPassword, setShowPassword] = useState(false);
+  const { showPassword, VisibilityIcon } = usePasswordVisibility();
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
+  const registerUser = (
+    values: any,
+    setSubmitting: (boolean: boolean) => void
   ) => {
-    event.preventDefault();
-  };
+    const data = {
+      userName:
+        values.userName.charAt(0).toUpperCase() +
+        values.userName.slice(1).toLowerCase(),
+      firstName: values.firstName.toLowerCase(),
+      lastName: values.lastName.toLowerCase(),
+      email: values.email.toLowerCase(),
+      password: values.password,
+      birthDate: values.birthDate,
+      phone: values.phone,
+    };
 
+    apiService.post
+      .REGISTER_USER(data)
+      .then(() => {
+        toast.success('Verification has been sent to your email');
+        Router.push('/auth/signin');
+      })
+      .catch((error) => {
+        toast.error(ErrorHandler(error));
+        setSubmitting(false);
+      });
+  };
   const {
     handleChange,
     handleBlur,
     setFieldValue,
     isSubmitting,
-    setSubmitting,
     values: {
       userName: valuesUserName,
       firstName: valuesFirstName,
@@ -79,35 +98,10 @@ const register = () => {
       confirm: '',
     },
     validationSchema: authValidationSchema('register'),
-    onSubmit: () => {
-      registerUser();
+    onSubmit: (newValues, { setSubmitting }) => {
+      registerUser(newValues, setSubmitting);
     },
   });
-
-  const registerUser = () => {
-    const data = {
-      userName:
-        valuesUserName.charAt(0).toUpperCase() +
-        valuesUserName.slice(1).toLowerCase(),
-      firstName: valuesFirstName.toLowerCase(),
-      lastName: valuesLastName.toLowerCase(),
-      email: valuesEmail.toLowerCase(),
-      password: valuesPassword,
-      birthDate: valuesBirthDate,
-      phone: valuesPhone,
-    };
-
-    apiService.post
-      .REGISTER_USER(data)
-      .then(() => {
-        toast.success('Verification has been sent to your email');
-        Router.push('/auth/signin');
-      })
-      .catch((error) => {
-        toast.error(ErrorHandler(error));
-        setSubmitting(false);
-      });
-  };
 
   //components
   const textField = () => {
@@ -208,15 +202,7 @@ const register = () => {
           variant="outlined"
           InputProps={{
             endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
+              <InputAdornment position="end">{VisibilityIcon}</InputAdornment>
             ),
           }}
           onChange={handleChange}

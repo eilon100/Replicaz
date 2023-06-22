@@ -11,6 +11,20 @@ import PageHead from '../../UI/pages/pageHead';
 import ReplicazLogo from '../../public/ReplicazAuthLogo.png';
 import ErrorHandler from '../../utills/ErrorHandler';
 function ForgetPassword() {
+  
+  const handleFormSubmit = (values: any) => {
+    const data = { email: values.email };
+
+    apiService.post
+      .RESET_PASSWORD(data)
+      .then(() => {
+        toast.success('Reset password has been sent to your email');
+      })
+      .catch((error) => {
+        toast.error(ErrorHandler(error));
+        setSubmitting(false);
+      });
+  };
   const {
     handleChange,
     isSubmitting,
@@ -25,24 +39,10 @@ function ForgetPassword() {
       email: '',
     },
     validationSchema: authValidationSchema('resetPassword'),
-    onSubmit: () => {
-      handleFormSubmit();
+    onSubmit: (newValues) => {
+      handleFormSubmit(newValues);
     },
   });
-
-  const handleFormSubmit = () => {
-    const data = { email: valuesEmail };
-
-    apiService.post
-      .RESET_PASSWORD(data)
-      .then(() => {
-        toast.success('Reset password has been sent to your email');
-      })
-      .catch((error) => {
-        toast.error(ErrorHandler(error));
-        setSubmitting(false);
-      });
-  };
 
   //components
 
