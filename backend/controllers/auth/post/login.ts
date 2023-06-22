@@ -50,14 +50,18 @@ async function validatePassword(user: any, password: string) {
 }
 
 function createToken(user: any) {
-  const token = jwt.sign(
-    {
-      email: user.email,
-      userId: user._id.toString(),
-    },
-    process.env.JWT_SECRET!,
-    { expiresIn: '7d' }
-  );
+  try {
+    const token = jwt.sign(
+      {
+        email: user.email,
+        userId: user._id.toString(),
+      },
+      process.env.JWT_SECRET!,
+      { expiresIn: '7d' }
+    );
 
-  return { token };
+    return { token };
+  } catch (error) {
+    throw new BadRequestError('Failed login');
+  }
 }

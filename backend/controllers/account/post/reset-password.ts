@@ -3,33 +3,41 @@ import jwt from 'jsonwebtoken';
 import { RequestHandler } from 'express';
 import User from '../../../db/modal/user';
 import { resetPasswordEmail } from '../../../utills/SG-mails';
+import { BadRequestError } from '../../../errors/bad-request';
 
 export const resetPassword: RequestHandler = async (req, res, next) => {
-  const API_KEY: string = process.env.SG_API!;
+  const API_KEY = process.env.SG_API!;
   sgMail.setApiKey(API_KEY);
 
   const { email } = req.body;
-
-  const user = await User.findOne({ email });
-
-  if (!user) {
-    return res.status(422).json({ error: 'Email is not registered' });
-  }
-
-  const resetToken = jwt.sign(
-    { userId: user._id, hashedPassword: user.hashedPassword },
-    process.env.JWT_SECRET!,
-    {
-      expiresIn: '5m',
-    }
-  );
-
-  const message = resetPasswordEmail(user.email, resetToken);
-
   try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      throw new BadRequestError('Could not find the user');
+    }
+    const resetToken = createResetToken(user._id, user.hashedPassword);
+
+    const message = resetPasswordEmail(user.email, resetToken);
+
     sgMail.send(message);
     return res.status(200).json({ msg: 'please check your email ' });
   } catch (error) {
-    return res.status(400).json({ error: 'Error on verify email ' });
+    next(error);
   }
 };
+
+function createResetToken(userId: string, hashedPassword: string) {
+  try {
+    const resetToken = jwt.sign(
+      { userId, hashedPassword },
+      process.env.JWT_SECRET!,
+      {
+        expiresIn: '5m',
+      }
+    );
+    return resetToken;
+  } catch (error) {
+    throw new BadRequestError('failed reset password');
+  }
+}

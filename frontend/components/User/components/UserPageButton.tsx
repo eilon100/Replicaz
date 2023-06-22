@@ -1,9 +1,10 @@
-import React, { useState } from "react";
-import { toast } from "react-hot-toast";
-import { MdOutlineReport } from "react-icons/md";
-import { RiLockPasswordLine } from "react-icons/ri";
-import InputModal from "../../../UI/modals/InputModal";
-import { apiService } from "../../../utills/apiService";
+import React, { useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { MdOutlineReport } from 'react-icons/md';
+import { RiLockPasswordLine } from 'react-icons/ri';
+import InputModal from '../../../UI/modals/InputModal';
+import { apiService } from '../../../utills/apiService';
+import ErrorHandler from '../../../utills/ErrorHandler';
 
 function UserPageButton({ reportedUserId, allowToEdit, email }: any) {
   const [reportModal, setReportModal] = useState(false);
@@ -27,10 +28,10 @@ function UserPageButton({ reportedUserId, allowToEdit, email }: any) {
     apiService.post
       .RESET_PASSWORD(data)
       .then(() => {
-        toast.success("Reset password has been sent to your email");
+        toast.success('Reset password has been sent to your email');
       })
-      .catch(({ response: { data } }) => {
-        toast.error(data.error);
+      .catch((error) => {
+        toast.error(ErrorHandler(error));
       });
   };
 

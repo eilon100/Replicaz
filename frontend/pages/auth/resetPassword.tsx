@@ -9,6 +9,7 @@ import AuthButton from '../../components/Auth/AuthButton';
 import { authValidationSchema } from '../../validation/auth';
 import PageHead from '../../UI/pages/pageHead';
 import ReplicazLogo from '../../public/ReplicazAuthLogo.png';
+import ErrorHandler from '../../utills/ErrorHandler';
 function ForgetPassword() {
   const {
     handleChange,
@@ -37,8 +38,8 @@ function ForgetPassword() {
       .then(() => {
         toast.success('Reset password has been sent to your email');
       })
-      .catch(({ response: { data } }) => {
-        toast.error(data.error);
+      .catch((error) => {
+        toast.error(ErrorHandler(error));
         setSubmitting(false);
       });
   };

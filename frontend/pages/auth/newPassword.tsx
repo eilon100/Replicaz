@@ -14,6 +14,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { IconButton } from '@mui/joy';
 import PageHead from '../../UI/pages/pageHead';
 import ReplicazLogo from '../../public/ReplicazAuthLogo.png';
+import ErrorHandler from '../../utills/ErrorHandler';
 
 function newPassword() {
   const router = useRouter();
@@ -26,9 +27,31 @@ function newPassword() {
   ) => {
     event.preventDefault();
   };
+
+  const handleFormSubmit = (
+    newValues: any,
+    setSubmitting: (Boolean: boolean) => void
+  ) => {
+    const data = {
+      password: newValues.password,
+      token: router.query.token,
+    };
+
+    apiService.post
+      .CREATE_NEW_PASSWORD(data)
+      .then(() => {
+        toast.success('password changed');
+        router.push('/auth/signin');
+      })
+      .catch((error) => {
+        toast.error(ErrorHandler(error));
+        setSubmitting(false);
+      });
+  };
   const {
     handleChange,
     isSubmitting,
+    setSubmitting,
     handleBlur,
     values: { password: valuesPassword, confirm: valuesConfirm },
     touched: { password: touchedPassword, confirm: touchedConfirm },
@@ -40,28 +63,10 @@ function newPassword() {
       confirm: '',
     },
     validationSchema: authValidationSchema('newPassword'),
-    onSubmit: () => {
-      handleFormSubmit();
+    onSubmit: (newValues, { setSubmitting }) => {
+      handleFormSubmit(newValues, setSubmitting);
     },
   });
-
-  const handleFormSubmit = () => {
-    const token = router.query.token;
-    let data = {
-      password: valuesPassword,
-      token: token,
-    };
-
-    apiService.post
-      .CREATE_NEW_PASSWORD(data)
-      .then(() => {
-        toast.success('password changed');
-        router.push('/auth/signin');
-      })
-      .catch((error) => {
-        toast.error(error.response?.data?.error);
-      });
-  };
 
   //components
 
