@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import PostBox from "../components/PostBox/PostBox";
 import Feed from "../components/Feed/Feed";
 import PageHead from "../UI/pages/pageHead";

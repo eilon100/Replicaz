@@ -1,35 +1,33 @@
-import { LoginIcon } from "@heroicons/react/outline";
-import { Divider, Menu, MenuItem } from "@mui/material";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import React, { useState } from "react";
-import { useContext } from "react";
-import { toast } from "react-hot-toast";
-import { AuthContext } from "../../../context/AuthContext";
-import { apiService } from "../../../utills/apiService";
-import { BiExit, BiUser } from "react-icons/bi";
-import { IoMdInformationCircleOutline } from "react-icons/io";
-import { deleteCookie } from "cookies-next";
+import { LoginIcon } from '@heroicons/react/outline';
+import { Divider, Menu, MenuItem } from '@mui/material';
+import Image from 'next/image';
+import { useRouter } from 'next/router';
+import React, { useState } from 'react';
+import { useContext } from 'react';
+import { AuthContext } from '../../../context/AuthContext';
+import { BiExit, BiUser } from 'react-icons/bi';
+import { IoMdInformationCircleOutline } from 'react-icons/io';
+
 const style = {
-  overflow: "visible",
-  filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.15))",
+  overflow: 'visible',
+  filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.15))',
   mt: 1.5,
-  "& .MuiAvatar-root": {
+  '& .MuiAvatar-root': {
     width: 32,
     height: 32,
     ml: -0.5,
     mr: 1,
   },
-  "&:before": {
+  '&:before': {
     content: '""',
-    display: "block",
-    position: "absolute",
+    display: 'block',
+    position: 'absolute',
     top: 0,
     right: 14,
     width: 10,
     height: 10,
-    bgcolor: "background.paper",
-    transform: "translateY(-50%) rotate(45deg)",
+    bgcolor: 'background.paper',
+    transform: 'translateY(-50%) rotate(45deg)',
     zIndex: 0,
   },
 };
@@ -44,7 +42,7 @@ function UserProfile() {
   const open = Boolean(closeOptions);
 
   const logOut = () => {
-    dispatch({ type: "LOGOUT" });
+    dispatch({ type: 'LOGOUT' });
   };
 
   const dropDown = () => {
@@ -58,12 +56,12 @@ function UserProfile() {
           elevation: 0,
           sx: style,
         }}
-        transformOrigin={{ horizontal: "right", vertical: "top" }}
-        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         <MenuItem
           disabled
-          style={{ color: "inherit", opacity: 1 }}
+          style={{ color: 'inherit', opacity: 1 }}
           className="flex flex-col items-start text-sm"
         >
           <p className="truncate font-semibold ">{userName}</p>
@@ -105,42 +103,42 @@ function UserProfile() {
     );
   };
 
-  return (
-    <div>
-      {loggedIn ? (
-        <>
-          <div
-            className=" hidden lg:flex relative h-10 w-10 cursor-pointer"
-            onClick={(event) => {
-              setCloseOptions(event.currentTarget);
-            }}
-          >
-            <Image
-              className=" rounded-full "
-              objectFit="cover"
-              src={
-                userImage ||
-                "https://res.cloudinary.com/dcpuvkirc/image/upload/v1667998882/defualt%20images/blank-profile-picture-gf01729628_1280_pdfkow.png"
-              }
-              layout="fill"
-            />
-          </div>
-          {dropDown()}
-        </>
-      ) : (
-        <div
-          onClick={() => router.push("/auth/signin")}
-          className="hidden rounded-xl cursor-pointer items-center space-x-2 border
-     border-gray-100 p-2 lg:flex"
-        >
-          <div className=" relative h-6 w-6 ">
-            <LoginIcon className="text-gray-400 pt-[1px]" />
-          </div>
-          <p className="text-gray-400 ">Sign in</p>
-        </div>
-      )}
+  const loggedInProfile = () => (
+    <>
+      <div
+        className=" hidden lg:flex relative h-10 w-10 cursor-pointer"
+        onClick={(event) => {
+          setCloseOptions(event.currentTarget);
+        }}
+      >
+        <Image
+          className=" rounded-full "
+          objectFit="cover"
+          src={
+            userImage ||
+            'https://res.cloudinary.com/dcpuvkirc/image/upload/v1667998882/defualt%20images/blank-profile-picture-gf01729628_1280_pdfkow.png'
+          }
+          layout="fill"
+        />
+      </div>
+      {dropDown()}
+    </>
+  );
+
+  const notLoggedInProfile = () => (
+    <div
+      onClick={() => router.push('/auth/signin')}
+      className="hidden rounded-xl cursor-pointer items-center space-x-2 border
+border-gray-100 p-2 lg:flex"
+    >
+      <div className=" relative h-6 w-6 ">
+        <LoginIcon className="text-gray-400 pt-[1px]" />
+      </div>
+      <p className="text-gray-400 ">Sign in</p>
     </div>
   );
+
+  return loggedIn ? loggedInProfile() : notLoggedInProfile();
 }
 
 export default UserProfile;

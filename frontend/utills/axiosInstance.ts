@@ -1,13 +1,13 @@
-import axios from "axios";
-import { getCookie } from "cookies-next";
+import axios from 'axios';
+import { getCookie } from 'cookies-next';
 
-const token = getCookie("token");
+const token = getCookie('token');
 export const axiosInstance = axios.create({
   headers: {
     Authorization: `Bearer ${token}`,
-    Accept: "application/json",
-    "Content-Type": "application/json",
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
   },
-  baseURL: "http://localhost:8080/",
+  baseURL: process.env.NEXT_PUBLIC_SERVER_PATH,
   withCredentials: true,
 });

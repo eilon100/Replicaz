@@ -1,5 +1,5 @@
 import TextField from '@mui/material/TextField';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { useFormik } from 'formik';
 import Router from 'next/router';
 import toast from 'react-hot-toast';
@@ -11,12 +11,10 @@ import { apiService } from '../../utills/apiService';
 import { AuthContext } from '../../context/AuthContext';
 import { authValidationSchema } from '../../validation/auth';
 import InputAdornment from '@mui/material/InputAdornment';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { IconButton } from '@mui/joy';
 import PageHead from '../../UI/pages/pageHead';
 import ReplicazLogo from '../../public/ReplicazAuthLogo.png';
 import usePasswordVisibility from '../../components/Auth/hooks/usePasswordVisibility';
+import ErrorHandler from '../../utills/ErrorHandler';
 
 const SignIn = () => {
   useEffect(() => {
@@ -59,8 +57,8 @@ const SignIn = () => {
         toast.success('Login successfully');
         Router.push('/');
       })
-      .catch(({ response: { data } }) => {
-        toast.error(data.error);
+      .catch((error) => {
+        toast.error(ErrorHandler(error));
         setSubmitting(false);
       });
   };

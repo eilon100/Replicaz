@@ -1,5 +1,4 @@
 import TextField from '@mui/material/TextField';
-import { useState } from 'react';
 import { useFormik } from 'formik';
 import Router from 'next/router';
 import toast from 'react-hot-toast';
@@ -12,9 +11,6 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import InputAdornment from '@mui/material/InputAdornment';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { IconButton } from '@mui/joy';
 import PageHead from '../../UI/pages/pageHead';
 import ReplicazLogo from '../../public/ReplicazAuthLogo.png';
 import ErrorHandler from '../../utills/ErrorHandler';

@@ -1,5 +1,4 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { CircularProgress } from '@mui/joy';
 import { useInfiniteQuery } from 'react-query';
 import { apiService } from '../../../../../utills/apiService';
 import useIntersectionObserver from '../../../../../utills/useIntersectionObserver';

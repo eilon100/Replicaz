@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import TextField from '@mui/material/TextField';
 import { useFormik } from 'formik';
 import { toast } from 'react-hot-toast';
@@ -9,9 +9,6 @@ import AuthFooter from '../../components/Auth/AuthFooter';
 import AuthButton from '../../components/Auth/AuthButton';
 import { authValidationSchema } from '../../validation/auth';
 import InputAdornment from '@mui/material/InputAdornment';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import { IconButton } from '@mui/joy';
 import PageHead from '../../UI/pages/pageHead';
 import ReplicazLogo from '../../public/ReplicazAuthLogo.png';
 import ErrorHandler from '../../utills/ErrorHandler';

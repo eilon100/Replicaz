@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import sneaker from "../../../public/sneaker.png";
 import { useRouter } from "next/router";
 import ReplicazLogo from "../../../public/ReplicazLogo.png";
 import ReplicazIcon from "../../../public/ReplicazIcon.png";

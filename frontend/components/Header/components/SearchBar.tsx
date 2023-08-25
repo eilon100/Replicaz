@@ -1,39 +1,23 @@
-import React, { useEffect } from "react";
-import { SearchIcon } from "@heroicons/react/solid";
-import { useFormik } from "formik";
-import { useRouter } from "next/router";
+import React, { useEffect } from 'react';
+import { SearchIcon } from '@heroicons/react/solid';
+import { useFormik } from 'formik';
+import { useRouter } from 'next/router';
 
 const SearchBar = () => {
   const router = useRouter();
   const { page, search } = router.query;
-  const currentRoute = router.pathname.replace("[page]", `${page}`);
+  const currentRoute = router.pathname.replace('[page]', `${page}`);
 
   useEffect(() => {
     if (!search) resetForm();
   }, [router]);
-
-  const {
-    handleChange,
-    handleBlur,
-    resetForm,
-    values: { search: valuesSearch },
-    handleSubmit,
-  } = useFormik({
-    initialValues: {
-      search: "",
-    },
-
-    onSubmit: () => {
-      onSubmit();
-    },
-  });
-
+  
   const onSubmit = () => {
     const correctRoute =
-      currentRoute === "/" || currentRoute.startsWith("/community");
+      currentRoute === '/' || currentRoute.startsWith('/community');
 
     if (correctRoute) {
-      if (valuesSearch.trim() === "") {
+      if (valuesSearch.trim() === '') {
         router.replace(currentRoute);
       } else {
         router.replace({
@@ -43,6 +27,21 @@ const SearchBar = () => {
       }
     }
   };
+  const {
+    handleChange,
+    handleBlur,
+    resetForm,
+    values: { search: valuesSearch },
+    handleSubmit,
+  } = useFormik({
+    initialValues: {
+      search: '',
+    },
+
+    onSubmit: () => {
+      onSubmit();
+    },
+  });
 
   return (
     <form

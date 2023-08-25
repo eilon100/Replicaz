@@ -3,14 +3,14 @@ import jwt from 'jsonwebtoken';
 import User from '../../../db/modal/user';
 import { BadRequestError } from '../../../errors/bad-request';
 const bcrypt = require('bcryptjs');
-const errorMessage = 'סיסמה או שם משתמש שגויים';
+const errorMessage = 'Incorrect password or email';
 
 export const login: RequestHandler = async (req, res, next) => {
   const { email, password } = req.body;
   try {
     const loadedUser = await findUser(email);
 
-    validatePassword(loadedUser, password);
+    await validatePassword(loadedUser, password);
 
     const token = createToken(loadedUser);
 
